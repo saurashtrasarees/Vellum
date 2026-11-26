@@ -3247,7 +3247,22 @@
           "112.jpeg"
         ],
         "imageCount": 12,
-        "video": "_100.mp4"
+        "video": "_100.mp4",
+        "heroImageUrl": "https://lh3.googleusercontent.com/d/1krmv3NtQQfbvYAPXJpxcHzZaU3Y2ONOD=w800",
+        "imageUrls": [
+          "https://lh3.googleusercontent.com/d/1krmv3NtQQfbvYAPXJpxcHzZaU3Y2ONOD=w800",
+          "https://lh3.googleusercontent.com/d/1UfWcCYfMhV1_lFE9q9wrTF5mp_WYYVdB=w800",
+          "https://lh3.googleusercontent.com/d/1fyqIKq7-PBZSZJ27s-sZZoyuV0v4dlmo=w800",
+          "https://lh3.googleusercontent.com/d/1wsVNTIFmaryiDbt7_VBfOETJJkiPeIzq=w800",
+          "https://lh3.googleusercontent.com/d/1PayHD8bEFC66z3CJZI4wAZhlP2cocaWh=w800",
+          "https://lh3.googleusercontent.com/d/1EHeUH0r0w0c5b0J7D2Tt-n8wRpqPkwDY=w800",
+          "https://lh3.googleusercontent.com/d/1jyUoPMo4huc3ldO0S8xeKqvqfla84z_R=w800",
+          "https://lh3.googleusercontent.com/d/1r-laNHLJhXmKjLnG7t5A2uXkN-LwebMd=w800",
+          "https://lh3.googleusercontent.com/d/1Imz0OuhgmqjaEVaT_bcwh8S8UlBUwhF_=w800",
+          "https://lh3.googleusercontent.com/d/144a9utsgGted8ZqGSRe-xsSHrCDJu7Ky=w800",
+          "https://lh3.googleusercontent.com/d/1FJaH9EDbCY1Bhsafg5u25R9hLjgB_iAU=w800",
+          "https://lh3.googleusercontent.com/d/1opgr9ysdFDBdBN41BDZYg1H9FiboF22q=w800"
+        ]
       },
       {
         "code": "200",
@@ -3267,7 +3282,21 @@
           "211.jpeg"
         ],
         "imageCount": 11,
-        "video": "_200.mp4"
+        "video": "_200.mp4",
+        "heroImageUrl": "https://lh3.googleusercontent.com/d/1vk4B18vmmpRvoy2VEzOlYhi0dH0R_5lO=w800",
+        "imageUrls": [
+          "https://lh3.googleusercontent.com/d/1vk4B18vmmpRvoy2VEzOlYhi0dH0R_5lO=w800",
+          "https://lh3.googleusercontent.com/d/1jtop8Xld-PV5osHGsNm0Blq8Ic9yh2_S=w800",
+          "https://lh3.googleusercontent.com/d/1ic809AU1zr-hNHBX30ru_Kil80zpteok=w800",
+          "https://lh3.googleusercontent.com/d/1nIoZCdqmSeunRmqojaR_fXPrDi9MPIF3=w800",
+          "https://lh3.googleusercontent.com/d/19d0sqvMy9AQY1DL3t9RWLlTFjr0qpVke=w800",
+          "https://lh3.googleusercontent.com/d/1j6kPeSBFXm4wZe9x2Tfr9DB3V9UxE2wT=w800",
+          "https://lh3.googleusercontent.com/d/1MCie9HuSQ9j38lq0N3vAfKkR1wepLsMe=w800",
+          "https://lh3.googleusercontent.com/d/1-HpXuuAn2pboNLuFIKj7OuoXetliE1TX=w800",
+          "https://lh3.googleusercontent.com/d/1T8SWmqavMJlyvDzAIGAtMsOfIZ1kA7TW=w800",
+          "https://lh3.googleusercontent.com/d/1meJZ0N7oLGzHaxi3PdtBarhAN905c9Bm=w800",
+          "https://lh3.googleusercontent.com/d/1SyK0guCUwzkgQ_nRzESyJzm4yBK4Mz-O=w800"
+        ]
       },
       {
         "code": "400",
@@ -3285,7 +3314,19 @@
           "409.jpeg"
         ],
         "imageCount": 9,
-        "video": "_100.mp4"
+        "video": "_100.mp4",
+        "heroImageUrl": "https://lh3.googleusercontent.com/d/1WffLfhdkg1eeWANYopu9NZwgaR3Qp7xT=w800",
+        "imageUrls": [
+          "https://lh3.googleusercontent.com/d/1WffLfhdkg1eeWANYopu9NZwgaR3Qp7xT=w800",
+          "https://lh3.googleusercontent.com/d/1x-GxIX-tBbc3uT4hf_Lpy3vqctKsKryE=w800",
+          "https://lh3.googleusercontent.com/d/1IN1BejzUNN927Dt8hewpVLUM_4vdvpaB=w800",
+          "https://lh3.googleusercontent.com/d/12zXv7i45oUhtaI9ZebXeIbk1fDC5wrXj=w800",
+          "https://lh3.googleusercontent.com/d/10Jb8FGmr6rEnKF8vBqN3vn0QRCkrGZXy=w800",
+          "https://lh3.googleusercontent.com/d/1H4wzzQkBy3mMUP6_ud2lqRH8Ex_DyR49=w800",
+          "https://lh3.googleusercontent.com/d/1re9Bi7e1Y52kTLEwxgsVKO95VOmZnQTb=w800",
+          "https://lh3.googleusercontent.com/d/1IcDhqJe-m6KI98XfZLs6PFijUhfTJb5h=w800",
+          "https://lh3.googleusercontent.com/d/1LT93V5ImfLamo2ReKds1Z8v24EZZ-C9Z=w800"
+        ]
       },
       {
         "code": "500",
@@ -3303,14 +3344,28 @@
           "509.jpeg"
         ],
         "imageCount": 9,
-        "video": "_100.mp4"
+        "video": "_100.mp4",
+        "heroImageUrl": "https://lh3.googleusercontent.com/d/1cb_l6J_C8gC126P7zM6wKDF8YiU8ffBa=w800",
+        "imageUrls": [
+          "https://lh3.googleusercontent.com/d/1cb_l6J_C8gC126P7zM6wKDF8YiU8ffBa=w800",
+          "https://lh3.googleusercontent.com/d/1mPt5doXlUtAESUFY_D3phaRAmvgQSEKp=w800",
+          "https://lh3.googleusercontent.com/d/1AFitZxg5zQsRN47m5F6PpMz-p8BKB55-=w800",
+          "https://lh3.googleusercontent.com/d/1i2XY757CMFBlvN5rLSKuu9CqbMO_O1S7=w800",
+          "https://lh3.googleusercontent.com/d/1myLQ9XekE7stVt6qGxMme_XBMX-90oDk=w800",
+          "https://lh3.googleusercontent.com/d/1Fnczq0Bvx1mWNXdYCGOT_RZ1xNroa--Z=w800",
+          "https://lh3.googleusercontent.com/d/1USDpT1sbqEMW0ts2AEed9bri9QMjWwDU=w800",
+          "https://lh3.googleusercontent.com/d/1nPJoXDDcjWDvr5ulXZlnXD_XZ76Fkzw2=w800",
+          "https://lh3.googleusercontent.com/d/1yGG9Y0QDHlJ5b-AvK_x-IqDOX7kc0qy9=w800"
+        ]
       }
     ],
     "txtFile": "Pushpa-Vol-8.txt",
     "shootTypes": [
       "Model Shoot",
       "Table Shoot"
-    ]
+    ],
+    "heroImageUrl": "https://lh3.googleusercontent.com/d/1krmv3NtQQfbvYAPXJpxcHzZaU3Y2ONOD=w800",
+    "heroImageId": "1krmv3NtQQfbvYAPXJpxcHzZaU3Y2ONOD"
   },
   {
     "id": "tusser-vol-1",
@@ -3349,13 +3404,28 @@
           "110.jpeg"
         ],
         "imageCount": 10,
-        "video": "111.mp4"
+        "video": "111.mp4",
+        "heroImageUrl": "https://lh3.googleusercontent.com/d/1l6NtkDqDlmp4z5CZbLkEBB9MLlrX_Zv-=w800",
+        "imageUrls": [
+          "https://lh3.googleusercontent.com/d/1l6NtkDqDlmp4z5CZbLkEBB9MLlrX_Zv-=w800",
+          "https://lh3.googleusercontent.com/d/1m9hMk3fd5uGadFkm0PFwSpHazXxVixjO=w800",
+          "https://lh3.googleusercontent.com/d/1LhidY8G2PwK_DG8J0gmewZVovIHN6y4T=w800",
+          "https://lh3.googleusercontent.com/d/19jxrpNVxb03maYDVmdUPrsSOlw-ROVvc=w800",
+          "https://lh3.googleusercontent.com/d/17O1Ia9Z1UY41Hw60YWNPEaXgxjsZIGqe=w800",
+          "https://lh3.googleusercontent.com/d/1nPUbOH4KMSXDQqae_N_3X8kntmAO_C4i=w800",
+          "https://lh3.googleusercontent.com/d/1uQHMOmY7WuuG0NgAMaS3I_qQw8kDIae6=w800",
+          "https://lh3.googleusercontent.com/d/1MIDfPSDjpaSVg1vi1RgnoqeYxJcLFYaw=w800",
+          "https://lh3.googleusercontent.com/d/1Ma52YSbt2hPuNwzGQzUTkaSNTcddbBGO=w800",
+          "https://lh3.googleusercontent.com/d/1q2qfDE4-S3cK4DuSYmJ-dQdj0nnS0sO5=w800"
+        ]
       }
     ],
     "txtFile": "Tusser-Vol-1.txt",
     "shootTypes": [
       "Model Shoot",
       "Table Shoot"
-    ]
+    ],
+    "heroImageUrl": "https://lh3.googleusercontent.com/d/1l6NtkDqDlmp4z5CZbLkEBB9MLlrX_Zv-=w800",
+    "heroImageId": "1l6NtkDqDlmp4z5CZbLkEBB9MLlrX_Zv-"
   }
 ]

@@ -45,11 +45,7 @@ function resolveRoleFromUrl() {
   const key = (params.get('k') || params.get('key') || params.get('ref') || '').toLowerCase().trim();
   const shoot = (params.get('shoot') || '').toLowerCase().trim();
 
-  if (shoot === 'table') {
-    state.currentShoot = 'table';
-  } else {
-    state.currentShoot = 'model';
-  }
+  state.currentShoot = (shoot === 'table') ? 'table' : 'model';
 
   // Key matching
   if (key === CONFIG.defaultKeys.wholesale || key === 'wholesale' || key === 'dealer' || key === 'bulk') {
@@ -354,22 +350,24 @@ function renderGrid(catalogs) {
     const shootBadgeClass = isModel ? 'badge-model' : 'badge-table';
 
     // Hero image logic: use real Google Drive photo if available
-    const displayImgUrl = firstDesign.heroImageUrl || cat.heroImageUrl;
-    const hasRealImg = !!displayImgUrl;
+    const displayImgUrl = firstDesign.heroImageUrl || cat.heroImageUrl || 'https://placehold.co/600x800/2c0d16/d4af37?text=' + encodeURIComponent(cat.name);
 
-    // Color swatches (first 5 dots)
-    const swatchesHtml = cat.designs.slice(0, 5).map((d, dIdx) => {
+    // Color swatches (first 6 dots)
+    const swatchesHtml = cat.designs.slice(0, 6).map((d, dIdx) => {
       const colorBg = getColorHex(d.color);
+      const isSelected = dIdx === 0;
       return `
-        <span 
+        <button 
+          type="button"
+          onclick="event.stopPropagation(); switchCardDesign('${cat.code}', ${dIdx})"
           title="${d.color} (Design ${d.code})"
-          class="w-3.5 h-3.5 rounded-full border border-slate-300 shadow-xs inline-block hover:scale-125 transition-transform"
+          class="card-dot-${cat.code} w-4 h-4 rounded-full border-2 border-white shadow-xs inline-block transition-transform hover:scale-130 ${isSelected ? 'ring-2 ring-brand-maroon scale-115' : 'opacity-85'}"
           style="background-color: ${colorBg};"
-        ></span>
+        ></button>
       `;
     }).join('');
 
-    const moreColors = cat.designs.length > 5 ? `<span class="text-[10px] text-slate-400 font-bold">+${cat.designs.length - 5}</span>` : '';
+    const moreColors = cat.designs.length > 6 ? `<span class="text-[10px] text-slate-400 font-bold">+${cat.designs.length - 6}</span>` : '';
 
     return `
       <div class="catalog-card bg-white rounded-3xl overflow-hidden border border-slate-200/90 flex flex-col group shadow-sm hover:shadow-xl transition-all">
@@ -377,27 +375,18 @@ function renderGrid(catalogs) {
         <!-- Media Visual Frame -->
         <div onclick="openProductModal('${cat.code}')" class="relative aspect-[3/4] bg-slate-900 overflow-hidden cursor-pointer flex items-center justify-center">
           
-          ${hasRealImg ? `
-            <img 
-              src="${displayImgUrl}" 
-              alt="${cat.name}" 
-              loading="lazy" 
-              class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-108"
-              onerror="this.onerror=null; this.src='https://placehold.co/600x800/2c0d16/d4af37?text=${encodeURIComponent(cat.name)}';"
-            >
-          ` : `
-            <div class="w-full h-full flex flex-col items-center justify-center p-6 text-center bg-gradient-to-br from-brand-maroondark to-brand-maroon text-white transition-transform duration-500 group-hover:scale-105">
-              <div class="w-14 h-14 rounded-2xl bg-amber-400/20 backdrop-blur-md flex items-center justify-center text-amber-300 mb-3 border border-amber-300/30">
-                <span class="font-serif text-2xl font-bold">${cat.name.charAt(0)}</span>
-              </div>
-              <p class="font-serif font-bold text-white text-lg leading-snug">${cat.name}</p>
-              <p class="text-xs text-amber-200 font-medium mt-1">${cat.category}</p>
-              <p class="text-[11px] text-slate-300 mt-2">${firstDesign.color || 'Multi-Color'} • ${firstDesign.images ? firstDesign.images.length : 4} Drapes</p>
-            </div>
-          `}
+          <img 
+            id="card-hero-${cat.code}"
+            src="${displayImgUrl}" 
+            referrerpolicy="no-referrer"
+            alt="${cat.name}" 
+            loading="lazy" 
+            class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-108"
+            onerror="this.onerror=null; this.src='https://placehold.co/600x800/2c0d16/d4af37?text=${encodeURIComponent(cat.name)}';"
+          >
 
           <!-- Badges Floating -->
-          <div class="absolute top-3.5 left-3.5 flex flex-col gap-1.5 items-start z-10">
+          <div class="absolute top-3.5 left-3.5 flex flex-col gap-1.5 items-start z-10 pointer-events-none">
             <span class="text-[10px] font-extrabold px-2.5 py-1 rounded-lg tracking-wide uppercase shadow-md ${shootBadgeClass}">
               ${shootBadge}
             </span>
@@ -409,7 +398,7 @@ function renderGrid(catalogs) {
           </div>
 
           <!-- Quick Look Icon on Hover -->
-          <div class="absolute inset-0 bg-slate-950/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+          <div class="absolute inset-0 bg-slate-950/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none">
             <span class="px-4 py-2 bg-white/95 backdrop-blur-md rounded-xl text-xs font-bold text-slate-900 shadow-xl flex items-center gap-1.5 transform translate-y-2 group-hover:translate-y-0 transition-transform">
               <span>Open Lookbook</span> ↗
             </span>
@@ -420,7 +409,7 @@ function renderGrid(catalogs) {
         <!-- Content Area -->
         <div class="p-5 flex-1 flex flex-col justify-between space-y-4">
           
-          <div class="space-y-2">
+          <div class="space-y-1.5">
             <div class="flex items-center justify-between text-xs">
               <span class="font-extrabold uppercase tracking-wider text-brand-maroon text-[10px] bg-brand-maroonlight px-2 py-0.5 rounded">
                 ${cat.code}
@@ -434,14 +423,22 @@ function renderGrid(catalogs) {
               ${cat.name}
             </h3>
 
+            <!-- Active Selected Color Label on Card -->
+            <p id="card-design-${cat.code}" class="text-[11px] font-bold text-brand-maroon">
+              Design ${firstDesign.code || '101'} — ${firstDesign.color || 'Color 1'}
+            </p>
+
             <p class="text-xs text-slate-500 line-clamp-2 leading-relaxed">
               ${cat.fabric}
             </p>
 
-            <!-- Color Swatches Row -->
-            <div class="flex items-center gap-1.5 pt-1">
-              ${swatchesHtml}
-              ${moreColors}
+            <!-- Color Swatches Row with 101, 201, 301 click switching -->
+            <div class="pt-1">
+              <span class="text-[10px] text-slate-400 font-semibold block mb-1">Click to view color:</span>
+              <div class="flex items-center gap-2">
+                ${swatchesHtml}
+                ${moreColors}
+              </div>
             </div>
           </div>
 
@@ -456,7 +453,7 @@ function renderGrid(catalogs) {
                 </div>
               </div>
               <span class="text-[10px] font-bold px-2 py-0.5 bg-amber-50 text-amber-900 border border-amber-200/60 rounded">
-                ${cat.skuCount} Designs
+                ${cat.skuCount} Colors
               </span>
             </div>
 
@@ -464,7 +461,7 @@ function renderGrid(catalogs) {
               <button onclick="openProductModal('${cat.code}')" class="py-2.5 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold transition-all text-center">
                 Lookbook
               </button>
-              <button onclick="quickWhatsApp('${cat.code}', '${firstDesign.color || 'All Colors'}', ${rate})" class="py-2.5 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold flex items-center justify-center gap-1.5 shadow-sm transition-all">
+              <button onclick="quickWhatsApp('${cat.code}', '${firstDesign.color || 'All Colors'} (Design ${firstDesign.code || '101'})', ${rate})" class="py-2.5 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold flex items-center justify-center gap-1.5 shadow-sm transition-all">
                 <span>Inquire</span>
               </button>
             </div>
@@ -475,6 +472,36 @@ function renderGrid(catalogs) {
       </div>
     `;
   }).join('');
+}
+
+// Switch Color / Design directly on the card
+function switchCardDesign(catCode, designIdx) {
+  const cat = state.catalogs.find(c => c.code.toLowerCase() === catCode.toLowerCase());
+  if (!cat || !cat.designs[designIdx]) return;
+
+  const design = cat.designs[designIdx];
+
+  // Update card hero image
+  const imgEl = document.getElementById(`card-hero-${cat.code}`);
+  if (imgEl && design.heroImageUrl) {
+    imgEl.src = design.heroImageUrl;
+  }
+
+  // Update design label text
+  const labelEl = document.getElementById(`card-design-${cat.code}`);
+  if (labelEl) {
+    labelEl.textContent = `Design ${design.code} — ${design.color}`;
+  }
+
+  // Update active border on swatch buttons
+  const dots = document.querySelectorAll(`.card-dot-${cat.code}`);
+  dots.forEach((dot, idx) => {
+    if (idx === designIdx) {
+      dot.className = `card-dot-${cat.code} w-4 h-4 rounded-full border-2 border-white shadow-xs inline-block transition-transform scale-125 ring-2 ring-brand-maroon`;
+    } else {
+      dot.className = `card-dot-${cat.code} w-4 h-4 rounded-full border-2 border-white shadow-xs inline-block transition-transform hover:scale-125 opacity-85`;
+    }
+  });
 }
 
 // Helper: Color to CSS Hex Map
@@ -494,19 +521,19 @@ function getColorHex(colorName) {
   if (c.includes('orange') || c.includes('peach')) return '#ea580c';
   if (c.includes('grey') || c.includes('gray')) return '#64748b';
   if (c.includes('black')) return '#0f172a';
-  if (c.includes('beige') || c.includes('chiku')) return '#d4a373';
+  if (c.includes('beige') || c.includes('chiku') || c.includes('cream')) return '#d4a373';
   return '#cbd5e1';
 }
 
 // --------------------------------------------------------------------------
 // 5. Lookbook Detail Modal
 // --------------------------------------------------------------------------
-function openProductModal(catalogCode) {
+function openProductModal(catalogCode, startDesignIdx = 0) {
   const cat = state.catalogs.find(c => c.code.toLowerCase() === catalogCode.toLowerCase());
   if (!cat) return;
 
   state.activeModalCatalog = cat;
-  state.activeModalDesignIndex = 0;
+  state.activeModalDesignIndex = startDesignIdx;
   state.activeModalShoot = state.currentShoot;
   state.activeModalImageIndex = 0;
 
@@ -596,20 +623,21 @@ function renderModalColorSwatches() {
   container.innerHTML = cat.designs.map((d, idx) => {
     const isSelected = idx === state.activeModalDesignIndex;
     const bgHex = getColorHex(d.color);
-    const activeClass = isSelected ? 'ring-2 ring-offset-2 ring-brand-maroon scale-110 shadow-md' : 'opacity-80 hover:opacity-100';
+    const activeClass = isSelected ? 'ring-3 ring-offset-2 ring-brand-maroon scale-115 shadow-md' : 'opacity-80 hover:opacity-100 hover:scale-110';
 
     return `
       <button 
+        type="button"
         onclick="selectModalDesign(${idx})" 
-        title="${d.color} (Design ${d.code})"
-        class="w-7 h-7 rounded-full border border-slate-300 shadow-sm transition-all ${activeClass}"
+        title="Design ${d.code} — ${d.color}"
+        class="w-7 h-7 rounded-full border-2 border-white shadow-sm transition-all ${activeClass}"
         style="background-color: ${bgHex};"
       ></button>
     `;
   }).join('');
 
   const activeDesign = cat.designs[state.activeModalDesignIndex] || {};
-  document.getElementById('modalSelectedColor').textContent = `${activeDesign.color || 'Color'} (Design ${activeDesign.code || '101'})`;
+  document.getElementById('modalSelectedColor').textContent = `Design ${activeDesign.code || '101'} — ${activeDesign.color || 'Color 1'}`;
 }
 
 function selectModalDesign(idx) {
@@ -624,10 +652,9 @@ function updateModalGallery() {
   if (!cat) return;
 
   const activeDesign = cat.designs[state.activeModalDesignIndex] || {};
-  const isModel = state.activeModalShoot === 'model';
   
-  // Real Drive image URLs
-  const realUrls = activeDesign.imageUrls && activeDesign.imageUrls.length > 0 
+  // Real Drive image URLs for this specific design (e.g. 101, 102, 103, 104)
+  const realUrls = (activeDesign.imageUrls && activeDesign.imageUrls.length > 0)
     ? activeDesign.imageUrls 
     : [activeDesign.heroImageUrl || cat.heroImageUrl];
 
@@ -653,24 +680,24 @@ function updateModalGallery() {
     }
   }
 
-  // Thumbnails Strip
+  // Thumbnails Strip: All angles for THIS design (e.g. 101, 102, 103, 104)
   const thumbStrip = document.getElementById('modalThumbStrip');
   if (thumbStrip) {
     thumbStrip.innerHTML = realUrls.map((imgUrl, i) => {
       const isSelected = i === state.activeModalImageIndex;
-      const borderClass = isSelected ? 'border-brand-maroon ring-2 ring-brand-maroon/30 scale-105' : 'border-slate-200 opacity-70 hover:opacity-100';
-      const angleLabel = i === 0 ? 'Front' : i === 1 ? 'Pallu' : i === 2 ? 'Border' : i === 3 ? 'Drape' : 'Blouse';
+      const borderClass = isSelected ? 'border-brand-maroon ring-2 ring-brand-maroon/40 scale-105' : 'border-slate-200 opacity-70 hover:opacity-100';
+      const angleLabel = i === 0 ? 'Front Drape' : i === 1 ? 'Pallu Detail' : i === 2 ? 'Border Zari' : i === 3 ? 'Pleats' : 'Blouse Piece';
 
       return `
         <div onclick="selectModalAngle(${i})" class="flex-shrink-0 w-16 h-20 rounded-xl overflow-hidden cursor-pointer border-2 transition-all relative group bg-slate-900 ${borderClass}">
-          ${imgUrl ? `
-            <img src="${imgUrl}" alt="Angle ${i+1}" class="w-full h-full object-cover">
-          ` : `
-            <div class="w-full h-full flex items-center justify-center text-[10px] text-white font-bold bg-slate-800">
-              Angle ${i+1}
-            </div>
-          `}
-          <span class="absolute bottom-1 left-1 right-1 bg-black/70 backdrop-blur-xs text-[9px] text-white font-bold text-center rounded py-0.5">
+          <img 
+            src="${imgUrl}" 
+            referrerpolicy="no-referrer"
+            alt="Angle ${i+1}" 
+            class="w-full h-full object-cover"
+            onerror="this.onerror=null; this.src='https://placehold.co/100x120/1e293b/ffffff?text=${i+1}';"
+          >
+          <span class="absolute bottom-1 left-1 right-1 bg-black/80 backdrop-blur-xs text-[8px] text-white font-bold text-center rounded py-0.5 truncate px-0.5">
             ${angleLabel}
           </span>
         </div>
