@@ -25,7 +25,8 @@ const state = {
   currentShoot: 'model', // 'model', 'table'
   activeModalCatalog: null,
   activeModalDesignIndex: 0,
-  activeModalShoot: 'model'
+  activeModalShoot: 'model',
+  activeModalImageIndex: 0
 };
 
 // Initialize Application
@@ -34,7 +35,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   await loadCatalogData();
   renderCategoryPills();
   applyFiltersAndRender();
-  lucide.createIcons();
 });
 
 // --------------------------------------------------------------------------
@@ -152,18 +152,19 @@ async function loadCatalogData() {
       state.catalogs = await res.json();
     }
   } catch (err) {
-    console.warn('Local catalog fallback failed:', err);
+    console.warn('Local catalog fallback error:', err);
   }
 
-  // Try live Google Sheet sync for dynamic rates
+  // Live Google Sheet sync for dynamic rates
   try {
     const sheetRes = await fetch(CONFIG.sheetUrl);
     if (sheetRes.ok) {
       const csvText = await sheetRes.text();
       mergeSheetPricing(csvText);
+      console.log('✓ Google Sheet Live Pricing successfully synced!');
     }
   } catch (sheetErr) {
-    console.log('Google Sheet live sync currently using local cache.');
+    console.log('Using cached pricing database.');
   }
 
   state.filteredCatalogs = [...state.catalogs];
@@ -325,6 +326,7 @@ function applyFiltersAndRender() {
   }
 
   renderGrid(list);
+  if (window.lucide) lucide.createIcons();
 }
 
 function getActiveRate(catalog) {
@@ -351,13 +353,17 @@ function renderGrid(catalogs) {
     const shootBadge = isModel ? '👗 Model Shoot' : '🪑 Table Shoot';
     const shootBadgeClass = isModel ? 'badge-model' : 'badge-table';
 
+    // Hero image logic: use real Google Drive photo if available
+    const displayImgUrl = firstDesign.heroImageUrl || cat.heroImageUrl;
+    const hasRealImg = !!displayImgUrl;
+
     // Color swatches (first 5 dots)
     const swatchesHtml = cat.designs.slice(0, 5).map((d, dIdx) => {
       const colorBg = getColorHex(d.color);
       return `
         <span 
           title="${d.color} (Design ${d.code})"
-          class="w-3.5 h-3.5 rounded-full border border-slate-300 shadow-xs inline-block"
+          class="w-3.5 h-3.5 rounded-full border border-slate-300 shadow-xs inline-block hover:scale-125 transition-transform"
           style="background-color: ${colorBg};"
         ></span>
       `;
@@ -366,37 +372,46 @@ function renderGrid(catalogs) {
     const moreColors = cat.designs.length > 5 ? `<span class="text-[10px] text-slate-400 font-bold">+${cat.designs.length - 5}</span>` : '';
 
     return `
-      <div class="catalog-card bg-white rounded-3xl overflow-hidden border border-slate-200/90 flex flex-col group">
+      <div class="catalog-card bg-white rounded-3xl overflow-hidden border border-slate-200/90 flex flex-col group shadow-sm hover:shadow-xl transition-all">
         
         <!-- Media Visual Frame -->
-        <div onclick="openProductModal('${cat.code}')" class="relative aspect-[3/4] bg-slate-100 overflow-hidden cursor-pointer flex items-center justify-center">
+        <div onclick="openProductModal('${cat.code}')" class="relative aspect-[3/4] bg-slate-900 overflow-hidden cursor-pointer flex items-center justify-center">
           
-          <!-- Image Placeholder / Hero Art -->
-          <div class="w-full h-full flex flex-col items-center justify-center p-6 text-center bg-gradient-to-b from-slate-100 to-slate-200/70 transition-transform duration-500 group-hover:scale-105">
-            <div class="w-16 h-16 rounded-2xl bg-white shadow-md flex items-center justify-center text-brand-maroon mb-3 border border-amber-500/20">
-              <span class="font-serif text-2xl font-bold">${cat.name.charAt(0)}</span>
+          ${hasRealImg ? `
+            <img 
+              src="${displayImgUrl}" 
+              alt="${cat.name}" 
+              loading="lazy" 
+              class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-108"
+              onerror="this.onerror=null; this.src='https://placehold.co/600x800/2c0d16/d4af37?text=${encodeURIComponent(cat.name)}';"
+            >
+          ` : `
+            <div class="w-full h-full flex flex-col items-center justify-center p-6 text-center bg-gradient-to-br from-brand-maroondark to-brand-maroon text-white transition-transform duration-500 group-hover:scale-105">
+              <div class="w-14 h-14 rounded-2xl bg-amber-400/20 backdrop-blur-md flex items-center justify-center text-amber-300 mb-3 border border-amber-300/30">
+                <span class="font-serif text-2xl font-bold">${cat.name.charAt(0)}</span>
+              </div>
+              <p class="font-serif font-bold text-white text-lg leading-snug">${cat.name}</p>
+              <p class="text-xs text-amber-200 font-medium mt-1">${cat.category}</p>
+              <p class="text-[11px] text-slate-300 mt-2">${firstDesign.color || 'Multi-Color'} • ${firstDesign.images ? firstDesign.images.length : 4} Drapes</p>
             </div>
-            <p class="font-serif font-bold text-slate-800 text-lg leading-snug">${cat.name}</p>
-            <p class="text-xs text-brand-maroon font-semibold mt-1">${cat.category}</p>
-            <p class="text-[11px] text-slate-500 mt-2 font-medium">${firstDesign.color || 'Multi-Color'} • ${firstDesign.images ? firstDesign.images.length : 4} Drapes</p>
-          </div>
+          `}
 
           <!-- Badges Floating -->
-          <div class="absolute top-3.5 left-3.5 flex flex-col gap-1.5 items-start">
-            <span class="text-[10px] font-extrabold px-2.5 py-1 rounded-lg tracking-wide uppercase shadow-xs ${shootBadgeClass}">
+          <div class="absolute top-3.5 left-3.5 flex flex-col gap-1.5 items-start z-10">
+            <span class="text-[10px] font-extrabold px-2.5 py-1 rounded-lg tracking-wide uppercase shadow-md ${shootBadgeClass}">
               ${shootBadge}
             </span>
             ${cat.hasVideo ? `
-              <span class="text-[10px] font-bold px-2 py-0.5 rounded-md bg-slate-900/80 text-white backdrop-blur-md flex items-center gap-1 shadow-xs">
+              <span class="text-[10px] font-bold px-2 py-0.5 rounded-md bg-slate-950/80 text-amber-300 backdrop-blur-md flex items-center gap-1 shadow-md border border-white/10">
                 <span>📹</span> Reel Ready
               </span>
             ` : ''}
           </div>
 
           <!-- Quick Look Icon on Hover -->
-          <div class="absolute inset-0 bg-slate-950/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-            <span class="px-4 py-2 bg-white/95 backdrop-blur-md rounded-xl text-xs font-bold text-slate-900 shadow-xl flex items-center gap-1.5">
-              <span>View Full Lookbook</span> ↗
+          <div class="absolute inset-0 bg-slate-950/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+            <span class="px-4 py-2 bg-white/95 backdrop-blur-md rounded-xl text-xs font-bold text-slate-900 shadow-xl flex items-center gap-1.5 transform translate-y-2 group-hover:translate-y-0 transition-transform">
+              <span>Open Lookbook</span> ↗
             </span>
           </div>
 
@@ -411,7 +426,7 @@ function renderGrid(catalogs) {
                 ${cat.code}
               </span>
               <span class="text-[11px] font-semibold text-emerald-600 flex items-center gap-1">
-                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> ${cat.status}
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> ${cat.status}
               </span>
             </div>
 
@@ -493,6 +508,7 @@ function openProductModal(catalogCode) {
   state.activeModalCatalog = cat;
   state.activeModalDesignIndex = 0;
   state.activeModalShoot = state.currentShoot;
+  state.activeModalImageIndex = 0;
 
   // Header
   document.getElementById('modalCatalogCode').textContent = cat.code;
@@ -514,7 +530,7 @@ function openProductModal(catalogCode) {
   const modal = document.getElementById('productModal');
   if (modal) modal.classList.remove('hidden');
   document.body.classList.add('overflow-hidden');
-  lucide.createIcons();
+  if (window.lucide) lucide.createIcons();
 }
 
 function closeProductModal() {
@@ -580,7 +596,7 @@ function renderModalColorSwatches() {
   container.innerHTML = cat.designs.map((d, idx) => {
     const isSelected = idx === state.activeModalDesignIndex;
     const bgHex = getColorHex(d.color);
-    const activeClass = isSelected ? 'ring-2 ring-offset-2 ring-brand-maroon scale-110' : 'opacity-80 hover:opacity-100';
+    const activeClass = isSelected ? 'ring-2 ring-offset-2 ring-brand-maroon scale-110 shadow-md' : 'opacity-80 hover:opacity-100';
 
     return `
       <button 
@@ -598,6 +614,7 @@ function renderModalColorSwatches() {
 
 function selectModalDesign(idx) {
   state.activeModalDesignIndex = idx;
+  state.activeModalImageIndex = 0;
   renderModalColorSwatches();
   updateModalGallery();
 }
@@ -608,18 +625,28 @@ function updateModalGallery() {
 
   const activeDesign = cat.designs[state.activeModalDesignIndex] || {};
   const isModel = state.activeModalShoot === 'model';
-  const imgList = activeDesign.images || ['101.jpeg', '102.jpeg', '103.jpeg', '104.jpeg'];
+  
+  // Real Drive image URLs
+  const realUrls = activeDesign.imageUrls && activeDesign.imageUrls.length > 0 
+    ? activeDesign.imageUrls 
+    : [activeDesign.heroImageUrl || cat.heroImageUrl];
+
+  const currentImgUrl = realUrls[state.activeModalImageIndex] || realUrls[0];
 
   // Hero frame
   const heroImg = document.getElementById('modalHeroImage');
   if (heroImg) {
-    heroImg.src = `https://placehold.co/600x800/f1f5f9/8b1d40?text=${cat.name}+${activeDesign.color || ''}+(${isModel ? 'Model' : 'Table'}+Shoot)`;
+    if (currentImgUrl) {
+      heroImg.src = currentImgUrl;
+    } else {
+      heroImg.src = `https://placehold.co/600x800/2c0d16/d4af37?text=${encodeURIComponent(cat.name)}+${activeDesign.color || ''}`;
+    }
   }
 
   // Video button
   const videoBtn = document.getElementById('modalVideoBtn');
   if (videoBtn) {
-    if (activeDesign.video || cat.hasVideo) {
+    if (activeDesign.video || cat.hasVideo || cat.videoUrl) {
       videoBtn.classList.remove('hidden');
     } else {
       videoBtn.classList.add('hidden');
@@ -629,12 +656,23 @@ function updateModalGallery() {
   // Thumbnails Strip
   const thumbStrip = document.getElementById('modalThumbStrip');
   if (thumbStrip) {
-    thumbStrip.innerHTML = imgList.map((imgName, i) => {
-      const angleLabel = i === 0 ? 'Full' : i === 1 ? 'Pallu' : i === 2 ? 'Border' : 'Drape';
+    thumbStrip.innerHTML = realUrls.map((imgUrl, i) => {
+      const isSelected = i === state.activeModalImageIndex;
+      const borderClass = isSelected ? 'border-brand-maroon ring-2 ring-brand-maroon/30 scale-105' : 'border-slate-200 opacity-70 hover:opacity-100';
+      const angleLabel = i === 0 ? 'Front' : i === 1 ? 'Pallu' : i === 2 ? 'Border' : i === 3 ? 'Drape' : 'Blouse';
+
       return `
-        <div onclick="selectModalAngle(${i})" class="flex-shrink-0 w-16 h-20 rounded-xl bg-slate-100 border-2 border-slate-200 overflow-hidden cursor-pointer hover:border-brand-maroon transition-all flex flex-col items-center justify-center p-1 text-center">
-          <span class="text-[9px] font-bold text-brand-maroon">${angleLabel}</span>
-          <span class="text-[8px] text-slate-400 mt-1">${imgName.slice(0, 7)}</span>
+        <div onclick="selectModalAngle(${i})" class="flex-shrink-0 w-16 h-20 rounded-xl overflow-hidden cursor-pointer border-2 transition-all relative group bg-slate-900 ${borderClass}">
+          ${imgUrl ? `
+            <img src="${imgUrl}" alt="Angle ${i+1}" class="w-full h-full object-cover">
+          ` : `
+            <div class="w-full h-full flex items-center justify-center text-[10px] text-white font-bold bg-slate-800">
+              Angle ${i+1}
+            </div>
+          `}
+          <span class="absolute bottom-1 left-1 right-1 bg-black/70 backdrop-blur-xs text-[9px] text-white font-bold text-center rounded py-0.5">
+            ${angleLabel}
+          </span>
         </div>
       `;
     }).join('');
@@ -642,15 +680,8 @@ function updateModalGallery() {
 }
 
 function selectModalAngle(angleIndex) {
-  const cat = state.activeModalCatalog;
-  const activeDesign = cat.designs[state.activeModalDesignIndex] || {};
-  const isModel = state.activeModalShoot === 'model';
-  const angleLabel = angleIndex === 0 ? 'Full+Drape' : angleIndex === 1 ? 'Pallu+Weave' : angleIndex === 2 ? 'Border+Zari' : 'Blouse+Detail';
-
-  const heroImg = document.getElementById('modalHeroImage');
-  if (heroImg) {
-    heroImg.src = `https://placehold.co/600x800/f1f5f9/8b1d40?text=${cat.name}+${angleLabel}+(${isModel ? 'Model' : 'Table'})`;
-  }
+  state.activeModalImageIndex = angleIndex;
+  updateModalGallery();
 }
 
 // --------------------------------------------------------------------------
@@ -661,13 +692,19 @@ function playModalVideo() {
   if (!cat) return;
   const activeDesign = cat.designs[state.activeModalDesignIndex] || {};
   const vName = activeDesign.video || '100.mp4';
+  const videoId = cat.videoDriveId || '1jLmIGfRmmDEZSNy-8xVNIyVnx9tAGwn6';
 
-  document.getElementById('videoModalTitle').textContent = `${cat.name} • Reel (${vName})`;
+  document.getElementById('videoModalTitle').textContent = `${cat.name} • Reel Video (${vName})`;
   document.getElementById('videoFileName').textContent = `${cat.code}/${vName}`;
+
+  const driveLink = document.getElementById('videoDriveLink');
+  if (driveLink) {
+    driveLink.href = `https://drive.google.com/file/d/${videoId}/view`;
+  }
 
   const vModal = document.getElementById('videoModal');
   if (vModal) vModal.classList.remove('hidden');
-  lucide.createIcons();
+  if (window.lucide) lucide.createIcons();
 }
 
 function closeVideoModal() {
@@ -680,12 +717,13 @@ function closeVideoModal() {
 // --------------------------------------------------------------------------
 function quickWhatsApp(catalogCode, color, rate) {
   const msg = encodeURIComponent(
-    `Hello BinduGrid Studio / Saurashtra Sarees, I am inquiring about:\n\n` +
+    `Hello BinduGrid Studio / Saurashtra Sarees,\n` +
+    `I am inquiring about:\n\n` +
     `🥻 Catalog: ${catalogCode}\n` +
     `🎨 Color: ${color}\n` +
     `💰 Rate: ₹${rate}\n` +
     `Shoot View: ${state.currentShoot === 'model' ? 'Model Shoot' : 'Table Shoot'}\n\n` +
-    `Please share availability and dispatch schedule.`
+    `Please share stock availability and dispatch schedule.`
   );
   window.open(`https://wa.me/${CONFIG.whatsappPrimary}?text=${msg}`, '_blank');
 }
