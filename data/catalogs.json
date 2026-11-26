@@ -1,0 +1,2315 @@
+[
+  {
+    "id": "aashvi-vol-1",
+    "name": "Aashvi Vol 1",
+    "code": "Aashvi-Vol-1",
+    "category": "Gadwal Silk",
+    "fabric": "Premium Kanji Gadwal Soft Silk Two Tone Fabric",
+    "border": "Narayan Peth Dual Zari Weave Border",
+    "pallu": "Rich Woven Contrast Zari Lagadi Pallu",
+    "blouse": "Contrast Designer Zari Blouse (0.80 Mtr)",
+    "length": "5.5 Mtr Saree + 0.80 Mtr Blouse",
+    "wholesaleRate": 999,
+    "resellerRate": 1249,
+    "retailRate": 1849,
+    "status": "Ready to Dispatch",
+    "has2mb": true,
+    "hasVideo": true,
+    "videoCount": 8,
+    "totalImages": 40,
+    "skuCount": 8,
+    "designs": [
+      {
+        "code": "100",
+        "color": "Red",
+        "heroImage": "101.jpeg",
+        "images": [
+          "101.jpeg",
+          "102.jpeg",
+          "103.jpeg",
+          "104.jpeg",
+          "105.jpeg"
+        ],
+        "imageCount": 5,
+        "video": "100.mp4"
+      },
+      {
+        "code": "200",
+        "color": "Wine",
+        "heroImage": "201.jpeg",
+        "images": [
+          "201.jpeg",
+          "202.jpeg",
+          "203.jpeg",
+          "204.jpeg",
+          "205.jpeg"
+        ],
+        "imageCount": 5,
+        "video": "200.mp4"
+      },
+      {
+        "code": "300",
+        "color": "Purple",
+        "heroImage": "301.jpeg",
+        "images": [
+          "301.jpeg",
+          "302.jpeg",
+          "303.jpeg",
+          "304.jpeg",
+          "305.jpeg"
+        ],
+        "imageCount": 5,
+        "video": "300.mp4"
+      },
+      {
+        "code": "400",
+        "color": "Teal",
+        "heroImage": "401.jpeg",
+        "images": [
+          "401.jpeg",
+          "402.jpeg",
+          "403.jpeg",
+          "404.jpeg",
+          "405.jpeg"
+        ],
+        "imageCount": 5,
+        "video": "400.mp4"
+      },
+      {
+        "code": "500",
+        "color": "Pink",
+        "heroImage": "501.jpeg",
+        "images": [
+          "501.jpeg",
+          "502.jpeg",
+          "503.jpeg",
+          "504.jpeg",
+          "505.jpeg"
+        ],
+        "imageCount": 5,
+        "video": "500.mp4"
+      },
+      {
+        "code": "600",
+        "color": "Yellow",
+        "heroImage": "601.jpeg",
+        "images": [
+          "601.jpeg",
+          "602.jpeg",
+          "603.jpeg",
+          "604.jpeg",
+          "605.jpeg"
+        ],
+        "imageCount": 5,
+        "video": "600.mp4"
+      },
+      {
+        "code": "700",
+        "color": "Royal Blue",
+        "heroImage": "701.jpeg",
+        "images": [
+          "701.jpeg",
+          "702.jpeg",
+          "703.jpeg",
+          "704.jpeg",
+          "705.jpeg"
+        ],
+        "imageCount": 5,
+        "video": "700.mp4"
+      },
+      {
+        "code": "800",
+        "color": "Green",
+        "heroImage": "801.jpeg",
+        "images": [
+          "801.jpeg",
+          "802.jpeg",
+          "803.jpeg",
+          "804.jpeg",
+          "805.jpeg"
+        ],
+        "imageCount": 5,
+        "video": "800.mp4"
+      }
+    ],
+    "txtFile": "Aashvi-Vol-1.txt",
+    "shootTypes": [
+      "Model Shoot",
+      "Table Shoot"
+    ]
+  },
+  {
+    "id": "aashvi-vol-2",
+    "name": "Aashvi Vol 2",
+    "code": "Aashvi-Vol-2",
+    "category": "Gadwal Silk",
+    "fabric": "Premium Kanji Gadwal Soft Silk Two Tone Fabric",
+    "border": "Narayan Peth Dual Zari Weave Border",
+    "pallu": "Rich Woven Contrast Zari Lagadi Pallu",
+    "blouse": "Contrast Designer Zari Blouse (0.80 Mtr)",
+    "length": "5.5 Mtr Saree + 0.80 Mtr Blouse",
+    "wholesaleRate": 999,
+    "resellerRate": 1249,
+    "retailRate": 1849,
+    "status": "Ready to Dispatch",
+    "has2mb": false,
+    "hasVideo": true,
+    "videoCount": 7,
+    "totalImages": 34,
+    "skuCount": 7,
+    "designs": [
+      {
+        "code": "100",
+        "color": "Red",
+        "heroImage": "101.jpeg",
+        "images": [
+          "101.jpeg",
+          "102.jpeg",
+          "103.jpeg",
+          "104.jpeg",
+          "105.jpeg"
+        ],
+        "imageCount": 5,
+        "video": "100.mp4"
+      },
+      {
+        "code": "200",
+        "color": "Wine",
+        "heroImage": "201.jpeg",
+        "images": [
+          "201.jpeg",
+          "202.jpeg",
+          "203.jpeg",
+          "204.jpeg",
+          "205.jpeg"
+        ],
+        "imageCount": 5,
+        "video": "200.mp4"
+      },
+      {
+        "code": "300",
+        "color": "Purple",
+        "heroImage": "301.jpeg",
+        "images": [
+          "301.jpeg",
+          "302.jpeg",
+          "303.jpeg",
+          "304.jpeg",
+          "305.jpeg"
+        ],
+        "imageCount": 5,
+        "video": "300.mp4"
+      },
+      {
+        "code": "400",
+        "color": "Teal",
+        "heroImage": "401.jpeg",
+        "images": [
+          "401.jpeg",
+          "402.jpeg",
+          "403.jpeg",
+          "404.jpeg",
+          "405.jpeg"
+        ],
+        "imageCount": 5,
+        "video": "400.mp4"
+      },
+      {
+        "code": "500",
+        "color": "Pink",
+        "heroImage": "501.jpeg",
+        "images": [
+          "501.jpeg",
+          "502.jpeg",
+          "503.jpeg",
+          "504.jpeg",
+          "505.jpeg"
+        ],
+        "imageCount": 5,
+        "video": "500.mp4"
+      },
+      {
+        "code": "600",
+        "color": "Yellow",
+        "heroImage": "601.jpeg",
+        "images": [
+          "601.jpeg",
+          "602.jpeg",
+          "603.jpeg",
+          "604.jpeg"
+        ],
+        "imageCount": 4,
+        "video": "600.mp4"
+      },
+      {
+        "code": "700",
+        "color": "Royal Blue",
+        "heroImage": "701.jpeg",
+        "images": [
+          "701.jpeg",
+          "702.jpeg",
+          "703.jpeg",
+          "704.jpeg",
+          "705.jpeg"
+        ],
+        "imageCount": 5,
+        "video": "700.mp4"
+      }
+    ],
+    "txtFile": "Aashvi-Vol-2.txt",
+    "shootTypes": [
+      "Model Shoot",
+      "Table Shoot"
+    ]
+  },
+  {
+    "id": "apsara-vol-1",
+    "name": "Apsara Vol 1",
+    "code": "Apsara-Vol-1",
+    "category": "Soft Silk",
+    "fabric": "Two Tone Litchi Soft Silk with Temple Border",
+    "border": "Temple Contrast Zari Woven Border",
+    "pallu": "Heavy Rich Contrast Zari Pallu with Tassels",
+    "blouse": "Contrast Brocade Silk Blouse (0.80 Mtr)",
+    "length": "5.5 Mtr Saree + 0.80 Mtr Blouse",
+    "wholesaleRate": 899,
+    "resellerRate": 1129,
+    "retailRate": 1699,
+    "status": "Ready to Dispatch",
+    "has2mb": false,
+    "hasVideo": true,
+    "videoCount": 8,
+    "totalImages": 32,
+    "skuCount": 8,
+    "designs": [
+      {
+        "code": "100",
+        "color": "Red",
+        "heroImage": "101_Red.jpeg",
+        "images": [
+          "101_Red.jpeg",
+          "102.jpeg",
+          "103.jpeg",
+          "104.jpeg"
+        ],
+        "imageCount": 4,
+        "video": "100.mp4"
+      },
+      {
+        "code": "200",
+        "color": "Brown",
+        "heroImage": "201_Brown.jpeg",
+        "images": [
+          "201_Brown.jpeg",
+          "202.jpeg",
+          "203.jpeg",
+          "204.jpeg"
+        ],
+        "imageCount": 4,
+        "video": "200.mp4"
+      },
+      {
+        "code": "300",
+        "color": "Black",
+        "heroImage": "301_Black.jpeg",
+        "images": [
+          "301_Black.jpeg",
+          "302.jpeg",
+          "303.jpeg",
+          "304.jpeg"
+        ],
+        "imageCount": 4,
+        "video": "300_.mp4"
+      },
+      {
+        "code": "400",
+        "color": "Parrot",
+        "heroImage": "401_Parrot.jpeg",
+        "images": [
+          "401_Parrot.jpeg",
+          "402.jpeg",
+          "403.jpeg",
+          "404.jpeg"
+        ],
+        "imageCount": 4,
+        "video": "400.mp4"
+      },
+      {
+        "code": "500",
+        "color": "Lavender",
+        "heroImage": "501_Lavender.jpeg",
+        "images": [
+          "501_Lavender.jpeg",
+          "502.jpeg",
+          "503.jpeg",
+          "504.jpeg"
+        ],
+        "imageCount": 4,
+        "video": "500.mp4"
+      },
+      {
+        "code": "600",
+        "color": "Rama",
+        "heroImage": "601_Rama.jpeg",
+        "images": [
+          "601_Rama.jpeg",
+          "602.jpeg",
+          "603.jpeg",
+          "604.jpeg"
+        ],
+        "imageCount": 4,
+        "video": "600.mp4"
+      },
+      {
+        "code": "700",
+        "color": "Purple",
+        "heroImage": "701_Purple.jpeg",
+        "images": [
+          "701_Purple.jpeg",
+          "702.jpeg",
+          "703.jpeg",
+          "704.jpeg"
+        ],
+        "imageCount": 4,
+        "video": "700_.mp4"
+      },
+      {
+        "code": "800",
+        "color": "Maroon",
+        "heroImage": "801_Maroon.jpeg",
+        "images": [
+          "801_Maroon.jpeg",
+          "802.jpeg",
+          "803.jpeg",
+          "804.jpeg"
+        ],
+        "imageCount": 4,
+        "video": "800.mp4"
+      }
+    ],
+    "txtFile": "Apsara-Vol-1.txt",
+    "shootTypes": [
+      "Model Shoot",
+      "Table Shoot"
+    ]
+  },
+  {
+    "id": "apsara-vol-2",
+    "name": "Apsara Vol 2",
+    "code": "Apsara-Vol-2",
+    "category": "Soft Silk",
+    "fabric": "Two Tone Litchi Soft Silk with Temple Border",
+    "border": "Temple Contrast Zari Woven Border",
+    "pallu": "Heavy Rich Contrast Zari Pallu with Tassels",
+    "blouse": "Contrast Brocade Silk Blouse (0.80 Mtr)",
+    "length": "5.5 Mtr Saree + 0.80 Mtr Blouse",
+    "wholesaleRate": 899,
+    "resellerRate": 1129,
+    "retailRate": 1699,
+    "status": "Ready to Dispatch",
+    "has2mb": false,
+    "hasVideo": true,
+    "videoCount": 13,
+    "totalImages": 52,
+    "skuCount": 13,
+    "designs": [
+      {
+        "code": "100",
+        "color": "Lavender",
+        "heroImage": "101_Lavender.jpeg",
+        "images": [
+          "101_Lavender.jpeg",
+          "102.jpeg",
+          "103.jpeg",
+          "104.jpeg"
+        ],
+        "imageCount": 4,
+        "video": "100.mp4"
+      },
+      {
+        "code": "200",
+        "color": "Grey",
+        "heroImage": "201_Grey.jpeg",
+        "images": [
+          "201_Grey.jpeg",
+          "202.jpeg",
+          "203.jpeg",
+          "204.jpeg"
+        ],
+        "imageCount": 4,
+        "video": "1200.mp4"
+      },
+      {
+        "code": "300",
+        "color": "Burgundy",
+        "heroImage": "301_Burgundy.jpeg",
+        "images": [
+          "301_Burgundy.jpeg",
+          "302.jpeg",
+          "303.jpeg",
+          "304.jpeg"
+        ],
+        "imageCount": 4,
+        "video": "1300.mp4"
+      },
+      {
+        "code": "500",
+        "color": "Teal",
+        "heroImage": "501.jpeg",
+        "images": [
+          "501.jpeg",
+          "502.jpeg",
+          "503.jpeg",
+          "504.jpeg"
+        ],
+        "imageCount": 4,
+        "video": "1500.mp4"
+      },
+      {
+        "code": "600",
+        "color": "Beige",
+        "heroImage": "601_Beige.jpeg",
+        "images": [
+          "601_Beige.jpeg",
+          "602.jpeg",
+          "603.jpeg",
+          "604.jpeg"
+        ],
+        "imageCount": 4,
+        "video": "600.mp4"
+      },
+      {
+        "code": "700",
+        "color": "Yellow",
+        "heroImage": "701.jpeg",
+        "images": [
+          "701.jpeg",
+          "702.jpeg",
+          "703.jpeg",
+          "704.jpeg"
+        ],
+        "imageCount": 4,
+        "video": "700.mp4"
+      },
+      {
+        "code": "800",
+        "color": "Royal Blue",
+        "heroImage": "801.jpeg",
+        "images": [
+          "801.jpeg",
+          "802.jpeg",
+          "803.jpeg",
+          "804.jpeg"
+        ],
+        "imageCount": 4,
+        "video": "800.mp4"
+      },
+      {
+        "code": "900",
+        "color": "Green",
+        "heroImage": "901.jpeg",
+        "images": [
+          "901.jpeg",
+          "902.jpeg",
+          "903.jpeg",
+          "904.jpeg"
+        ],
+        "imageCount": 4,
+        "video": "900.mp4"
+      },
+      {
+        "code": "1000",
+        "color": "Orange",
+        "heroImage": "1001.jpeg",
+        "images": [
+          "1001.jpeg",
+          "1002.jpeg",
+          "1003.jpeg",
+          "1004.jpeg"
+        ],
+        "imageCount": 4,
+        "video": "1000.mp4"
+      },
+      {
+        "code": "1100",
+        "color": "Maroon",
+        "heroImage": "1101.jpeg",
+        "images": [
+          "1101.jpeg",
+          "1102.jpeg",
+          "1103.jpeg",
+          "1104.jpeg"
+        ],
+        "imageCount": 4,
+        "video": "1100.mp4"
+      },
+      {
+        "code": "1200",
+        "color": "Lavender",
+        "heroImage": "1201.jpeg",
+        "images": [
+          "1201.jpeg",
+          "1202.jpeg",
+          "1203.jpeg",
+          "1204.jpeg"
+        ],
+        "imageCount": 4,
+        "video": "1200.mp4"
+      },
+      {
+        "code": "1300",
+        "color": "Peach",
+        "heroImage": "1301.jpeg",
+        "images": [
+          "1301.jpeg",
+          "1302.jpeg",
+          "1303.jpeg",
+          "1304.jpeg"
+        ],
+        "imageCount": 4,
+        "video": "1300.mp4"
+      },
+      {
+        "code": "1500",
+        "color": "Rama",
+        "heroImage": "1501.jpeg",
+        "images": [
+          "1501.jpeg",
+          "1502.jpeg",
+          "1503.jpeg",
+          "1504.jpeg"
+        ],
+        "imageCount": 4,
+        "video": "1500.mp4"
+      }
+    ],
+    "txtFile": "Apsara-Vol-2.txt",
+    "shootTypes": [
+      "Model Shoot",
+      "Table Shoot"
+    ]
+  },
+  {
+    "id": "apsara-vol-3",
+    "name": "Apsara Vol 3",
+    "code": "Apsara-Vol-3",
+    "category": "Soft Silk",
+    "fabric": "Two Tone Litchi Soft Silk with Temple Border",
+    "border": "Temple Contrast Zari Woven Border",
+    "pallu": "Heavy Rich Contrast Zari Pallu with Tassels",
+    "blouse": "Contrast Brocade Silk Blouse (0.80 Mtr)",
+    "length": "5.5 Mtr Saree + 0.80 Mtr Blouse",
+    "wholesaleRate": 899,
+    "resellerRate": 1129,
+    "retailRate": 1699,
+    "status": "Ready to Dispatch",
+    "has2mb": false,
+    "hasVideo": true,
+    "videoCount": 7,
+    "totalImages": 32,
+    "skuCount": 8,
+    "designs": [
+      {
+        "code": "100",
+        "color": "Pink",
+        "heroImage": "101_Pink.jpeg",
+        "images": [
+          "101_Pink.jpeg",
+          "102.jpeg",
+          "103.jpeg",
+          "104.jpeg"
+        ],
+        "imageCount": 4,
+        "video": "100.mp4"
+      },
+      {
+        "code": "200",
+        "color": "Yellow",
+        "heroImage": "201_Yellow.jpeg",
+        "images": [
+          "201_Yellow.jpeg",
+          "202.jpeg",
+          "203.jpeg",
+          "204.jpeg"
+        ],
+        "imageCount": 4,
+        "video": "200.mp4"
+      },
+      {
+        "code": "300",
+        "color": "Mahendi",
+        "heroImage": "301_Mahendi.jpeg",
+        "images": [
+          "301_Mahendi.jpeg",
+          "302.jpeg",
+          "303.jpeg",
+          "304.jpeg"
+        ],
+        "imageCount": 4,
+        "video": "300.mp4"
+      },
+      {
+        "code": "400",
+        "color": "Blue",
+        "heroImage": "401_Blue.jpeg",
+        "images": [
+          "401_Blue.jpeg",
+          "402.jpeg",
+          "403.jpeg",
+          "404.jpeg"
+        ],
+        "imageCount": 4,
+        "video": "400.mp4"
+      },
+      {
+        "code": "500",
+        "color": "Navy",
+        "heroImage": "501_Navy.jpeg",
+        "images": [
+          "501_Navy.jpeg",
+          "502.jpeg",
+          "503.jpeg",
+          "504.jpeg"
+        ],
+        "imageCount": 4,
+        "video": "100.mp4"
+      },
+      {
+        "code": "600",
+        "color": "Maroon",
+        "heroImage": "601_Maroon.jpeg",
+        "images": [
+          "601_Maroon.jpeg",
+          "602.jpeg",
+          "603.jpeg",
+          "604.jpeg"
+        ],
+        "imageCount": 4,
+        "video": "600.mp4"
+      },
+      {
+        "code": "700",
+        "color": "Purple",
+        "heroImage": "701_Purple.jpeg",
+        "images": [
+          "701_Purple.jpeg",
+          "702.jpeg",
+          "703.jpeg",
+          "704.jpeg"
+        ],
+        "imageCount": 4,
+        "video": "700.mp4"
+      },
+      {
+        "code": "800",
+        "color": "Red",
+        "heroImage": "801_Red.jpeg",
+        "images": [
+          "801_Red.jpeg",
+          "802.jpeg",
+          "803.jpeg",
+          "804.jpeg"
+        ],
+        "imageCount": 4,
+        "video": "800.mp4"
+      }
+    ],
+    "txtFile": "Apsara-Vol-3.txt",
+    "shootTypes": [
+      "Model Shoot",
+      "Table Shoot"
+    ]
+  },
+  {
+    "id": "apsara-vol-5",
+    "name": "Apsara Vol 5",
+    "code": "Apsara-Vol-5",
+    "category": "Soft Silk",
+    "fabric": "Two Tone Litchi Soft Silk with Temple Border",
+    "border": "Temple Contrast Zari Woven Border",
+    "pallu": "Heavy Rich Contrast Zari Pallu with Tassels",
+    "blouse": "Contrast Brocade Silk Blouse (0.80 Mtr)",
+    "length": "5.5 Mtr Saree + 0.80 Mtr Blouse",
+    "wholesaleRate": 899,
+    "resellerRate": 1129,
+    "retailRate": 1699,
+    "status": "Ready to Dispatch",
+    "has2mb": false,
+    "hasVideo": true,
+    "videoCount": 1,
+    "totalImages": 6,
+    "skuCount": 1,
+    "designs": [
+      {
+        "code": "100",
+        "color": "Orange",
+        "heroImage": "101_Orange.jpeg",
+        "images": [
+          "101_Orange.jpeg",
+          "102.jpeg",
+          "103.jpeg",
+          "104.jpeg",
+          "105.jpeg",
+          "106.jpeg"
+        ],
+        "imageCount": 6,
+        "video": "100.mp4"
+      }
+    ],
+    "txtFile": "Apsara-Vol-5.txt",
+    "shootTypes": [
+      "Model Shoot",
+      "Table Shoot"
+    ]
+  },
+  {
+    "id": "khushi-vol-5",
+    "name": "Khushi Vol 5",
+    "code": "Khushi-Vol-5",
+    "category": "Organza Silk",
+    "fabric": "Pure Katan Organza Silk with Zari Butti",
+    "border": "Scalloped Embroidered Zari Border",
+    "pallu": "Floral Meenakari Zari Woven Pallu",
+    "blouse": "Running Tone-to-Tone Silk Blouse",
+    "length": "5.5 Mtr Saree + 0.80 Mtr Blouse",
+    "wholesaleRate": 799,
+    "resellerRate": 999,
+    "retailRate": 1499,
+    "status": "Ready to Dispatch",
+    "has2mb": true,
+    "hasVideo": false,
+    "videoCount": 0,
+    "totalImages": 20,
+    "skuCount": 4,
+    "designs": [
+      {
+        "code": "100",
+        "color": "Purple",
+        "heroImage": "101_Purple.jpeg",
+        "images": [
+          "101_Purple.jpeg",
+          "102.jpeg",
+          "103.jpeg",
+          "104.jpeg",
+          "105.jpeg"
+        ],
+        "imageCount": 5,
+        "video": null
+      },
+      {
+        "code": "200",
+        "color": "Wine",
+        "heroImage": "201.jpeg",
+        "images": [
+          "201.jpeg",
+          "202.jpeg",
+          "203.jpeg",
+          "204.jpeg",
+          "205.jpeg"
+        ],
+        "imageCount": 5,
+        "video": null
+      },
+      {
+        "code": "300",
+        "color": "Purple",
+        "heroImage": "301.jpeg",
+        "images": [
+          "301.jpeg",
+          "302.jpeg",
+          "303.jpeg",
+          "304.jpeg",
+          "305.jpeg"
+        ],
+        "imageCount": 5,
+        "video": null
+      },
+      {
+        "code": "400",
+        "color": "Teal",
+        "heroImage": "401.jpeg",
+        "images": [
+          "401.jpeg",
+          "402.jpeg",
+          "403.jpeg",
+          "404.jpeg",
+          "405.jpeg"
+        ],
+        "imageCount": 5,
+        "video": null
+      }
+    ],
+    "txtFile": "Khushi-Vol-5.txt",
+    "shootTypes": [
+      "Model Shoot",
+      "Table Shoot"
+    ]
+  },
+  {
+    "id": "komal-vol-1",
+    "name": "Komal Vol 1",
+    "code": "Komal-Vol-1",
+    "category": "Dola Silk",
+    "fabric": "Heavy Dola Silk with Golden Zari Weaving",
+    "border": "Broad Antique Zari Floral Border",
+    "pallu": "Exclusive Digital Foil & Woven Pallu",
+    "blouse": "Heavy Zari Jacquard Blouse (0.80 Mtr)",
+    "length": "5.5 Mtr Saree + 0.80 Mtr Blouse",
+    "wholesaleRate": 849,
+    "resellerRate": 1069,
+    "retailRate": 1599,
+    "status": "Ready to Dispatch",
+    "has2mb": true,
+    "hasVideo": true,
+    "videoCount": 1,
+    "totalImages": 8,
+    "skuCount": 2,
+    "designs": [
+      {
+        "code": "100",
+        "color": "Gold",
+        "heroImage": "101_Gold.jpeg",
+        "images": [
+          "101_Gold.jpeg",
+          "102.jpeg",
+          "103.jpeg",
+          "104.jpeg"
+        ],
+        "imageCount": 4,
+        "video": "0000.mp4"
+      },
+      {
+        "code": "300",
+        "color": "Green",
+        "heroImage": "301_Green.jpeg",
+        "images": [
+          "301_Green.jpeg",
+          "302.jpeg",
+          "303.jpeg",
+          "304.jpeg"
+        ],
+        "imageCount": 4,
+        "video": "0000.mp4"
+      }
+    ],
+    "txtFile": "Komal-Vol-1.txt",
+    "shootTypes": [
+      "Model Shoot",
+      "Table Shoot"
+    ]
+  },
+  {
+    "id": "komal-vol-2",
+    "name": "Komal Vol 2",
+    "code": "Komal-Vol-2",
+    "category": "Dola Silk",
+    "fabric": "Heavy Dola Silk with Golden Zari Weaving",
+    "border": "Broad Antique Zari Floral Border",
+    "pallu": "Exclusive Digital Foil & Woven Pallu",
+    "blouse": "Heavy Zari Jacquard Blouse (0.80 Mtr)",
+    "length": "5.5 Mtr Saree + 0.80 Mtr Blouse",
+    "wholesaleRate": 849,
+    "resellerRate": 1069,
+    "retailRate": 1599,
+    "status": "Ready to Dispatch",
+    "has2mb": false,
+    "hasVideo": true,
+    "videoCount": 1,
+    "totalImages": 10,
+    "skuCount": 2,
+    "designs": [
+      {
+        "code": "100",
+        "color": "Red",
+        "heroImage": "101.jpeg",
+        "images": [
+          "101.jpeg",
+          "102.jpeg",
+          "103.jpeg",
+          "104.jpeg",
+          "105.jpeg"
+        ],
+        "imageCount": 5,
+        "video": "100.mp4"
+      },
+      {
+        "code": "200",
+        "color": "Wine",
+        "heroImage": "201.jpeg",
+        "images": [
+          "201.jpeg",
+          "202.jpeg",
+          "203.jpeg",
+          "204.jpeg",
+          "205.jpeg"
+        ],
+        "imageCount": 5,
+        "video": "100.mp4"
+      }
+    ],
+    "txtFile": "Komal-Vol-2.txt",
+    "shootTypes": [
+      "Model Shoot",
+      "Table Shoot"
+    ]
+  },
+  {
+    "id": "mohini-vol-10",
+    "name": "Mohini Vol 10",
+    "code": "Mohini-Vol-10",
+    "category": "Cotton & Chanderi",
+    "fabric": "Soft Chanderi / Cotton Silk with Zari Checks Weave",
+    "border": "Zari Woven Contrast Temple & Lagadi Border",
+    "pallu": "Rich Zari Woven Traditional Lagadi Pallu",
+    "blouse": "Weaving Running Concept Blouse (0.80 Mtr)",
+    "length": "5.5 Mtr Saree + 0.80 Mtr Blouse",
+    "wholesaleRate": 649,
+    "resellerRate": 819,
+    "retailRate": 1249,
+    "status": "Ready to Dispatch",
+    "has2mb": false,
+    "hasVideo": true,
+    "videoCount": 1,
+    "totalImages": 16,
+    "skuCount": 4,
+    "designs": [
+      {
+        "code": "100",
+        "color": "Lavenderpurple",
+        "heroImage": "101_LavenderPurple.jpeg",
+        "images": [
+          "101_LavenderPurple.jpeg",
+          "102.jpeg",
+          "103.jpeg",
+          "104.jpeg"
+        ],
+        "imageCount": 4,
+        "video": "000.MOV"
+      },
+      {
+        "code": "300",
+        "color": "Pinkgold",
+        "heroImage": "301_PinkGold.jpeg",
+        "images": [
+          "301_PinkGold.jpeg",
+          "302.jpeg",
+          "303.jpeg",
+          "304.jpeg"
+        ],
+        "imageCount": 4,
+        "video": "000.MOV"
+      },
+      {
+        "code": "400",
+        "color": "Pinkmaroon",
+        "heroImage": "401_PinkMaroon.jpeg",
+        "images": [
+          "401_PinkMaroon.jpeg",
+          "402.jpeg",
+          "403.jpeg",
+          "404.jpeg"
+        ],
+        "imageCount": 4,
+        "video": "000.MOV"
+      },
+      {
+        "code": "500",
+        "color": "Lavendernavyblue",
+        "heroImage": "501_LavenderNavyBlue.jpeg",
+        "images": [
+          "501_LavenderNavyBlue.jpeg",
+          "502.jpeg",
+          "503.jpeg",
+          "504.jpeg"
+        ],
+        "imageCount": 4,
+        "video": "000.MOV"
+      }
+    ],
+    "txtFile": "Mohini-Vol-10.txt",
+    "shootTypes": [
+      "Model Shoot",
+      "Table Shoot"
+    ]
+  },
+  {
+    "id": "mohini-vol-11",
+    "name": "Mohini Vol 11",
+    "code": "Mohini-Vol-11",
+    "category": "Cotton & Chanderi",
+    "fabric": "Soft Chanderi / Cotton Silk with Zari Checks Weave",
+    "border": "Zari Woven Contrast Temple & Lagadi Border",
+    "pallu": "Rich Zari Woven Traditional Lagadi Pallu",
+    "blouse": "Weaving Running Concept Blouse (0.80 Mtr)",
+    "length": "5.5 Mtr Saree + 0.80 Mtr Blouse",
+    "wholesaleRate": 649,
+    "resellerRate": 819,
+    "retailRate": 1249,
+    "status": "Ready to Dispatch",
+    "has2mb": false,
+    "hasVideo": true,
+    "videoCount": 1,
+    "totalImages": 16,
+    "skuCount": 4,
+    "designs": [
+      {
+        "code": "100",
+        "color": "Yellow",
+        "heroImage": "101_Yellow.jpeg",
+        "images": [
+          "101_Yellow.jpeg",
+          "102.jpeg",
+          "103.jpeg",
+          "104.jpeg"
+        ],
+        "imageCount": 4,
+        "video": "000.MOV"
+      },
+      {
+        "code": "200",
+        "color": "Purple",
+        "heroImage": "201_Purple.jpeg",
+        "images": [
+          "201_Purple.jpeg",
+          "202.jpeg",
+          "203.jpeg",
+          "204.jpeg"
+        ],
+        "imageCount": 4,
+        "video": "000.MOV"
+      },
+      {
+        "code": "300",
+        "color": "Pink",
+        "heroImage": "301_Pink.jpeg",
+        "images": [
+          "301_Pink.jpeg",
+          "302.jpeg",
+          "303.jpeg",
+          "304.jpeg"
+        ],
+        "imageCount": 4,
+        "video": "000.MOV"
+      },
+      {
+        "code": "400",
+        "color": "Blue",
+        "heroImage": "401_Blue.jpeg",
+        "images": [
+          "401_Blue.jpeg",
+          "402.jpeg",
+          "403.jpeg",
+          "404.jpeg"
+        ],
+        "imageCount": 4,
+        "video": "000.MOV"
+      }
+    ],
+    "txtFile": "Mohini-Vol-11.txt",
+    "shootTypes": [
+      "Model Shoot",
+      "Table Shoot"
+    ]
+  },
+  {
+    "id": "mohini-vol-14",
+    "name": "Mohini Vol 14",
+    "code": "Mohini-Vol-14",
+    "category": "Cotton & Chanderi",
+    "fabric": "Soft Chanderi / Cotton Silk with Zari Checks Weave",
+    "border": "Zari Woven Contrast Temple & Lagadi Border",
+    "pallu": "Rich Zari Woven Traditional Lagadi Pallu",
+    "blouse": "Weaving Running Concept Blouse (0.80 Mtr)",
+    "length": "5.5 Mtr Saree + 0.80 Mtr Blouse",
+    "wholesaleRate": 649,
+    "resellerRate": 819,
+    "retailRate": 1249,
+    "status": "Ready to Dispatch",
+    "has2mb": false,
+    "hasVideo": true,
+    "videoCount": 1,
+    "totalImages": 8,
+    "skuCount": 2,
+    "designs": [
+      {
+        "code": "200",
+        "color": "Red",
+        "heroImage": "201_Red.jpeg",
+        "images": [
+          "201_Red.jpeg",
+          "202.jpeg",
+          "203.jpeg",
+          "204.jpeg"
+        ],
+        "imageCount": 4,
+        "video": "000.MOV"
+      },
+      {
+        "code": "300",
+        "color": "Pink",
+        "heroImage": "301_Pink.jpeg",
+        "images": [
+          "301_Pink.jpeg",
+          "302.jpeg",
+          "303.jpeg",
+          "304.jpeg"
+        ],
+        "imageCount": 4,
+        "video": "000.MOV"
+      }
+    ],
+    "txtFile": "Mohini-Vol-14.txt",
+    "shootTypes": [
+      "Model Shoot",
+      "Table Shoot"
+    ]
+  },
+  {
+    "id": "mohini-vol-15",
+    "name": "Mohini Vol 15",
+    "code": "Mohini-Vol-15",
+    "category": "Cotton & Chanderi",
+    "fabric": "Soft Chanderi / Cotton Silk with Zari Checks Weave",
+    "border": "Zari Woven Contrast Temple & Lagadi Border",
+    "pallu": "Rich Zari Woven Traditional Lagadi Pallu",
+    "blouse": "Weaving Running Concept Blouse (0.80 Mtr)",
+    "length": "5.5 Mtr Saree + 0.80 Mtr Blouse",
+    "wholesaleRate": 649,
+    "resellerRate": 819,
+    "retailRate": 1249,
+    "status": "Ready to Dispatch",
+    "has2mb": false,
+    "hasVideo": true,
+    "videoCount": 1,
+    "totalImages": 24,
+    "skuCount": 6,
+    "designs": [
+      {
+        "code": "100",
+        "color": "Peachteal",
+        "heroImage": "101_PeachTeal.jpeg",
+        "images": [
+          "101_PeachTeal.jpeg",
+          "102.jpeg",
+          "103.jpeg",
+          "104.jpeg"
+        ],
+        "imageCount": 4,
+        "video": "000.MOV"
+      },
+      {
+        "code": "300",
+        "color": "Pinkteal",
+        "heroImage": "301_PinkTeal.jpeg",
+        "images": [
+          "301_PinkTeal.jpeg",
+          "302.jpeg",
+          "303.jpeg",
+          "304.jpeg"
+        ],
+        "imageCount": 4,
+        "video": "000.MOV"
+      },
+      {
+        "code": "400",
+        "color": "Offwhite Pink",
+        "heroImage": "401_OffWhite_Pink.jpeg",
+        "images": [
+          "401_OffWhite_Pink.jpeg",
+          "402.jpeg",
+          "403.jpeg",
+          "404.jpeg"
+        ],
+        "imageCount": 4,
+        "video": "000.MOV"
+      },
+      {
+        "code": "500",
+        "color": "Greenred",
+        "heroImage": "501_GreenRed.jpeg",
+        "images": [
+          "501_GreenRed.jpeg",
+          "502.jpeg",
+          "503.jpeg",
+          "504.jpeg"
+        ],
+        "imageCount": 4,
+        "video": "000.MOV"
+      },
+      {
+        "code": "600",
+        "color": "Greenblue",
+        "heroImage": "601_GreenBlue.jpeg",
+        "images": [
+          "601_GreenBlue.jpeg",
+          "602.jpeg",
+          "603.jpeg",
+          "604.jpeg"
+        ],
+        "imageCount": 4,
+        "video": "000.MOV"
+      },
+      {
+        "code": "700",
+        "color": "Tblueblue",
+        "heroImage": "701_TBlueBlue.jpeg",
+        "images": [
+          "701_TBlueBlue.jpeg",
+          "702.jpeg",
+          "703.jpeg",
+          "704.jpeg"
+        ],
+        "imageCount": 4,
+        "video": "000.MOV"
+      }
+    ],
+    "txtFile": "Mohini-Vol-15.txt",
+    "shootTypes": [
+      "Model Shoot",
+      "Table Shoot"
+    ]
+  },
+  {
+    "id": "mohini-vol-18",
+    "name": "Mohini Vol 18",
+    "code": "Mohini-Vol-18",
+    "category": "Cotton & Chanderi",
+    "fabric": "Soft Chanderi / Cotton Silk with Zari Checks Weave",
+    "border": "Zari Woven Contrast Temple & Lagadi Border",
+    "pallu": "Rich Zari Woven Traditional Lagadi Pallu",
+    "blouse": "Weaving Running Concept Blouse (0.80 Mtr)",
+    "length": "5.5 Mtr Saree + 0.80 Mtr Blouse",
+    "wholesaleRate": 649,
+    "resellerRate": 819,
+    "retailRate": 1249,
+    "status": "Ready to Dispatch",
+    "has2mb": false,
+    "hasVideo": true,
+    "videoCount": 1,
+    "totalImages": 8,
+    "skuCount": 2,
+    "designs": [
+      {
+        "code": "100",
+        "color": "Purple",
+        "heroImage": "101_Purple.jpeg",
+        "images": [
+          "101_Purple.jpeg",
+          "102.jpeg",
+          "103.jpeg",
+          "104.jpeg"
+        ],
+        "imageCount": 4,
+        "video": "000.MOV"
+      },
+      {
+        "code": "400",
+        "color": "Red",
+        "heroImage": "401_Red.jpeg",
+        "images": [
+          "401_Red.jpeg",
+          "402.jpeg",
+          "403.jpeg",
+          "404.jpeg"
+        ],
+        "imageCount": 4,
+        "video": "000.MOV"
+      }
+    ],
+    "txtFile": "Mohini-Vol-18.txt",
+    "shootTypes": [
+      "Model Shoot",
+      "Table Shoot"
+    ]
+  },
+  {
+    "id": "mohini-vol-19",
+    "name": "Mohini Vol 19",
+    "code": "Mohini-Vol-19",
+    "category": "Cotton & Chanderi",
+    "fabric": "Soft Chanderi / Cotton Silk with Zari Checks Weave",
+    "border": "Zari Woven Contrast Temple & Lagadi Border",
+    "pallu": "Rich Zari Woven Traditional Lagadi Pallu",
+    "blouse": "Weaving Running Concept Blouse (0.80 Mtr)",
+    "length": "5.5 Mtr Saree + 0.80 Mtr Blouse",
+    "wholesaleRate": 649,
+    "resellerRate": 819,
+    "retailRate": 1249,
+    "status": "Ready to Dispatch",
+    "has2mb": false,
+    "hasVideo": true,
+    "videoCount": 1,
+    "totalImages": 28,
+    "skuCount": 7,
+    "designs": [
+      {
+        "code": "100",
+        "color": "Skyblue",
+        "heroImage": "101_SkyBlue.jpeg",
+        "images": [
+          "101_SkyBlue.jpeg",
+          "102.jpeg",
+          "103.jpeg",
+          "104.jpeg"
+        ],
+        "imageCount": 4,
+        "video": "000.MOV"
+      },
+      {
+        "code": "200",
+        "color": "Peach",
+        "heroImage": "201_Peach.jpeg",
+        "images": [
+          "201_Peach.jpeg",
+          "202.jpeg",
+          "203.jpeg",
+          "204.jpeg"
+        ],
+        "imageCount": 4,
+        "video": "000.MOV"
+      },
+      {
+        "code": "300",
+        "color": "Yellow",
+        "heroImage": "301_Yellow.jpeg",
+        "images": [
+          "301_Yellow.jpeg",
+          "302.jpeg",
+          "303.jpeg",
+          "304.jpeg"
+        ],
+        "imageCount": 4,
+        "video": "000.MOV"
+      },
+      {
+        "code": "400",
+        "color": "Pink",
+        "heroImage": "401_Pink.jpeg",
+        "images": [
+          "401_Pink.jpeg",
+          "402.jpeg",
+          "403.jpeg",
+          "404.jpeg"
+        ],
+        "imageCount": 4,
+        "video": "000.MOV"
+      },
+      {
+        "code": "500",
+        "color": "Orange",
+        "heroImage": "501_Orange.jpeg",
+        "images": [
+          "501_Orange.jpeg",
+          "502.jpeg",
+          "503.jpeg",
+          "504.jpeg"
+        ],
+        "imageCount": 4,
+        "video": "000.MOV"
+      },
+      {
+        "code": "600",
+        "color": "Pista",
+        "heroImage": "601_Pista.jpeg",
+        "images": [
+          "601_Pista.jpeg",
+          "602.jpeg",
+          "603.jpeg",
+          "604.jpeg"
+        ],
+        "imageCount": 4,
+        "video": "000.MOV"
+      },
+      {
+        "code": "700",
+        "color": "Chiku",
+        "heroImage": "701_Chiku.jpeg",
+        "images": [
+          "701_Chiku.jpeg",
+          "702.jpeg",
+          "703.jpeg",
+          "704.jpeg"
+        ],
+        "imageCount": 4,
+        "video": "000.MOV"
+      }
+    ],
+    "txtFile": "Mohini-Vol-19.txt",
+    "shootTypes": [
+      "Model Shoot",
+      "Table Shoot"
+    ]
+  },
+  {
+    "id": "mohini-vol-6",
+    "name": "Mohini Vol 6",
+    "code": "Mohini-Vol-6",
+    "category": "Cotton & Chanderi",
+    "fabric": "Soft Chanderi / Cotton Silk with Zari Checks Weave",
+    "border": "Zari Woven Contrast Temple & Lagadi Border",
+    "pallu": "Rich Zari Woven Traditional Lagadi Pallu",
+    "blouse": "Weaving Running Concept Blouse (0.80 Mtr)",
+    "length": "5.5 Mtr Saree + 0.80 Mtr Blouse",
+    "wholesaleRate": 649,
+    "resellerRate": 819,
+    "retailRate": 1249,
+    "status": "Ready to Dispatch",
+    "has2mb": false,
+    "hasVideo": false,
+    "videoCount": 0,
+    "totalImages": 7,
+    "skuCount": 2,
+    "designs": [
+      {
+        "code": "100",
+        "color": "Purple",
+        "heroImage": "101_Purple.jpeg",
+        "images": [
+          "101_Purple.jpeg",
+          "102.jpeg",
+          "103.jpeg",
+          "104.jpeg"
+        ],
+        "imageCount": 4,
+        "video": null
+      },
+      {
+        "code": "200",
+        "color": "Teal",
+        "heroImage": "201_Teal.jpeg",
+        "images": [
+          "201_Teal.jpeg",
+          "202.jpeg",
+          "203.jpeg"
+        ],
+        "imageCount": 3,
+        "video": null
+      }
+    ],
+    "txtFile": null,
+    "shootTypes": [
+      "Model Shoot",
+      "Table Shoot"
+    ]
+  },
+  {
+    "id": "mohini-vol-7",
+    "name": "Mohini Vol 7",
+    "code": "Mohini-Vol-7",
+    "category": "Cotton & Chanderi",
+    "fabric": "Soft Chanderi / Cotton Silk with Zari Checks Weave",
+    "border": "Zari Woven Contrast Temple & Lagadi Border",
+    "pallu": "Rich Zari Woven Traditional Lagadi Pallu",
+    "blouse": "Weaving Running Concept Blouse (0.80 Mtr)",
+    "length": "5.5 Mtr Saree + 0.80 Mtr Blouse",
+    "wholesaleRate": 649,
+    "resellerRate": 819,
+    "retailRate": 1249,
+    "status": "Ready to Dispatch",
+    "has2mb": false,
+    "hasVideo": true,
+    "videoCount": 1,
+    "totalImages": 16,
+    "skuCount": 5,
+    "designs": [
+      {
+        "code": "100",
+        "color": "Red",
+        "heroImage": "101_Red.jpeg",
+        "images": [
+          "101_Red.jpeg",
+          "102.jpeg",
+          "103.jpeg",
+          "104.jpeg"
+        ],
+        "imageCount": 4,
+        "video": "000.MOV"
+      },
+      {
+        "code": "200",
+        "color": "Purple",
+        "heroImage": "201_Purple.jpeg",
+        "images": [
+          "201_Purple.jpeg",
+          "202.jpeg",
+          "203.jpeg",
+          "204.jpeg"
+        ],
+        "imageCount": 4,
+        "video": "000.MOV"
+      },
+      {
+        "code": "300",
+        "color": "Blue",
+        "heroImage": "301_Blue.jpeg",
+        "images": [
+          "301_Blue.jpeg",
+          "302.jpeg",
+          "303.jpeg",
+          "304.jpeg"
+        ],
+        "imageCount": 4,
+        "video": "000.MOV"
+      },
+      {
+        "code": "400",
+        "color": "Green",
+        "heroImage": "401_Green.jpeg",
+        "images": [
+          "401_Green.jpeg",
+          "402.jpeg",
+          "403.jpeg"
+        ],
+        "imageCount": 3,
+        "video": "000.MOV"
+      },
+      {
+        "code": "500",
+        "color": "Pink",
+        "heroImage": "501.jpeg",
+        "images": [
+          "501.jpeg"
+        ],
+        "imageCount": 1,
+        "video": "000.MOV"
+      }
+    ],
+    "txtFile": "Mohini-Vol-7.txt",
+    "shootTypes": [
+      "Model Shoot",
+      "Table Shoot"
+    ]
+  },
+  {
+    "id": "mohini-vol-9",
+    "name": "Mohini Vol 9",
+    "code": "Mohini-Vol-9",
+    "category": "Cotton & Chanderi",
+    "fabric": "Soft Chanderi / Cotton Silk with Zari Checks Weave",
+    "border": "Zari Woven Contrast Temple & Lagadi Border",
+    "pallu": "Rich Zari Woven Traditional Lagadi Pallu",
+    "blouse": "Weaving Running Concept Blouse (0.80 Mtr)",
+    "length": "5.5 Mtr Saree + 0.80 Mtr Blouse",
+    "wholesaleRate": 649,
+    "resellerRate": 819,
+    "retailRate": 1249,
+    "status": "Ready to Dispatch",
+    "has2mb": false,
+    "hasVideo": true,
+    "videoCount": 1,
+    "totalImages": 12,
+    "skuCount": 3,
+    "designs": [
+      {
+        "code": "100",
+        "color": "Seagreen",
+        "heroImage": "101_SeaGreen.jpeg",
+        "images": [
+          "101_SeaGreen.jpeg",
+          "102.jpeg",
+          "103.jpeg",
+          "104.jpeg"
+        ],
+        "imageCount": 4,
+        "video": "000.MOV"
+      },
+      {
+        "code": "200",
+        "color": "Pink",
+        "heroImage": "201_Pink.jpeg",
+        "images": [
+          "201_Pink.jpeg",
+          "202.jpeg",
+          "203.jpeg",
+          "204.jpeg"
+        ],
+        "imageCount": 4,
+        "video": "000.MOV"
+      },
+      {
+        "code": "300",
+        "color": "Green",
+        "heroImage": "301_Green.jpeg",
+        "images": [
+          "301_Green.jpeg",
+          "302.jpeg",
+          "303.jpeg",
+          "304.jpeg"
+        ],
+        "imageCount": 4,
+        "video": "000.MOV"
+      }
+    ],
+    "txtFile": "Mohini-Vol-9.txt",
+    "shootTypes": [
+      "Model Shoot",
+      "Table Shoot"
+    ]
+  },
+  {
+    "id": "nisha-vol-6",
+    "name": "Nisha Vol 6",
+    "code": "Nisha-Vol-6",
+    "category": "Banarasi Art Silk",
+    "fabric": "Pure Banarasi Art Silk with All-Over Paisley Jaal",
+    "border": "Traditional Kadhwa Weave Zari Border",
+    "pallu": "Opulent Golden Zari Paisley Pallu with Latkan",
+    "blouse": "Contrast Brocade Blouse Piece",
+    "length": "5.5 Mtr Saree + 0.80 Mtr Blouse",
+    "wholesaleRate": 1099,
+    "resellerRate": 1379,
+    "retailRate": 2049,
+    "status": "Ready to Dispatch",
+    "has2mb": true,
+    "hasVideo": false,
+    "videoCount": 0,
+    "totalImages": 40,
+    "skuCount": 8,
+    "designs": [
+      {
+        "code": "100",
+        "color": "Pink",
+        "heroImage": "101_Pink.jpeg",
+        "images": [
+          "101_Pink.jpeg",
+          "102.jpeg",
+          "103.jpeg",
+          "104.jpeg",
+          "105.jpeg"
+        ],
+        "imageCount": 5,
+        "video": null
+      },
+      {
+        "code": "200",
+        "color": "Maroon",
+        "heroImage": "201_Maroon.jpeg",
+        "images": [
+          "201_Maroon.jpeg",
+          "202.jpeg",
+          "203.jpeg",
+          "204.jpeg",
+          "205.jpeg"
+        ],
+        "imageCount": 5,
+        "video": null
+      },
+      {
+        "code": "300",
+        "color": "Magenta",
+        "heroImage": "301_Magenta.jpeg",
+        "images": [
+          "301_Magenta.jpeg",
+          "302.jpeg",
+          "303.jpeg",
+          "304.jpeg",
+          "305.jpeg"
+        ],
+        "imageCount": 5,
+        "video": null
+      },
+      {
+        "code": "400",
+        "color": "Tblue",
+        "heroImage": "401_TBlue.jpeg",
+        "images": [
+          "401_TBlue.jpeg",
+          "402.jpeg",
+          "403.jpeg",
+          "404.jpeg",
+          "405.jpeg"
+        ],
+        "imageCount": 5,
+        "video": null
+      },
+      {
+        "code": "500",
+        "color": "Greypurple",
+        "heroImage": "501_GreyPurple.jpeg",
+        "images": [
+          "501_GreyPurple.jpeg",
+          "502.jpeg",
+          "503.jpeg",
+          "504.jpeg",
+          "505.jpeg"
+        ],
+        "imageCount": 5,
+        "video": null
+      },
+      {
+        "code": "600",
+        "color": "Skypurple",
+        "heroImage": "601_SkyPurple.jpeg",
+        "images": [
+          "601_SkyPurple.jpeg",
+          "602.jpeg",
+          "603.jpeg",
+          "604.jpeg",
+          "605.jpeg"
+        ],
+        "imageCount": 5,
+        "video": null
+      },
+      {
+        "code": "700",
+        "color": "Purple",
+        "heroImage": "701_Purple.jpeg",
+        "images": [
+          "701_Purple.jpeg",
+          "702.jpeg",
+          "703.jpeg",
+          "704.jpeg",
+          "705.jpeg"
+        ],
+        "imageCount": 5,
+        "video": null
+      },
+      {
+        "code": "800",
+        "color": "Peach",
+        "heroImage": "801_Peach.jpeg",
+        "images": [
+          "801_Peach.jpeg",
+          "802.jpeg",
+          "803.jpeg",
+          "804.jpeg",
+          "805.jpeg"
+        ],
+        "imageCount": 5,
+        "video": null
+      }
+    ],
+    "txtFile": "Nisha-Vol-6.txt",
+    "shootTypes": [
+      "Model Shoot",
+      "Table Shoot"
+    ]
+  },
+  {
+    "id": "padma-vol-1",
+    "name": "Padma Vol 1",
+    "code": "Padma-Vol-1",
+    "category": "Kanjivaram Silk",
+    "fabric": "South Kanjivaram Silk with Royal Peacock Motifs",
+    "border": "Korvai Contrast Golden Zari Border",
+    "pallu": "Grand Wedding Style Rich Zari Pallu",
+    "blouse": "Contrast Silk Blouse Piece with Border",
+    "length": "5.5 Mtr Saree + 0.80 Mtr Blouse",
+    "wholesaleRate": 1199,
+    "resellerRate": 1499,
+    "retailRate": 2249,
+    "status": "Ready to Dispatch",
+    "has2mb": false,
+    "hasVideo": true,
+    "videoCount": 4,
+    "totalImages": 23,
+    "skuCount": 4,
+    "designs": [
+      {
+        "code": "100",
+        "color": "Yellow",
+        "heroImage": "101_Yellow.jpeg",
+        "images": [
+          "101_Yellow.jpeg",
+          "102.jpeg",
+          "103.jpeg",
+          "104.jpeg",
+          "105.jpeg",
+          "106.jpeg"
+        ],
+        "imageCount": 6,
+        "video": "100.mp4"
+      },
+      {
+        "code": "200",
+        "color": "Red Green",
+        "heroImage": "201_Red_Green.jpeg",
+        "images": [
+          "201_Red_Green.jpeg",
+          "202.jpeg",
+          "203.jpeg",
+          "204.jpeg",
+          "205.jpeg",
+          "206.jpeg"
+        ],
+        "imageCount": 6,
+        "video": "200.mov"
+      },
+      {
+        "code": "300",
+        "color": "Green",
+        "heroImage": "301_Green.jpeg",
+        "images": [
+          "301_Green.jpeg",
+          "302.jpeg",
+          "303.jpeg",
+          "304.jpeg",
+          "305.jpeg",
+          "306.jpeg"
+        ],
+        "imageCount": 6,
+        "video": "300.mov"
+      },
+      {
+        "code": "400",
+        "color": "Red Purple",
+        "heroImage": "401_Red_Purple.jpeg",
+        "images": [
+          "401_Red_Purple.jpeg",
+          "402.jpeg",
+          "403.jpeg",
+          "404.jpeg",
+          "405.jpeg"
+        ],
+        "imageCount": 5,
+        "video": "400.mov"
+      }
+    ],
+    "txtFile": "Padma-Vol-1.txt",
+    "shootTypes": [
+      "Model Shoot",
+      "Table Shoot"
+    ]
+  },
+  {
+    "id": "pashmina-vol-1",
+    "name": "Pashmina Vol 1",
+    "code": "Pashmina-Vol-1",
+    "category": "Warm Pashmina Jacquard",
+    "fabric": "Pure Kashmiri Pashmina Blend Jacquard Weave",
+    "border": "Intricate Kashmiri Floral Paisley Border",
+    "pallu": "Rich Self Jacquard Kashmiri Shawl Pallu",
+    "blouse": "Matching Kashmiri Jacquard Blouse",
+    "length": "5.5 Mtr Saree + 0.80 Mtr Blouse",
+    "wholesaleRate": 899,
+    "resellerRate": 1129,
+    "retailRate": 1699,
+    "status": "Ready to Dispatch",
+    "has2mb": false,
+    "hasVideo": true,
+    "videoCount": 2,
+    "totalImages": 8,
+    "skuCount": 2,
+    "designs": [
+      {
+        "code": "300",
+        "color": "Wine",
+        "heroImage": "301_Wine.jpeg",
+        "images": [
+          "301_Wine.jpeg",
+          "302.jpeg",
+          "303.jpeg",
+          "304.jpeg"
+        ],
+        "imageCount": 4,
+        "video": "000.MOV"
+      },
+      {
+        "code": "600",
+        "color": "Black",
+        "heroImage": "601_Black.jpeg",
+        "images": [
+          "601_Black.jpeg",
+          "602.jpeg",
+          "603.jpeg",
+          "604.jpeg"
+        ],
+        "imageCount": 4,
+        "video": "000.MOV"
+      }
+    ],
+    "txtFile": "Pashmina-Vol-1.txt",
+    "shootTypes": [
+      "Model Shoot",
+      "Table Shoot"
+    ]
+  },
+  {
+    "id": "pashmina-vol-5",
+    "name": "Pashmina Vol 5",
+    "code": "Pashmina-Vol-5",
+    "category": "Warm Pashmina Jacquard",
+    "fabric": "Pure Kashmiri Pashmina Blend Jacquard Weave",
+    "border": "Intricate Kashmiri Floral Paisley Border",
+    "pallu": "Rich Self Jacquard Kashmiri Shawl Pallu",
+    "blouse": "Matching Kashmiri Jacquard Blouse",
+    "length": "5.5 Mtr Saree + 0.80 Mtr Blouse",
+    "wholesaleRate": 899,
+    "resellerRate": 1129,
+    "retailRate": 1699,
+    "status": "Ready to Dispatch",
+    "has2mb": true,
+    "hasVideo": false,
+    "videoCount": 0,
+    "totalImages": 10,
+    "skuCount": 2,
+    "designs": [
+      {
+        "code": "100",
+        "color": "Red",
+        "heroImage": "101.jpeg",
+        "images": [
+          "101.jpeg",
+          "102.jpeg",
+          "103.jpeg",
+          "104.jpeg",
+          "105.jpeg"
+        ],
+        "imageCount": 5,
+        "video": null
+      },
+      {
+        "code": "200",
+        "color": "Wine",
+        "heroImage": "201.jpeg",
+        "images": [
+          "201.jpeg",
+          "202.jpeg",
+          "203.jpeg",
+          "204.jpeg",
+          "205.jpeg"
+        ],
+        "imageCount": 5,
+        "video": null
+      }
+    ],
+    "txtFile": "Pashmina-Vol-5.txt",
+    "shootTypes": [
+      "Model Shoot",
+      "Table Shoot"
+    ]
+  },
+  {
+    "id": "pashmina-vol-6",
+    "name": "Pashmina Vol 6",
+    "code": "Pashmina-Vol-6",
+    "category": "Warm Pashmina Jacquard",
+    "fabric": "Pure Kashmiri Pashmina Blend Jacquard Weave",
+    "border": "Intricate Kashmiri Floral Paisley Border",
+    "pallu": "Rich Self Jacquard Kashmiri Shawl Pallu",
+    "blouse": "Matching Kashmiri Jacquard Blouse",
+    "length": "5.5 Mtr Saree + 0.80 Mtr Blouse",
+    "wholesaleRate": 899,
+    "resellerRate": 1129,
+    "retailRate": 1699,
+    "status": "Ready to Dispatch",
+    "has2mb": false,
+    "hasVideo": false,
+    "videoCount": 0,
+    "totalImages": 20,
+    "skuCount": 4,
+    "designs": [
+      {
+        "code": "100",
+        "color": "Red",
+        "heroImage": "101.jpeg",
+        "images": [
+          "101.jpeg",
+          "102.jpeg",
+          "103.jpeg",
+          "104.jpeg",
+          "105.jpeg"
+        ],
+        "imageCount": 5,
+        "video": null
+      },
+      {
+        "code": "200",
+        "color": "Wine",
+        "heroImage": "201.jpeg",
+        "images": [
+          "201.jpeg",
+          "202.jpeg",
+          "203.jpeg",
+          "204.jpeg",
+          "205.jpeg"
+        ],
+        "imageCount": 5,
+        "video": null
+      },
+      {
+        "code": "300",
+        "color": "Purple",
+        "heroImage": "301.jpeg",
+        "images": [
+          "301.jpeg",
+          "302.jpeg",
+          "303.jpeg",
+          "304.jpeg",
+          "305.jpeg"
+        ],
+        "imageCount": 5,
+        "video": null
+      },
+      {
+        "code": "400",
+        "color": "Teal",
+        "heroImage": "401.jpeg",
+        "images": [
+          "401.jpeg",
+          "402.jpeg",
+          "403.jpeg",
+          "404.jpeg",
+          "405.jpeg"
+        ],
+        "imageCount": 5,
+        "video": null
+      }
+    ],
+    "txtFile": "Pashmina-Vol-6.txt",
+    "shootTypes": [
+      "Model Shoot",
+      "Table Shoot"
+    ]
+  },
+  {
+    "id": "pushpa-vol-1",
+    "name": "Pushpa Vol 1",
+    "code": "Pushpa-Vol-1",
+    "category": "Paithani Silk",
+    "fabric": "Yeola Paithani Silk with Minakari Peacock Butti",
+    "border": "Traditional Mor-Popat (Peacock-Parrot) Zari Border",
+    "pallu": "Heavy Colorful Meenakari Paithani Pallu",
+    "blouse": "Contrast Silk Blouse with Paithani Border",
+    "length": "5.5 Mtr Saree + 0.80 Mtr Blouse",
+    "wholesaleRate": 949,
+    "resellerRate": 1189,
+    "retailRate": 1799,
+    "status": "Ready to Dispatch",
+    "has2mb": false,
+    "hasVideo": true,
+    "videoCount": 5,
+    "totalImages": 28,
+    "skuCount": 5,
+    "designs": [
+      {
+        "code": "100",
+        "color": "Sky",
+        "heroImage": "101_Sky.jpeg",
+        "images": [
+          "101_Sky.jpeg",
+          "102.jpeg",
+          "103.jpeg",
+          "104.jpeg",
+          "105.jpeg",
+          "106.jpeg"
+        ],
+        "imageCount": 6,
+        "video": "100.mp4"
+      },
+      {
+        "code": "200",
+        "color": "Peach",
+        "heroImage": "201_Peach.jpeg",
+        "images": [
+          "201_Peach.jpeg",
+          "202.jpeg",
+          "203.jpeg",
+          "204.jpeg",
+          "205.jpeg",
+          "206.jpeg"
+        ],
+        "imageCount": 6,
+        "video": "200.mp4"
+      },
+      {
+        "code": "300",
+        "color": "Parrot",
+        "heroImage": "301_Parrot.jpeg",
+        "images": [
+          "301_Parrot.jpeg",
+          "302.jpeg",
+          "303.jpeg",
+          "304.jpeg",
+          "305.jpeg",
+          "306.jpeg"
+        ],
+        "imageCount": 6,
+        "video": "300.mp4"
+      },
+      {
+        "code": "400",
+        "color": "Sky Blue",
+        "heroImage": "401_Sky_Blue.jpeg",
+        "images": [
+          "401_Sky_Blue.jpeg",
+          "402.jpeg",
+          "403.jpeg",
+          "405.jpeg"
+        ],
+        "imageCount": 4,
+        "video": "400.mp4"
+      },
+      {
+        "code": "500",
+        "color": "Yellow",
+        "heroImage": "501_Yellow.jpeg",
+        "images": [
+          "501_Yellow.jpeg",
+          "502.jpeg",
+          "503.jpeg",
+          "504.jpeg",
+          "505.jpeg",
+          "506.jpeg"
+        ],
+        "imageCount": 6,
+        "video": "500.mp4"
+      }
+    ],
+    "txtFile": "Pushpa-Vol-1.txt",
+    "shootTypes": [
+      "Model Shoot",
+      "Table Shoot"
+    ]
+  },
+  {
+    "id": "pushpa-vol-8",
+    "name": "Pushpa Vol 8",
+    "code": "Pushpa-Vol-8",
+    "category": "Paithani Silk",
+    "fabric": "Yeola Paithani Silk with Minakari Peacock Butti",
+    "border": "Traditional Mor-Popat (Peacock-Parrot) Zari Border",
+    "pallu": "Heavy Colorful Meenakari Paithani Pallu",
+    "blouse": "Contrast Silk Blouse with Paithani Border",
+    "length": "5.5 Mtr Saree + 0.80 Mtr Blouse",
+    "wholesaleRate": 949,
+    "resellerRate": 1189,
+    "retailRate": 1799,
+    "status": "Ready to Dispatch",
+    "has2mb": false,
+    "hasVideo": true,
+    "videoCount": 3,
+    "totalImages": 41,
+    "skuCount": 4,
+    "designs": [
+      {
+        "code": "100",
+        "color": "Orange",
+        "heroImage": "101_Orange.jpeg",
+        "images": [
+          "101_Orange.jpeg",
+          "102.jpeg",
+          "103.jpeg",
+          "104.jpeg",
+          "105.jpeg",
+          "106.jpeg",
+          "107.jpeg",
+          "108.jpeg",
+          "109.jpeg",
+          "110.jpeg",
+          "111.jpeg",
+          "112.jpeg"
+        ],
+        "imageCount": 12,
+        "video": "_100.mp4"
+      },
+      {
+        "code": "200",
+        "color": "Blue",
+        "heroImage": "201_Blue.jpeg",
+        "images": [
+          "201_Blue.jpeg",
+          "202.jpeg",
+          "203.jpeg",
+          "204.jpeg",
+          "205.jpeg",
+          "206.jpeg",
+          "207.jpeg",
+          "208.jpeg",
+          "209.jpeg",
+          "210.jpeg",
+          "211.jpeg"
+        ],
+        "imageCount": 11,
+        "video": "_200.mp4"
+      },
+      {
+        "code": "400",
+        "color": "Wine",
+        "heroImage": "401_Wine.jpeg",
+        "images": [
+          "401_Wine.jpeg",
+          "402.jpeg",
+          "403.jpeg",
+          "404.jpeg",
+          "405.jpeg",
+          "406.jpeg",
+          "407.jpeg",
+          "408.jpeg",
+          "409.jpeg"
+        ],
+        "imageCount": 9,
+        "video": "_100.mp4"
+      },
+      {
+        "code": "500",
+        "color": "Red",
+        "heroImage": "501_Red.jpeg",
+        "images": [
+          "501_Red.jpeg",
+          "502.jpeg",
+          "503.jpeg",
+          "504.jpeg",
+          "505.jpeg",
+          "506.jpeg",
+          "507.jpeg",
+          "508.jpeg",
+          "509.jpeg"
+        ],
+        "imageCount": 9,
+        "video": "_100.mp4"
+      }
+    ],
+    "txtFile": "Pushpa-Vol-8.txt",
+    "shootTypes": [
+      "Model Shoot",
+      "Table Shoot"
+    ]
+  },
+  {
+    "id": "tusser-vol-1",
+    "name": "Tusser Vol 1",
+    "code": "Tusser-Vol-1",
+    "category": "Tussar Ghicha Silk",
+    "fabric": "Organic Tussar Silk with Textured Weave",
+    "border": "Antique Zari Weave Temple Border",
+    "pallu": "Handloom Style Striped Zari Pallu with Tassels",
+    "blouse": "Raw Silk Contrast Blouse Piece",
+    "length": "5.5 Mtr Saree + 0.80 Mtr Blouse",
+    "wholesaleRate": 999,
+    "resellerRate": 1249,
+    "retailRate": 1849,
+    "status": "Ready to Dispatch",
+    "has2mb": false,
+    "hasVideo": true,
+    "videoCount": 1,
+    "totalImages": 10,
+    "skuCount": 1,
+    "designs": [
+      {
+        "code": "100",
+        "color": "Red",
+        "heroImage": "101.jpeg",
+        "images": [
+          "101.jpeg",
+          "102.jpeg",
+          "103.jpeg",
+          "104.jpeg",
+          "105.jpeg",
+          "106.jpeg",
+          "107.jpeg",
+          "108.jpeg",
+          "109.jpeg",
+          "110.jpeg"
+        ],
+        "imageCount": 10,
+        "video": "111.mp4"
+      }
+    ],
+    "txtFile": "Tusser-Vol-1.txt",
+    "shootTypes": [
+      "Model Shoot",
+      "Table Shoot"
+    ]
+  }
+]
