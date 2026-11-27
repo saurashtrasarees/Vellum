@@ -1,15 +1,11 @@
 // ==========================================================================
 // VELLUM — Multi-Firm Luxury Saree Showroom Engine
-// Developed by BinduGrid Studio
+// Architecture & Engineering by BinduGrid Studio (contact@bindugrid.com)
 // ==========================================================================
 
 const CONFIG = {
   sheetId: '1O-F9nVgPdkamtTGDesEcde8PCZSK7pyjUJDi8PrwmaY',
   sheetUrl: 'https://docs.google.com/spreadsheets/d/1O-F9nVgPdkamtTGDesEcde8PCZSK7pyjUJDi8PrwmaY/gviz/tq?tqx=out:csv&sheet=Catalogs%20%26%20Pricing',
-  defaultKeys: {
-    wholesale: 'prime',
-    reseller: 'seller'
-  }
 };
 
 // --------------------------------------------------------------------------
@@ -41,80 +37,169 @@ const FIRMS = {
 };
 
 // --------------------------------------------------------------------------
-// 2. STAFF DIRECTORY (Supports 3-6 dedicated staff members)
+// 2. DEDICATED USER PROFILES (No. 1 to No. 4)
+// Formula: First 2 letters of Name + Last 2 digits of Mobile
 // --------------------------------------------------------------------------
-const DEFAULT_STAFF = [
-  {
-    id: 'staff-1',
-    slug: 'saurabh',
-    name: 'Saurabh Bhai',
-    firm: 'saurashtra',
-    phone: '9879471039',
-    whatsapp: '919879471039',
-    role: 'Wholesale Sales Head'
-  },
-  {
-    id: 'staff-2',
-    slug: 'keyur',
-    name: 'Keyur Bhai',
+const USER_PROFILES = {
+  // ------------------------------------------------------------------------
+  // 1. Keya Fashion [All Retail Rate]
+  // ------------------------------------------------------------------------
+  'KH28': {
+    code: 'KH28',
+    slug: 'khushi',
+    name: 'Khushi',
+    initials: 'KH',
+    title: 'Dedicated Catalog Representative',
+    phone: '9825452528',
+    whatsapp: '919825452528',
+    displayPhone: '+91 98254 52528',
     firm: 'keya',
-    phone: '9913643433',
-    whatsapp: '919913643433',
-    role: 'Portal & Reseller Specialist'
+    rateAccess: 'retail' // Retail only
   },
-  {
-    id: 'staff-3',
-    slug: 'rajesh',
-    name: 'Rajesh Bhai',
-    firm: 'saurashtra',
-    phone: '9879471039',
-    whatsapp: '919879471039',
-    role: 'B2B Trade Coordinator'
-  },
-  {
-    id: 'staff-4',
-    slug: 'neha',
-    name: 'Neha Ben',
+  'AN26': {
+    code: 'AN26',
+    slug: 'anshika',
+    name: 'Anshika',
+    initials: 'AN',
+    title: 'Client Relationship Executive',
+    phone: '9825452526',
+    whatsapp: '919825452526',
+    displayPhone: '+91 98254 52526',
     firm: 'keya',
-    phone: '9913643433',
-    whatsapp: '919913643433',
-    role: 'Online Catalog Desk'
+    rateAccess: 'retail'
   },
-  {
-    id: 'staff-5',
-    slug: 'amit',
-    name: 'Amit Bhai',
-    firm: 'saurashtra',
-    phone: '9879471039',
-    whatsapp: '919879471039',
-    role: 'Senior Sales Executive'
-  },
-  {
-    id: 'staff-6',
-    slug: 'priya',
-    name: 'Priya Ben',
+  'PR28': {
+    code: 'PR28',
+    slug: 'priti',
+    name: 'Priti',
+    initials: 'PR',
+    title: 'Customer Sales Coordinator',
+    phone: '9909352528',
+    whatsapp: '919909352528',
+    displayPhone: '+91 99093 52528',
     firm: 'keya',
-    phone: '9913643433',
-    whatsapp: '919913643433',
-    role: 'Customer Success Manager'
-  }
-];
+    rateAccess: 'retail'
+  },
+  'PA28': {
+    code: 'PA28',
+    slug: 'palak',
+    name: 'Palak',
+    initials: 'PA',
+    title: 'Order Desk Manager',
+    phone: '9909452528',
+    whatsapp: '919909452528',
+    displayPhone: '+91 99094 52528',
+    firm: 'keya',
+    rateAccess: 'retail'
+  },
+  'JE04': {
+    code: 'JE04',
+    slug: 'jenish',
+    name: 'Jenish',
+    initials: 'JE',
+    title: 'Digital Sales Executive',
+    phone: '9033808104',
+    whatsapp: '919033808104',
+    displayPhone: '+91 90338 08104',
+    firm: 'keya',
+    rateAccess: 'retail'
+  },
 
-// Global Application State
+  // ------------------------------------------------------------------------
+  // 2. Saurashtra Sarees [All Retail Rate]
+  // ------------------------------------------------------------------------
+  'AR38': {
+    code: 'AR38',
+    slug: 'arvind',
+    name: 'Arvind Sir',
+    initials: 'AR',
+    title: 'Senior Sales Director',
+    phone: '9824982338',
+    whatsapp: '919824982338',
+    displayPhone: '+91 98249 82338',
+    firm: 'saurashtra',
+    rateAccess: 'retail' // Retail only
+  },
+  'NA39': {
+    code: 'NA39',
+    slug: 'nayan',
+    name: 'Nayan Sir',
+    initials: 'NA',
+    title: 'Head of Sales & Distribution',
+    phone: '9879471039',
+    whatsapp: '919879471039',
+    displayPhone: '+91 98794 71039',
+    firm: 'saurashtra',
+    rateAccess: 'retail' // Retail only
+  },
+  'CH33': {
+    code: 'CH33',
+    slug: 'chetan',
+    name: 'Chetan Sir',
+    initials: 'CH',
+    title: 'Managing Director & Sales Head',
+    phone: '9913643433',
+    whatsapp: '919913643433',
+    displayPhone: '+91 99136 43433',
+    firm: 'saurashtra',
+    rateAccess: 'retail' // Retail only
+  },
+
+  // ------------------------------------------------------------------------
+  // 3. Saurashtra Sarees [All Rate]
+  // ------------------------------------------------------------------------
+  'NA39ALL': {
+    code: 'NA39ALL',
+    slug: 'nayan-all',
+    name: 'Nayan Sir',
+    initials: 'NA',
+    title: 'Head of Sales & Distribution (All Rates)',
+    phone: '9879471039',
+    whatsapp: '919879471039',
+    displayPhone: '+91 98794 71039',
+    firm: 'saurashtra',
+    rateAccess: 'all' // Super Wholesale, Reseller & Retail
+  },
+  'CH33ALL': {
+    code: 'CH33ALL',
+    slug: 'chetan-all',
+    name: 'Chetan Sir',
+    initials: 'CH',
+    title: 'Managing Director (All Rates)',
+    phone: '9913643433',
+    whatsapp: '919913643433',
+    displayPhone: '+91 99136 43433',
+    firm: 'saurashtra',
+    rateAccess: 'all' // Super Wholesale, Reseller & Retail
+  }
+};
+
+// 4. Super Admin Configuration
+const SUPER_ADMIN = {
+  name: 'Super Admin',
+  phone: '9898907401',
+  displayPhone: '+91 98989 07401',
+  pins: ['7401', '9879', '9898', '9898907401']
+};
+
+// Global State
 const state = {
   catalogs: [],
   filteredCatalogs: [],
   selectedCategory: 'all',
   searchQuery: '',
   sortBy: 'newest',
-  currentRole: 'retail', // 'wholesale', 'reseller', 'retail'
+  currentRole: 'retail', // 'retail', 'all', 'wholesale', 'reseller'
   currentShoot: 'all',   // 'all' (default), 'model', 'table'
   activeFirm: 'saurashtra',
-  activeStaff: null,
+  activeUser: null,
+  isLocked: false,
+  isSuperAdmin: false,
   activePdpCatalog: null,
   activePdpDesignIndex: 0,
   activePdpImageIndex: 0,
-  activePdpShoot: 'all'
+  activePdpShoot: 'all',
+  activePdpTab: 'specs'
 };
 
 // --------------------------------------------------------------------------
@@ -133,52 +218,62 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (window.lucide) lucide.createIcons();
 });
 
-// Resolve Firm, Staff, Role and Shoot from URL parameters
+// Resolve Firm, User, Role and Lockdown from URL parameters
 function resolveUrlContext() {
   const params = new URLSearchParams(window.location.search);
   
-  // 1. Firm resolution
-  const firmParam = (params.get('firm') || params.get('f') || '').toLowerCase().trim();
-  if (firmParam === 'keya' || firmParam === 'keyafashion') {
-    state.activeFirm = 'keya';
-  } else {
-    state.activeFirm = 'saurashtra';
+  // 1. Super Admin Check
+  const adminParam = (params.get('admin') || '').trim();
+  if (adminParam === '9898907401' || adminParam === '7401' || adminParam === 'true') {
+    state.isSuperAdmin = true;
+    sessionStorage.setItem('vellum_admin_auth', 'true');
+  } else if (sessionStorage.getItem('vellum_admin_auth') === 'true') {
+    state.isSuperAdmin = true;
   }
 
-  // 2. Staff resolution (stored in localStorage or from DEFAULT_STAFF)
-  const savedStaff = JSON.parse(localStorage.getItem('vellum_staff_list') || 'null') || DEFAULT_STAFF;
-  const staffParam = (params.get('staff') || params.get('rep') || params.get('s') || '').toLowerCase().trim();
-  
-  if (staffParam) {
-    const matched = savedStaff.find(s => s.slug.toLowerCase() === staffParam || s.id.toLowerCase() === staffParam);
-    if (matched) {
-      state.activeStaff = matched;
-      state.activeFirm = matched.firm; // Firm follows the staff member's assignment
+  // 2. User Code Resolution (e.g., ?u=KH28, ?u=NA39ALL, ?staff=AR38)
+  let rawUser = (params.get('u') || params.get('user') || params.get('staff') || '').toUpperCase().trim();
+  rawUser = rawUser.replace(/[^A-Z0-9]/g, '');
+
+  let matchedUser = USER_PROFILES[rawUser];
+
+  // Also check if someone passed the slug (e.g. ?staff=khushi)
+  if (!matchedUser && rawUser) {
+    matchedUser = Object.values(USER_PROFILES).find(p => p.slug.toUpperCase().replace(/[^A-Z0-9]/g, '') === rawUser);
+  }
+
+  if (matchedUser) {
+    state.activeUser = matchedUser;
+    state.activeFirm = matchedUser.firm;
+    state.isLocked = true; // Firm and user are locked!
+    
+    if (matchedUser.rateAccess === 'all') {
+      state.currentRole = 'all';
+    } else {
+      state.currentRole = 'retail';
     }
+  } else {
+    // If no user code supplied: check firm param or default
+    const firmParam = (params.get('firm') || params.get('f') || '').toLowerCase().trim();
+    if (firmParam === 'keya' || firmParam === 'keyafashion') {
+      state.activeFirm = 'keya';
+      state.activeUser = USER_PROFILES['KH28'];
+    } else {
+      state.activeFirm = 'saurashtra';
+      state.activeUser = USER_PROFILES['AR38'];
+    }
+    state.isLocked = false;
+    state.currentRole = 'retail';
   }
 
-  if (!state.activeStaff) {
-    // Default to the first staff of the active firm
-    state.activeStaff = savedStaff.find(s => s.firm === state.activeFirm) || savedStaff[0];
-  }
-
-  // 3. Shoot resolution (Default is "all")
+  // 3. Shoot resolution (Default is always "all")
   const shootParam = (params.get('shoot') || '').toLowerCase().trim();
   if (shootParam === 'model') state.currentShoot = 'model';
   else if (shootParam === 'table') state.currentShoot = 'table';
   else state.currentShoot = 'all';
 
-  // 4. Role resolution
-  const key = (params.get('k') || params.get('key') || params.get('ref') || '').toLowerCase().trim();
-  if (key === CONFIG.defaultKeys.wholesale || key === 'wholesale' || key === 'dealer' || key === 'bulk') {
-    state.currentRole = 'wholesale';
-  } else if (key === CONFIG.defaultKeys.reseller || key === 'seller' || key === 'portal' || key === 'reseller') {
-    state.currentRole = 'reseller';
-  } else {
-    state.currentRole = 'retail';
-  }
-
   applyFirmTheme();
+  applyLockdownUI();
   updateRoleUI();
   updateShootUI();
   updateStaffUI();
@@ -193,7 +288,7 @@ function applyFirmTheme() {
   }
 
   // Update Page Title & Firm Logos
-  document.getElementById('pageTitle').textContent = `${firm.name} | Digital Wholesale Showroom`;
+  document.getElementById('pageTitle').textContent = `${firm.name} | Digital Textile Showroom`;
   
   const logoImg = document.getElementById('firmLogoImg');
   if (logoImg) logoImg.src = firm.logo;
@@ -201,42 +296,79 @@ function applyFirmTheme() {
   const footerLogo = document.getElementById('footerFirmLogo');
   if (footerLogo) footerLogo.src = firm.logo;
 
-  // Text Elements
+  // Header & Announcement Text
   document.getElementById('headerFirmName').textContent = firm.name;
   document.getElementById('announcementFirmText').textContent = firm.name;
   document.getElementById('announcementTagline').textContent = firm.tagline;
   document.getElementById('footerFirmName').textContent = firm.name;
   document.getElementById('footerFirmTagline').textContent = firm.tagline;
   document.getElementById('heroFirmTag').textContent = `${firm.name} Direct Wholesale`;
-  document.getElementById('currentFirmPillLabel').textContent = `Firm: ${firm.name.split(' ')[0]}`;
+  
+  const pillLabel = document.getElementById('currentFirmPillLabel');
+  if (pillLabel) pillLabel.textContent = `Firm: ${firm.name.split(' ')[0]}`;
+}
+
+// Enforces strict lockdown rules for No. 1, 2, 3
+function applyLockdownUI() {
+  const firmSwitcherContainer = document.getElementById('firmSwitcherContainer');
+  const roleDropdownContainer = document.getElementById('roleDropdownContainer');
+  const adminHeaderBtn = document.getElementById('adminHeaderBtn');
+
+  if (state.isSuperAdmin) {
+    if (firmSwitcherContainer) firmSwitcherContainer.classList.remove('hidden');
+    if (roleDropdownContainer) roleDropdownContainer.classList.remove('hidden');
+    if (adminHeaderBtn) adminHeaderBtn.classList.remove('hidden');
+    return;
+  }
+
+  // For regular staff/customer links:
+  // 1. Hide firm switcher completely (Firm is strictly locked)
+  if (firmSwitcherContainer) {
+    firmSwitcherContainer.classList.add('hidden');
+  }
+
+  // 2. Hide admin button completely
+  if (adminHeaderBtn) {
+    adminHeaderBtn.classList.add('hidden');
+  }
+
+  // 3. For No. 1 & 2 (Retail only), hide role dropdown completely
+  // For No. 3 (All Rate users), keep role visible or show All Rates badge
+  if (roleDropdownContainer) {
+    if (state.activeUser && state.activeUser.rateAccess === 'all') {
+      roleDropdownContainer.classList.remove('hidden');
+    } else {
+      roleDropdownContainer.classList.add('hidden');
+    }
+  }
 }
 
 function updateStaffUI() {
-  const staff = state.activeStaff;
-  if (!staff) return;
+  const user = state.activeUser;
+  if (!user) return;
 
   const staffNameEls = [
     document.getElementById('staffNameDisplay'),
     document.getElementById('badgeStaffActive')
   ];
   staffNameEls.forEach(el => {
-    if (el) el.textContent = staff.name;
+    if (el) el.textContent = `${user.name} (${user.code})`;
   });
 
   const phoneEl = document.getElementById('staffPhoneDisplay');
-  if (phoneEl) phoneEl.textContent = `+91 ${staff.phone}`;
+  if (phoneEl) phoneEl.textContent = user.displayPhone;
 
   const callLink = document.getElementById('staffCallLink');
-  if (callLink) callLink.href = `tel:+91${staff.phone}`;
+  if (callLink) callLink.href = `tel:+91${user.phone}`;
 }
 
 function switchFirm(firmId) {
+  if (state.isLocked && !state.isSuperAdmin) return;
   state.activeFirm = firmId;
   applyFirmTheme();
   
-  // Re-assign a matching staff member
-  const savedStaff = JSON.parse(localStorage.getItem('vellum_staff_list') || 'null') || DEFAULT_STAFF;
-  state.activeStaff = savedStaff.find(s => s.firm === state.activeFirm) || savedStaff[0];
+  // Re-assign default representative for the newly selected firm
+  state.activeUser = firmId === 'keya' ? USER_PROFILES['KH28'] : USER_PROFILES['AR38'];
   updateStaffUI();
 
   toggleFirmMenu();
@@ -245,6 +377,7 @@ function switchFirm(firmId) {
 }
 
 function toggleFirmMenu() {
+  if (state.isLocked && !state.isSuperAdmin) return;
   const menu = document.getElementById('firmMenu');
   if (menu) menu.classList.toggle('hidden');
 }
@@ -253,16 +386,20 @@ function updateRoleUI() {
   const labelEl = document.getElementById('currentRoleLabel');
   const badgeEl = document.getElementById('badgeRoleActive');
 
-  let labelText = 'Retail / MRP';
-  let badgeText = 'Retail / MRP Rate';
+  let labelText = 'Catalog MRP';
+  let badgeText = 'Retail / Catalog MRP Rate';
   let badgeClass = 'text-purple-700';
 
-  if (state.currentRole === 'wholesale') {
-    labelText = 'Wholesale';
+  if (state.currentRole === 'all') {
+    labelText = 'All Rates Active';
+    badgeText = 'All Rates (Wholesale, Reseller & Retail)';
+    badgeClass = 'text-amber-700';
+  } else if (state.currentRole === 'wholesale') {
+    labelText = 'Wholesale Rate';
     badgeText = 'Super Wholesale Rate';
     badgeClass = 'text-emerald-700';
   } else if (state.currentRole === 'reseller') {
-    labelText = 'Portal Seller';
+    labelText = 'Portal Seller Rate';
     badgeText = 'Reseller / Portal Rate';
     badgeClass = 'text-blue-700';
   }
@@ -351,7 +488,7 @@ async function loadCatalogData() {
       console.log('✓ Google Sheet Live Pricing successfully synced!');
     }
   } catch (sheetErr) {
-    console.log('Using cached pricing database.');
+    console.log('Using local pricing database.');
   }
 
   state.filteredCatalogs = [...state.catalogs];
@@ -499,18 +636,6 @@ function resetFilters() {
   applyFiltersAndRender();
 }
 
-function getActiveRate(catalog) {
-  if (state.currentRole === 'wholesale') return catalog.wholesaleRate;
-  if (state.currentRole === 'reseller') return catalog.resellerRate;
-  return catalog.retailRate;
-}
-
-function getRoleTag() {
-  if (state.currentRole === 'wholesale') return 'Wholesale';
-  if (state.currentRole === 'reseller') return 'Reseller';
-  return 'MRP';
-}
-
 function applyFiltersAndRender() {
   let list = [...state.catalogs];
 
@@ -519,183 +644,197 @@ function applyFiltersAndRender() {
     list = list.filter(c => c.category === state.selectedCategory);
   }
 
+  // Shoot Filter
+  if (state.currentShoot === 'model') {
+    list = list.filter(c => c.has2mb);
+  } else if (state.currentShoot === 'table') {
+    list = list.filter(c => !c.has2mb);
+  }
+
   // Search Filter
   if (state.searchQuery) {
-    const q = state.searchQuery;
-    list = list.filter(c => {
-      const matchName = c.name.toLowerCase().includes(q);
-      const matchCode = c.code.toLowerCase().includes(q);
-      const matchCat = c.category.toLowerCase().includes(q);
-      const matchFabric = c.fabric.toLowerCase().includes(q);
-      const matchColors = c.designs.some(d => d.color.toLowerCase().includes(q));
-      return matchName || matchCode || matchCat || matchFabric || matchColors;
-    });
+    list = list.filter(c => 
+      c.name.toLowerCase().includes(state.searchQuery) ||
+      c.code.toLowerCase().includes(state.searchQuery) ||
+      c.category.toLowerCase().includes(state.searchQuery) ||
+      c.fabric.toLowerCase().includes(state.searchQuery)
+    );
   }
 
   // Sorting
-  if (state.sortBy === 'price-asc') {
+  if (state.sortBy === 'price-low') {
     list.sort((a, b) => getActiveRate(a) - getActiveRate(b));
-  } else if (state.sortBy === 'price-desc') {
+  } else if (state.sortBy === 'price-high') {
     list.sort((a, b) => getActiveRate(b) - getActiveRate(a));
-  } else if (state.sortBy === 'name-asc') {
-    list.sort((a, b) => a.name.localeCompare(b.name));
+  } else if (state.sortBy === 'colors') {
+    list.sort((a, b) => b.skuCount - a.skuCount);
   }
 
   state.filteredCatalogs = list;
-
-  const countLabel = document.getElementById('catalogCountLabel');
-  if (countLabel) countLabel.textContent = `Showing ${list.length} of ${state.catalogs.length} Catalogs`;
-
-  const emptyState = document.getElementById('emptyState');
-  const grid = document.getElementById('catalogGrid');
-
-  if (list.length === 0) {
-    if (emptyState) emptyState.classList.remove('hidden');
-    if (grid) grid.innerHTML = '';
-    return;
-  } else {
-    if (emptyState) emptyState.classList.add('hidden');
-  }
-
-  renderGrid(list);
-  if (window.lucide) lucide.createIcons();
+  renderCatalogGrid();
+  renderCatalogCount();
 }
 
-function renderGrid(catalogs) {
-  const grid = document.getElementById('catalogGrid');
+function renderCatalogCount() {
+  const countEl = document.getElementById('activeCatalogCount');
+  if (countEl) countEl.textContent = state.filteredCatalogs.length;
+}
+
+function getActiveRate(cat) {
+  if (state.currentRole === 'wholesale') return cat.wholesaleRate;
+  if (state.currentRole === 'reseller') return cat.resellerRate;
+  return cat.retailRate; // Default to retailRate
+}
+
+function renderCatalogGrid() {
+  const grid = document.getElementById('catalogsGrid');
+  const emptyState = document.getElementById('emptyState');
+
   if (!grid) return;
 
-  grid.innerHTML = catalogs.map((cat, idx) => {
+  if (state.filteredCatalogs.length === 0) {
+    grid.innerHTML = '';
+    if (emptyState) emptyState.classList.remove('hidden');
+    return;
+  }
+
+  if (emptyState) emptyState.classList.add('hidden');
+
+  const isAllRatesUser = (state.activeUser && state.activeUser.rateAccess === 'all') || state.currentRole === 'all';
+
+  grid.innerHTML = state.filteredCatalogs.map(cat => {
     const firstDesign = cat.designs[0] || {};
-    const rate = getActiveRate(cat);
-    const roleTag = getRoleTag();
-
-    // Shoot badge calculation based on currentShoot
-    let shootBadge = '🌟 All Shoots';
-    let shootBadgeClass = 'badge-all';
-
-    if (state.currentShoot === 'model') {
-      shootBadge = '👗 Model Shoot';
-      shootBadgeClass = 'badge-model';
-    } else if (state.currentShoot === 'table') {
-      shootBadge = '🪑 Table Shoot';
-      shootBadgeClass = 'badge-table';
-    }
-
-    const displayImgUrl = firstDesign.heroImageUrl || cat.heroImageUrl || 'https://placehold.co/600x800/1e293b/d4af37?text=' + encodeURIComponent(cat.name);
-
-    // Color Swatches with Tooltips (Requirement 5)
-    const swatchesHtml = cat.designs.slice(0, 6).map((d, dIdx) => {
-      const colorObj = getAccurateColor(d.color);
-      const isSelected = dIdx === 0;
-      return `
-        <div class="swatch-wrapper">
-          <span class="swatch-tooltip">Design ${d.code}: ${colorObj.label}</span>
-          <button 
-            type="button"
-            onclick="event.stopPropagation(); switchCardDesign('${cat.code}', ${dIdx})"
-            class="card-dot-${cat.code} w-4 h-4 rounded-full border-2 border-white shadow-xs inline-block transition-transform hover:scale-130 ${isSelected ? 'ring-2 ring-slate-900 scale-115' : 'opacity-85'}"
-            style="background-color: ${colorObj.hex};"
-          ></button>
-        </div>
-      `;
-    }).join('');
-
-    const moreColors = cat.designs.length > 6 ? `<span class="text-[10px] text-slate-400 font-bold">+${cat.designs.length - 6}</span>` : '';
+    const heroImg = firstDesign.heroImageUrl || cat.heroImageUrl || 'https://placehold.co/600x800/1e293b/d4af37?text=' + encodeURIComponent(cat.name);
+    const activeColorObj = getAccurateColor(firstDesign.color);
+    const retailRate = cat.retailRate;
+    const wholesaleRate = cat.wholesaleRate;
+    const resellerRate = cat.resellerRate;
 
     return `
-      <div class="catalog-card bg-white rounded-3xl overflow-hidden border border-slate-200/90 flex flex-col group shadow-xs hover:shadow-xl transition-all">
+      <div class="catalog-card bg-white rounded-3xl border border-slate-200/90 overflow-hidden shadow-xs hover:shadow-xl transition-all duration-300 flex flex-col justify-between group">
         
-        <!-- Media Frame: Clicking navigates to dedicated Shopify PDP -->
-        <div onclick="navigateToProduct('${cat.code}')" class="relative aspect-[3/4] bg-slate-900 overflow-hidden cursor-pointer flex items-center justify-center">
-          
+        <!-- Top Media Area -->
+        <div class="relative aspect-[3/4] bg-slate-900 overflow-hidden cursor-pointer" onclick="navigateToProduct('${cat.code}')">
           <img 
-            id="card-hero-${cat.code}"
-            src="${displayImgUrl}" 
+            id="card-hero-${cat.code}" 
+            src="${heroImg}" 
             referrerpolicy="no-referrer"
             alt="${cat.name}" 
-            loading="lazy" 
-            class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-108"
+            class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-106 hero-image-fade"
             onerror="this.onerror=null; this.src='https://placehold.co/600x800/1e293b/d4af37?text=${encodeURIComponent(cat.name)}';"
           >
 
-          <!-- Badges Floating -->
-          <div class="absolute top-3.5 left-3.5 flex flex-col gap-1.5 items-start z-10 pointer-events-none">
-            <span class="text-[10px] font-extrabold px-2.5 py-1 rounded-lg tracking-wide uppercase shadow-md ${shootBadgeClass}">
-              ${shootBadge}
+          <!-- Top Status & Shoot Badges -->
+          <div class="absolute top-3 left-3 right-3 flex items-center justify-between pointer-events-none">
+            <span class="text-[10px] font-extrabold px-2.5 py-1 rounded-full uppercase tracking-wider bg-white/95 text-slate-900 shadow-sm backdrop-blur-xs">
+              ${cat.has2mb ? '👗 Model Shoot' : '🪑 Table Shoot'}
             </span>
-            ${cat.hasVideo ? `
-              <span class="text-[10px] font-bold px-2 py-0.5 rounded-md bg-slate-950/80 text-amber-300 backdrop-blur-md flex items-center gap-1 shadow-md border border-white/10">
-                <span>📹</span> Reel Ready
-              </span>
-            ` : ''}
-          </div>
-
-          <!-- Quick Look Icon on Hover -->
-          <div class="absolute inset-0 bg-slate-950/25 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none">
-            <span class="px-4 py-2 bg-white/95 backdrop-blur-md rounded-xl text-xs font-bold text-slate-900 shadow-xl flex items-center gap-1.5 transform translate-y-2 group-hover:translate-y-0 transition-transform">
-              <span>View Product Details</span> ↗
+            <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500 text-white shadow-sm flex items-center gap-1">
+              <span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
+              ${cat.status}
             </span>
           </div>
 
+          <!-- Video Play Icon Pill -->
+          ${(cat.hasVideo || firstDesign.video) ? `
+            <div class="absolute bottom-3 left-3 bg-black/70 hover:bg-black/90 backdrop-blur-xs text-white text-[11px] font-semibold px-2.5 py-1 rounded-full flex items-center gap-1.5 border border-white/20 transition-all">
+              <i data-lucide="play" class="w-3 h-3 fill-current text-amber-400"></i>
+              <span>Reel Available</span>
+            </div>
+          ` : ''}
+
+          <!-- SKU Count Overlay -->
+          <div class="absolute bottom-3 right-3 bg-black/75 backdrop-blur-xs text-white text-[10px] font-extrabold px-2.5 py-1 rounded-full border border-white/10">
+            ${cat.skuCount} Colors
+          </div>
         </div>
 
-        <!-- Content Details Area -->
-        <div class="p-5 flex-1 flex flex-col justify-between space-y-4">
+        <!-- Content Area -->
+        <div class="p-5 flex-1 flex flex-col justify-between space-y-3.5">
           
-          <div class="space-y-1.5">
-            <div class="flex items-center justify-between text-xs">
-              <span class="font-extrabold uppercase tracking-wider text-slate-700 text-[10px] bg-slate-100 px-2 py-0.5 rounded">
-                ${cat.code}
-              </span>
-              <span class="text-[11px] font-semibold text-emerald-600 flex items-center gap-1">
-                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> ${cat.status}
-              </span>
+          <div>
+            <div class="flex items-center justify-between gap-2">
+              <span class="text-[10px] font-extrabold tracking-wider text-slate-400 uppercase">${cat.category}</span>
+              <span class="text-[10px] font-mono text-slate-400 font-bold">${cat.code}</span>
             </div>
-
-            <h3 onclick="navigateToProduct('${cat.code}')" class="font-serif text-lg font-bold text-slate-900 hover:text-slate-700 cursor-pointer transition-colors leading-tight">
+            
+            <h3 onclick="navigateToProduct('${cat.code}')" class="font-serif text-lg font-bold text-slate-900 group-hover:text-brand-maroon transition-colors line-clamp-1 cursor-pointer mt-0.5">
               ${cat.name}
             </h3>
 
-            <!-- Active Selected Design & Color -->
-            <p id="card-design-${cat.code}" class="text-[11px] font-bold text-slate-700">
-              Design ${firstDesign.code || '101'} — ${firstDesign.color || 'Color 1'}
-            </p>
-
-            <p class="text-xs text-slate-500 line-clamp-2 leading-relaxed">
-              ${cat.fabric}
-            </p>
-
-            <!-- Color Swatches with Tooltips -->
-            <div class="pt-1">
-              <div class="flex items-center gap-2">
-                ${swatchesHtml}
-                ${moreColors}
+            <!-- Color Variants Swatches Strip with Tooltips -->
+            <div class="mt-3 pt-2.5 border-t border-slate-100 flex items-center justify-between">
+              <div class="flex items-center gap-1.5 flex-wrap">
+                ${cat.designs.slice(0, 7).map((d, dIdx) => {
+                  const dColor = getAccurateColor(d.color);
+                  return `
+                    <div class="swatch-wrapper">
+                      <span class="swatch-tooltip">Design ${d.code}: ${dColor.label}</span>
+                      <button 
+                        type="button"
+                        onclick="event.stopPropagation(); switchCardDesign('${cat.code}', ${dIdx})" 
+                        class="card-dot-${cat.code} w-4 h-4 rounded-full border border-white shadow-xs inline-block transition-transform hover:scale-125 ${dIdx === 0 ? 'ring-2 ring-slate-900 scale-110' : 'opacity-85'}"
+                        style="background-color: ${dColor.hex};"
+                      ></button>
+                    </div>
+                  `;
+                }).join('')}
+                ${cat.designs.length > 7 ? `
+                  <span class="text-[10px] font-bold text-slate-400 ml-0.5">+${cat.designs.length - 7}</span>
+                ` : ''}
               </div>
+
+              <span id="card-design-${cat.code}" class="text-[10px] font-semibold text-slate-500 truncate max-w-[110px]">
+                Design ${firstDesign.code || '101'}
+              </span>
             </div>
           </div>
 
-          <!-- Price & Quick Actions -->
-          <div class="pt-3 border-t border-slate-100 space-y-3">
-            <div class="flex items-baseline justify-between">
-              <div>
-                <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">${roleTag} Rate</span>
-                <div class="flex items-baseline gap-1">
-                  <span class="font-serif text-2xl font-extrabold text-slate-900">₹${rate}</span>
-                  <span class="text-[11px] text-slate-400">/ pc</span>
+          <!-- Commercial Pricing Block -->
+          <div class="pt-3 border-t border-slate-100">
+            ${isAllRatesUser ? `
+              <!-- Multi-Rate Matrix for No. 3 All-Rate Users -->
+              <div class="bg-slate-50 rounded-2xl p-2.5 border border-slate-200/80 space-y-1.5">
+                <div class="flex items-center justify-between text-[11px]">
+                  <span class="text-slate-500 font-medium">Wholesale:</span>
+                  <span class="font-serif font-bold text-emerald-700">₹${wholesaleRate}</span>
+                </div>
+                <div class="flex items-center justify-between text-[11px]">
+                  <span class="text-slate-500 font-medium">Reseller:</span>
+                  <span class="font-serif font-bold text-blue-700">₹${resellerRate}</span>
+                </div>
+                <div class="flex items-center justify-between text-[11px] pt-1 border-t border-slate-200">
+                  <span class="text-slate-700 font-bold">Catalog MRP:</span>
+                  <span class="font-serif font-extrabold text-slate-900">₹${retailRate}</span>
                 </div>
               </div>
-              <span class="text-[10px] font-bold px-2 py-0.5 bg-slate-100 text-slate-700 rounded">
-                ${cat.skuCount} Colors
-              </span>
-            </div>
+            ` : `
+              <!-- Single Retail MRP Rate for No. 1 and No. 2 Users -->
+              <div class="flex items-baseline justify-between">
+                <div>
+                  <span class="text-[10px] text-slate-400 uppercase font-semibold">Catalog MRP</span>
+                  <p class="font-serif text-xl font-extrabold text-slate-900">₹${retailRate}</p>
+                </div>
+                <span class="text-[10px] text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md font-bold">Direct Dispatch</span>
+              </div>
+            `}
 
-            <div class="grid grid-cols-2 gap-2">
-              <button onclick="navigateToProduct('${cat.code}')" class="py-2.5 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold transition-all text-center">
-                Full Details
+            <!-- 1-Click Action Buttons -->
+            <div class="flex items-center gap-2 mt-3">
+              <button 
+                onclick="navigateToProduct('${cat.code}')" 
+                class="flex-1 py-2 px-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold transition-all text-center flex items-center justify-center gap-1.5 shadow-xs"
+              >
+                <span>View Catalogue</span>
+                <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
               </button>
-              <button onclick="sendStaffWhatsApp('${cat.code}', '${firstDesign.color || 'All Colors'}', ${rate})" class="py-2.5 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold flex items-center justify-center gap-1.5 shadow-xs transition-all">
-                <span>Inquire</span>
+
+              <button 
+                onclick="sendStaffWhatsApp('${cat.code}', 'Design ${firstDesign.code} (${activeColorObj.label})', ${retailRate})" 
+                title="Inquire on WhatsApp" 
+                class="p-2 rounded-xl bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-700 transition-all flex items-center justify-center"
+              >
+                <i data-lucide="message-circle" class="w-4 h-4 fill-current"></i>
               </button>
             </div>
           </div>
@@ -705,6 +844,8 @@ function renderGrid(catalogs) {
       </div>
     `;
   }).join('');
+
+  if (window.lucide) lucide.createIcons();
 }
 
 // Switch design/color directly on card
@@ -715,25 +856,22 @@ function switchCardDesign(catCode, designIdx) {
   const design = cat.designs[designIdx];
   const colorObj = getAccurateColor(design.color);
 
-  // Update card hero image
   const imgEl = document.getElementById(`card-hero-${cat.code}`);
   if (imgEl && design.heroImageUrl) {
     imgEl.src = design.heroImageUrl;
   }
 
-  // Update design label text
   const labelEl = document.getElementById(`card-design-${cat.code}`);
   if (labelEl) {
     labelEl.textContent = `Design ${design.code} — ${colorObj.label}`;
   }
 
-  // Highlight active dot
   const dots = document.querySelectorAll(`.card-dot-${cat.code}`);
   dots.forEach((dot, idx) => {
     if (idx === designIdx) {
-      dot.className = `card-dot-${cat.code} w-4 h-4 rounded-full border-2 border-white shadow-xs inline-block transition-transform scale-125 ring-2 ring-slate-900`;
+      dot.className = `card-dot-${cat.code} w-4 h-4 rounded-full border border-white shadow-xs inline-block transition-transform scale-125 ring-2 ring-slate-900`;
     } else {
-      dot.className = `card-dot-${cat.code} w-4 h-4 rounded-full border-2 border-white shadow-xs inline-block transition-transform hover:scale-125 opacity-85`;
+      dot.className = `card-dot-${cat.code} w-4 h-4 rounded-full border border-white shadow-xs inline-block transition-transform hover:scale-125 opacity-85`;
     }
   });
 }
@@ -763,6 +901,7 @@ function handleHashRoute() {
       state.activePdpDesignIndex = 0;
       state.activePdpImageIndex = 0;
       state.activePdpShoot = state.currentShoot;
+      state.activePdpTab = 'specs';
 
       if (screenHome) screenHome.classList.add('hidden');
       if (screenProduct) screenProduct.classList.remove('hidden');
@@ -784,8 +923,8 @@ function renderPdpScreen() {
   if (!cat) return;
 
   const firm = FIRMS[state.activeFirm] || FIRMS.saurashtra;
-  const staff = state.activeStaff || DEFAULT_STAFF[0];
-  const rate = getActiveRate(cat);
+  const user = state.activeUser || USER_PROFILES['AR38'];
+  const isAllRatesUser = user.rateAccess === 'all' || state.currentRole === 'all';
 
   // Breadcrumbs
   document.getElementById('pdpBreadcrumbCategory').textContent = cat.category;
@@ -795,31 +934,87 @@ function renderPdpScreen() {
   document.getElementById('pdpCategoryTag').textContent = `${firm.name} • ${cat.category} Collection`;
   document.getElementById('pdpTitle').textContent = cat.name;
   document.getElementById('pdpCode').textContent = `SKU: ${cat.code}`;
-  document.getElementById('pdpPrice').textContent = `₹${rate}`;
-  
-  const roleName = state.currentRole === 'wholesale' 
-    ? 'Wholesale / Super Stockist Rate' 
-    : state.currentRole === 'reseller' 
-      ? 'Portal Seller / Reseller Rate' 
-      : 'Retail / Catalog MRP';
-  document.getElementById('pdpRoleName').textContent = roleName;
+
+  // Rate Display Logic
+  const singlePriceCard = document.getElementById('pdpSinglePriceCard');
+  const allRatesCard = document.getElementById('pdpAllRatesCard');
+
+  if (isAllRatesUser) {
+    if (singlePriceCard) singlePriceCard.classList.add('hidden');
+    if (allRatesCard) {
+      allRatesCard.classList.remove('hidden');
+      document.getElementById('pdpRateWholesale').textContent = `₹${cat.wholesaleRate}`;
+      document.getElementById('pdpRateReseller').textContent = `₹${cat.resellerRate}`;
+      document.getElementById('pdpRateRetail').textContent = `₹${cat.retailRate}`;
+      
+      const resMargin = cat.resellerRate - cat.wholesaleRate;
+      const retMargin = cat.retailRate - cat.wholesaleRate;
+      document.getElementById('pdpResellerMargin').textContent = `₹${resMargin}`;
+      document.getElementById('pdpRetailMargin').textContent = `₹${retMargin}`;
+    }
+  } else {
+    if (allRatesCard) allRatesCard.classList.add('hidden');
+    if (singlePriceCard) {
+      singlePriceCard.classList.remove('hidden');
+      document.getElementById('pdpPrice').textContent = `₹${cat.retailRate}`;
+      document.getElementById('pdpRoleName').textContent = 'Catalog MRP / Retail Rate';
+    }
+  }
+
+  // Specifications & Story Tab Content
+  document.getElementById('pdpEditorialStory').textContent = cat.editorialStory || 
+    `Woven with authentic Indian textile artistry in Surat, this exquisite ${cat.category} saree features high-grade yarns with intricate metallic zari craftsmanship. Designed for luxurious comfort and majestic festive presence.`;
 
   document.getElementById('pdpFabric').textContent = cat.fabric;
   document.getElementById('pdpBorder').textContent = cat.border;
   document.getElementById('pdpPallu').textContent = cat.pallu;
   document.getElementById('pdpBlouse').textContent = cat.blouse;
-  document.getElementById('pdpLength').textContent = cat.length;
+  document.getElementById('pdpLength').textContent = cat.sareeLengthTotal || cat.length;
+  document.getElementById('pdpWeight').textContent = cat.weightApprox || 'Approx. 650 - 750 grams';
+  document.getElementById('pdpOrigin').textContent = cat.origin || 'Surat, Gujarat (Direct Mill)';
 
-  // Staff Assignment Card
-  document.getElementById('pdpStaffName').textContent = staff.name;
-  document.getElementById('pdpStaffFirm').textContent = `${firm.name} • ${staff.role}`;
-  document.getElementById('pdpStaffCallBtn').href = `tel:+91${staff.phone}`;
+  // Styling Tab Content
+  document.getElementById('pdpOccasionText').textContent = cat.idealOccasion || 'Weddings, Traditional Functions & Festivals';
+  document.getElementById('pdpJewelryText').textContent = cat.jewelryTip || 'Complements antique gold or temple jewelry sets.';
+  document.getElementById('pdpCareText').textContent = cat.washCare || 'Dry clean only recommended. Wrap in cotton cloth.';
 
-  // Color Swatches with accurate colors & hover tooltips
+  // Representative Card
+  document.getElementById('pdpStaffAvatarLetters').textContent = user.initials || 'SR';
+  document.getElementById('pdpStaffName').textContent = user.name;
+  document.getElementById('pdpStaffFirm').textContent = `${firm.name} • ${user.title}`;
+  document.getElementById('pdpStaffCallBtn').href = `tel:+91${user.phone}`;
+  document.getElementById('pdpWhatsAppBtnText').textContent = `Inquire & Order via WhatsApp with ${user.name}`;
+
+  // Swatches, Gallery, Shoot & Related
   renderPdpColorSwatches();
   updatePdpGallery();
   updatePdpShootUI();
+  switchPdpTab(state.activePdpTab);
   renderRelatedCatalogs();
+
+  if (window.lucide) lucide.createIcons();
+}
+
+function switchPdpTab(tabName) {
+  state.activePdpTab = tabName;
+  const tabs = ['specs', 'styling', 'care'];
+
+  tabs.forEach(t => {
+    const btn = document.getElementById(`pdpTabBtn${t.charAt(0).toUpperCase() + t.slice(1)}`);
+    const content = document.getElementById(`pdpTabContent${t.charAt(0).toUpperCase() + t.slice(1)}`);
+
+    if (t === tabName) {
+      if (content) content.classList.remove('hidden');
+      if (btn) {
+        btn.className = 'flex-1 py-3 px-3 border-b-2 border-slate-900 text-slate-900 bg-white font-bold transition-all flex items-center justify-center gap-1.5 shadow-xs';
+      }
+    } else {
+      if (content) content.classList.add('hidden');
+      if (btn) {
+        btn.className = 'flex-1 py-3 px-3 border-b-2 border-transparent text-slate-500 hover:text-slate-800 font-medium transition-all flex items-center justify-center gap-1.5';
+      }
+    }
+  });
 
   if (window.lucide) lucide.createIcons();
 }
@@ -908,7 +1103,7 @@ function updatePdpGallery() {
     }
   }
 
-  // Thumbnails Strip for THIS selected color (e.g. 101, 102, 103, 104)
+  // Thumbnails Strip
   const thumbStrip = document.getElementById('pdpThumbStrip');
   if (thumbStrip) {
     document.getElementById('pdpAngleCount').textContent = `${realUrls.length} Multi-Angle Views`;
@@ -945,7 +1140,7 @@ function selectPdpAngle(angleIdx) {
 }
 
 // --------------------------------------------------------------------------
-// 8. SECTION: RELATED CATALOGUES (YOU MAY ALSO LIKE) (Requirement 4)
+// 8. SECTION: RELATED CATALOGUES (YOU MAY ALSO LIKE)
 // --------------------------------------------------------------------------
 function renderRelatedCatalogs() {
   const cat = state.activePdpCatalog;
@@ -954,7 +1149,6 @@ function renderRelatedCatalogs() {
   const container = document.getElementById('pdpRelatedGrid');
   if (!container) return;
 
-  // Find 4 other catalogs (prioritizing same category, excluding active catalog)
   let related = state.catalogs.filter(c => c.code !== cat.code && c.category === cat.category);
   if (related.length < 4) {
     const others = state.catalogs.filter(c => c.code !== cat.code && c.category !== cat.category);
@@ -962,9 +1156,10 @@ function renderRelatedCatalogs() {
   }
   related = related.slice(0, 4);
 
+  const isAllRatesUser = (state.activeUser && state.activeUser.rateAccess === 'all') || state.currentRole === 'all';
+
   container.innerHTML = related.map(item => {
     const firstD = item.designs[0] || {};
-    const itemRate = getActiveRate(item);
     const itemImg = firstD.heroImageUrl || item.heroImageUrl || 'https://placehold.co/600x800/1e293b/d4af37?text=' + encodeURIComponent(item.name);
 
     return `
@@ -985,7 +1180,9 @@ function renderRelatedCatalogs() {
           <span class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">${item.category}</span>
           <h4 class="font-serif text-sm font-bold text-slate-900 group-hover:text-brand-maroon transition-colors line-clamp-1">${item.name}</h4>
           <div class="flex items-baseline justify-between mt-1">
-            <span class="font-serif text-base font-extrabold text-slate-900">₹${itemRate}</span>
+            <span class="font-serif text-base font-extrabold text-slate-900">
+              ₹${isAllRatesUser ? item.wholesaleRate : item.retailRate}
+            </span>
             <span class="text-[10px] text-emerald-600 font-bold">${item.status}</span>
           </div>
         </div>
@@ -995,22 +1192,22 @@ function renderRelatedCatalogs() {
 }
 
 // --------------------------------------------------------------------------
-// 9. DEDICATED STAFF WHATSAPP & CALL INQUIRIES (Requirement 2)
+// 9. DEDICATED STAFF WHATSAPP & CALL INQUIRIES
 // --------------------------------------------------------------------------
 function sendStaffWhatsApp(catalogCode, color, rate) {
   const firm = FIRMS[state.activeFirm] || FIRMS.saurashtra;
-  const staff = state.activeStaff || DEFAULT_STAFF[0];
+  const user = state.activeUser || USER_PROFILES['AR38'];
 
   const msg = encodeURIComponent(
-    `Hello ${staff.name} (${firm.name}),\n` +
+    `Hello ${user.name} (${firm.name}),\n` +
     `I am inquiring about this catalog:\n\n` +
     `🥻 Catalog: ${catalogCode}\n` +
     `🎨 Color/Design: ${color}\n` +
-    `💰 Rate: ₹${rate}\n` +
+    `💰 Price: ₹${rate}/- Only\n` +
     `View Mode: ${state.currentShoot.toUpperCase()}\n\n` +
     `Please share stock availability and dispatch schedule.`
   );
-  window.open(`https://wa.me/${staff.whatsapp}?text=${msg}`, '_blank');
+  window.open(`https://wa.me/${user.whatsapp}?text=${msg}`, '_blank');
 }
 
 function sendPdpWhatsApp() {
@@ -1018,7 +1215,7 @@ function sendPdpWhatsApp() {
   if (!cat) return;
   const activeDesign = cat.designs[state.activePdpDesignIndex] || {};
   const colorObj = getAccurateColor(activeDesign.color);
-  const rate = getActiveRate(cat);
+  const rate = cat.retailRate;
 
   sendStaffWhatsApp(cat.code, `${colorObj.label} (Design ${activeDesign.code})`, rate);
 }
@@ -1027,32 +1224,38 @@ function copyPdpSpecs() {
   const cat = state.activePdpCatalog;
   if (!cat) return;
   const firm = FIRMS[state.activeFirm] || FIRMS.saurashtra;
-  const staff = state.activeStaff || DEFAULT_STAFF[0];
-  const rate = getActiveRate(cat);
+  const user = state.activeUser || USER_PROFILES['AR38'];
+  const isAllRatesUser = user.rateAccess === 'all' || state.currentRole === 'all';
+
+  const priceText = isAllRatesUser
+    ? `• Super Wholesale: ₹${cat.wholesaleRate}/-\n• Reseller Rate: ₹${cat.resellerRate}/-\n• Catalog MRP: ₹${cat.retailRate}/-`
+    : `₹${cat.retailRate}/- Only (All Inclusive)`;
 
   const textToCopy = 
-`🆕 PREMIUM SAREE CATALOG 🆕
-Brand: ${firm.name}
-Catalogue: ${cat.code} (${cat.category})
-Price: ₹${rate}/- Only
+`🌸 *PREMIUM DESIGNER SAREE COLLECTION* 🌸
+*Brand:* ${firm.name}
+*Catalogue:* ${cat.name} (SKU: ${cat.code})
+*Category:* ${cat.category}
 
-Fabric Details:
-• Fabric: ${cat.fabric}
-• Border: ${cat.border}
-• Pallu: ${cat.pallu}
-• Blouse: ${cat.blouse}
-• Length: ${cat.length}
+✨ *Craft & Fabric Specifications:*
+• *Fabric Quality:* ${cat.fabric}
+• *Border Weave:* ${cat.border}
+• *Pallu Detail:* ${cat.pallu}
+• *Blouse Piece:* ${cat.blouse}
+• *Total Length:* ${cat.sareeLengthTotal || cat.length}
+• *Weight:* ${cat.weightApprox || 'Approx. 650 grams'}
+• *Total Variants:* ${cat.skuCount} Rich Festive Shades
 
-Total Colors: ${cat.skuCount} Premium Colors
-Status: ${cat.status}
+💰 *Price:* ${priceText}
+📦 *Status:* ${cat.status} (Direct Surat Mill Dispatch)
 
-Direct Inquiries & Booking:
-📞 Representative: ${staff.name}
-📱 WhatsApp / Call: +91 ${staff.phone}
-Powered by ${firm.name}`;
+📞 *Direct Booking & Orders:*
+Representative: *${user.name}*
+📱 WhatsApp / Call: ${user.displayPhone}
+Direct Link: https://wa.me/${user.whatsapp}?text=${encodeURIComponent('Hello ' + user.name + ', I want to order ' + cat.name)}`;
 
   navigator.clipboard.writeText(textToCopy).then(() => {
-    showToast(`Specs copied for ${staff.name}'s desk!`);
+    showToast(`Catalog specs copied for ${user.name}'s broadcast!`);
   });
 }
 

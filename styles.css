@@ -166,3 +166,24 @@ body {
 .zoom-container:hover img {
   transform: scale(1.4);
 }
+
+/* Luxury Micro-Interactions */
+.glow-dot {
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.6);
+}
+
+/* Active PDP tab transition */
+.pdp-tab-active {
+  border-bottom: 2px solid #0f172a;
+  color: #0f172a;
+  background-color: #ffffff;
+  font-weight: 700;
+}
+.pdp-tab-inactive {
+  border-bottom: 2px solid transparent;
+  color: #64748b;
+  font-weight: 500;
+}
+.pdp-tab-inactive:hover {
+  color: #1e293b;
+}

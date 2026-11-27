@@ -93,8 +93,8 @@
       <!-- Right: Role Pricing Tier, Firm Switcher & Admin Link -->
       <div class="flex items-center gap-2 sm:gap-3">
         
-        <!-- Firm Quick Switcher Dropdown -->
-        <div class="relative">
+        <!-- Firm Quick Switcher Dropdown (Conditionally hidden for locked staff links) -->
+        <div id="firmSwitcherContainer" class="relative">
           <button onclick="toggleFirmMenu()" class="flex items-center gap-1.5 px-2.5 py-2 bg-slate-100 hover:bg-slate-200/80 rounded-xl text-xs font-semibold text-slate-700 transition-all border border-slate-200">
             <i data-lucide="building-2" class="w-3.5 h-3.5 text-slate-500"></i>
             <span id="currentFirmPillLabel" class="hidden sm:inline">Firm: Saurashtra</span>
@@ -113,11 +113,11 @@
           </div>
         </div>
 
-        <!-- Role Pricing Dropdown -->
-        <div class="relative">
+        <!-- Role Pricing Dropdown (Conditionally hidden for locked retail users) -->
+        <div id="roleDropdownContainer" class="relative">
           <button id="btnRoleDropdown" onclick="toggleRoleMenu()" class="flex items-center gap-1.5 px-3 py-2 bg-amber-50/90 hover:bg-amber-100 border border-amber-300/80 rounded-xl text-xs font-bold text-amber-900 transition-all shadow-xs">
             <i data-lucide="shield-check" class="w-3.5 h-3.5 text-amber-700"></i>
-            <span id="currentRoleLabel">Wholesale</span>
+            <span id="currentRoleLabel">Catalog MRP</span>
             <i data-lucide="chevron-down" class="w-3 h-3 text-amber-800"></i>
           </button>
 
@@ -150,8 +150,8 @@
           </div>
         </div>
 
-        <!-- Super-Admin Portal Link -->
-        <a href="admin.html" title="Open Super-Admin Portal" class="p-2.5 rounded-xl border border-slate-200 hover:bg-slate-100 text-slate-600 transition-all flex items-center gap-1.5 text-xs font-semibold">
+        <!-- Super-Admin Portal Link (Hidden on client staff links) -->
+        <a id="adminHeaderBtn" href="admin.html" title="Open Super-Admin Portal" class="p-2.5 rounded-xl border border-slate-200 hover:bg-slate-100 text-slate-600 transition-all flex items-center gap-1.5 text-xs font-semibold">
           <i data-lucide="settings" class="w-4 h-4"></i>
           <span class="hidden xl:inline">Super-Admin</span>
         </a>
@@ -375,20 +375,55 @@
               <p id="pdpCode" class="text-xs font-mono font-bold text-slate-400">SKU: AASHVI-VOL-1</p>
             </div>
 
-            <!-- Dynamic Role Rate Card -->
-            <div class="p-5 rounded-3xl bg-gradient-to-br from-amber-50/90 via-orange-50/50 to-white border border-amber-200/80 shadow-xs">
+            <!-- 1. Pricing Display -->
+            <!-- A: Single Price Card (Shown for Retail / Standard Users) -->
+            <div id="pdpSinglePriceCard" class="p-5 rounded-3xl bg-gradient-to-br from-amber-50/90 via-orange-50/40 to-white border border-amber-200/80 shadow-xs">
               <div class="flex items-center justify-between">
-                <span id="pdpRoleName" class="text-xs font-extrabold text-amber-900 uppercase tracking-wider">Wholesale / Stockist Rate</span>
-                <span class="text-[10px] bg-amber-200 text-amber-900 px-2 py-0.5 rounded-md font-bold">Best Trade Price</span>
+                <span id="pdpRoleName" class="text-xs font-extrabold text-amber-900 uppercase tracking-wider">Catalog MRP / Retail Rate</span>
+                <span class="text-[10px] bg-amber-200/80 text-amber-900 px-2 py-0.5 rounded-md font-bold">100% Original Weave</span>
               </div>
               <div class="flex items-baseline gap-2 mt-1.5">
-                <span id="pdpPrice" class="font-serif text-4xl font-extrabold text-slate-900">₹999</span>
+                <span id="pdpPrice" class="font-serif text-4xl font-extrabold text-slate-900">₹1,849</span>
                 <span class="text-xs text-slate-500 font-medium">/ piece (inclusive of all taxes)</span>
               </div>
-              <p class="text-[11px] text-amber-900/80 mt-1">Direct from Surat manufacturing unit • Full catalog pack available</p>
+              <p class="text-[11px] text-amber-900/80 mt-1">Direct from Surat manufacturing loom • Premium quality assurance</p>
             </div>
 
-            <!-- Color Swatches & Hover Tooltips -->
+            <!-- B: 3-Tier Commercial Rate Matrix (Shown ONLY for No. 3 All-Rate Users: NA39ALL, CH33ALL & Super Admin) -->
+            <div id="pdpAllRatesCard" class="hidden p-5 rounded-3xl bg-slate-950 text-white border border-amber-500/40 shadow-xl space-y-3">
+              <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+                <div class="flex items-center gap-1.5">
+                  <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+                  <span class="text-xs font-extrabold text-amber-300 uppercase tracking-wider">Master All-Rates Matrix</span>
+                </div>
+                <span class="text-[10px] bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded font-mono font-bold">Super Access</span>
+              </div>
+
+              <div class="grid grid-cols-3 gap-2.5 text-center">
+                <div class="p-2.5 rounded-2xl bg-slate-900 border border-slate-800">
+                  <p class="text-[9px] uppercase font-bold text-slate-400">Wholesale / Mill</p>
+                  <p id="pdpRateWholesale" class="font-serif text-xl font-bold text-emerald-400 mt-0.5">₹999</p>
+                  <p class="text-[9px] text-slate-500">Super Stockist</p>
+                </div>
+                <div class="p-2.5 rounded-2xl bg-slate-900 border border-slate-800">
+                  <p class="text-[9px] uppercase font-bold text-slate-400">Portal / Reseller</p>
+                  <p id="pdpRateReseller" class="font-serif text-xl font-bold text-blue-400 mt-0.5">₹1,249</p>
+                  <p class="text-[9px] text-slate-500">Online Reseller</p>
+                </div>
+                <div class="p-2.5 rounded-2xl bg-slate-900 border border-slate-800">
+                  <p class="text-[9px] uppercase font-bold text-slate-400">Retail / MRP</p>
+                  <p id="pdpRateRetail" class="font-serif text-xl font-bold text-amber-300 mt-0.5">₹1,849</p>
+                  <p class="text-[9px] text-slate-500">End Customer</p>
+                </div>
+              </div>
+
+              <div class="flex items-center justify-between text-[11px] pt-1 text-slate-300 border-t border-slate-800/80">
+                <span>Reseller Margin: <strong id="pdpResellerMargin" class="text-emerald-400 font-mono">₹250</strong></span>
+                <span>Retail Margin: <strong id="pdpRetailMargin" class="text-amber-400 font-mono">₹850</strong></span>
+              </div>
+            </div>
+
+            <!-- 2. Color Swatches & Hover Tooltips -->
             <div class="space-y-2">
               <div class="flex items-center justify-between">
                 <span class="text-xs font-bold text-slate-800">Available Color Variants:</span>
@@ -400,63 +435,155 @@
               </div>
             </div>
 
-            <!-- Fabric & Craftsmanship Details Table -->
-            <div class="rounded-2xl border border-slate-200 overflow-hidden text-xs">
-              <div class="bg-slate-50 px-4 py-2.5 font-bold text-slate-700 border-b border-slate-200 uppercase tracking-wider text-[10px]">
-                Fabric & Craftsmanship Specifications
+            <!-- 3. High-End Tabbed Story & Specifications Container (Wholesome Description Redesign) -->
+            <div class="rounded-3xl border border-slate-200 overflow-hidden shadow-xs bg-white">
+              
+              <!-- Tab Navigation Buttons -->
+              <div class="flex border-b border-slate-200 bg-slate-50 text-xs font-bold">
+                <button id="pdpTabBtnSpecs" onclick="switchPdpTab('specs')" class="flex-1 py-3 px-3 border-b-2 border-slate-900 text-slate-900 bg-white transition-all flex items-center justify-center gap-1.5">
+                  <i data-lucide="layers" class="w-3.5 h-3.5"></i>
+                  <span>Craft & Specs</span>
+                </button>
+                <button id="pdpTabBtnStyling" onclick="switchPdpTab('styling')" class="flex-1 py-3 px-3 border-b-2 border-transparent text-slate-500 hover:text-slate-800 transition-all flex items-center justify-center gap-1.5">
+                  <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+                  <span>Styling & Drape</span>
+                </button>
+                <button id="pdpTabBtnCare" onclick="switchPdpTab('care')" class="flex-1 py-3 px-3 border-b-2 border-transparent text-slate-500 hover:text-slate-800 transition-all flex items-center justify-center gap-1.5">
+                  <i data-lucide="shield" class="w-3.5 h-3.5"></i>
+                  <span>Wash Care</span>
+                </button>
               </div>
-              <div class="divide-y divide-slate-100">
-                <div class="flex justify-between px-4 py-2.5">
-                  <span class="text-slate-500">Fabric Quality:</span>
-                  <span id="pdpFabric" class="font-semibold text-slate-900 text-right max-w-[240px]">Soft Silk Two Tone</span>
+
+              <!-- Tab Content 1: Craft Story & Detailed Technical Specifications -->
+              <div id="pdpTabContentSpecs" class="p-5 space-y-4">
+                <div>
+                  <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Editorial Craft Story</h4>
+                  <p id="pdpEditorialStory" class="text-xs text-slate-700 leading-relaxed">
+                    Woven with authentic Indian textile artistry, this exquisite saree merges heritage weaving techniques with modern comfort.
+                  </p>
                 </div>
-                <div class="flex justify-between px-4 py-2.5">
-                  <span class="text-slate-500">Border Weave:</span>
-                  <span id="pdpBorder" class="font-semibold text-slate-900 text-right max-w-[240px]">Narayan Peth Dual Zari</span>
-                </div>
-                <div class="flex justify-between px-4 py-2.5">
-                  <span class="text-slate-500">Pallu Concept:</span>
-                  <span id="pdpPallu" class="font-semibold text-slate-900 text-right max-w-[240px]">Rich Woven Lagadi Pallu</span>
-                </div>
-                <div class="flex justify-between px-4 py-2.5">
-                  <span class="text-slate-500">Blouse Piece:</span>
-                  <span id="pdpBlouse" class="font-semibold text-slate-900 text-right max-w-[240px]">Contrast Concept (0.80 Mtr)</span>
-                </div>
-                <div class="flex justify-between px-4 py-2.5">
-                  <span class="text-slate-500">Saree Length:</span>
-                  <span id="pdpLength" class="font-semibold text-slate-900">5.5 Mtr + 0.8 Mtr</span>
+
+                <div class="border-t border-slate-100 pt-3">
+                  <h4 class="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-2">Technical Specifications</h4>
+                  <div class="divide-y divide-slate-100 text-xs">
+                    <div class="flex justify-between py-1.5">
+                      <span class="text-slate-500">Fabric Quality:</span>
+                      <span id="pdpFabric" class="font-semibold text-slate-900 text-right max-w-[220px]">Soft Silk Two Tone</span>
+                    </div>
+                    <div class="flex justify-between py-1.5">
+                      <span class="text-slate-500">Border Weave:</span>
+                      <span id="pdpBorder" class="font-semibold text-slate-900 text-right max-w-[220px]">Narayan Peth Dual Zari</span>
+                    </div>
+                    <div class="flex justify-between py-1.5">
+                      <span class="text-slate-500">Pallu Concept:</span>
+                      <span id="pdpPallu" class="font-semibold text-slate-900 text-right max-w-[220px]">Rich Woven Lagadi Pallu</span>
+                    </div>
+                    <div class="flex justify-between py-1.5">
+                      <span class="text-slate-500">Blouse Piece:</span>
+                      <span id="pdpBlouse" class="font-semibold text-slate-900 text-right max-w-[220px]">Contrast Concept (0.80 Mtr)</span>
+                    </div>
+                    <div class="flex justify-between py-1.5">
+                      <span class="text-slate-500">Saree Length:</span>
+                      <span id="pdpLength" class="font-semibold text-slate-900">5.5 Mtr + 0.8 Mtr</span>
+                    </div>
+                    <div class="flex justify-between py-1.5">
+                      <span class="text-slate-500">Weight & Feel:</span>
+                      <span id="pdpWeight" class="font-semibold text-slate-900">Approx 650g • Fluid Drape</span>
+                    </div>
+                    <div class="flex justify-between py-1.5">
+                      <span class="text-slate-500">Origin:</span>
+                      <span id="pdpOrigin" class="font-semibold text-slate-900">Surat, Gujarat (Direct Mill)</span>
+                    </div>
+                  </div>
                 </div>
               </div>
+
+              <!-- Tab Content 2: Drape & Styling Guide -->
+              <div id="pdpTabContentStyling" class="hidden p-5 space-y-4 text-xs">
+                <div>
+                  <h4 class="text-xs font-bold text-slate-800 flex items-center gap-1.5 mb-1">
+                    <i data-lucide="award" class="w-4 h-4 text-amber-500"></i> Best Suited Occasions
+                  </h4>
+                  <p id="pdpOccasionText" class="text-slate-600 leading-relaxed">
+                    Grand Weddings, Traditional Pujas, Family Celebrations & Boutique Showroom Displays.
+                  </p>
+                </div>
+                <div class="border-t border-slate-100 pt-3">
+                  <h4 class="text-xs font-bold text-slate-800 flex items-center gap-1.5 mb-1">
+                    <i data-lucide="gem" class="w-4 h-4 text-amber-500"></i> Recommended Jewelry & Styling
+                  </h4>
+                  <p id="pdpJewelryText" class="text-slate-600 leading-relaxed">
+                    Pairs magnificently with traditional matte gold temple jewelry, antique Kundan chokers, or elegant jhumkas.
+                  </p>
+                </div>
+                <div class="border-t border-slate-100 pt-3">
+                  <h4 class="text-xs font-bold text-slate-800 flex items-center gap-1.5 mb-1">
+                    <i data-lucide="scissors" class="w-4 h-4 text-amber-500"></i> Blouse Tailoring Suggestions
+                  </h4>
+                  <p class="text-slate-600 leading-relaxed">
+                    Unstitched 0.80 Mtr contrast fabric provided. Recommended with elbow-length sleeves highlighting the woven border pattern or a sophisticated boat neckline.
+                  </p>
+                </div>
+              </div>
+
+              <!-- Tab Content 3: Wash Care & Preservation -->
+              <div id="pdpTabContentCare" class="hidden p-5 space-y-3 text-xs">
+                <div class="flex items-start gap-3 p-3 rounded-2xl bg-amber-50/60 border border-amber-200/60">
+                  <i data-lucide="info" class="w-5 h-5 text-amber-600 shrink-0 mt-0.5"></i>
+                  <div>
+                    <h5 class="font-bold text-amber-900">Dry Clean Only Recommended</h5>
+                    <p id="pdpCareText" class="text-amber-800/90 mt-0.5">
+                      To preserve the radiant luster and intricate metallic zari weave, professional dry cleaning is strictly recommended.
+                    </p>
+                  </div>
+                </div>
+                <div class="divide-y divide-slate-100 text-slate-600">
+                  <div class="py-2 flex items-center gap-2">
+                    <i data-lucide="check" class="w-4 h-4 text-emerald-600"></i>
+                    <span>Store wrapped in pure breathable cotton or muslin fabric.</span>
+                  </div>
+                  <div class="py-2 flex items-center gap-2">
+                    <i data-lucide="check" class="w-4 h-4 text-emerald-600"></i>
+                    <span>Never spray perfumes directly onto the fabric or zari borders.</span>
+                  </div>
+                  <div class="py-2 flex items-center gap-2">
+                    <i data-lucide="check" class="w-4 h-4 text-emerald-600"></i>
+                    <span>Steam iron on low/silk setting strictly on the reverse side.</span>
+                  </div>
+                </div>
+              </div>
+
             </div>
 
-            <!-- Dedicated Staff Contact Card -->
-            <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-between">
+            <!-- 4. Dedicated Staff Representative Card -->
+            <div class="p-4 rounded-3xl bg-slate-50 border border-slate-200 flex items-center justify-between shadow-xs">
               <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center text-slate-700 font-bold">
-                  <i data-lucide="user" class="w-5 h-5"></i>
+                <div class="relative w-11 h-11 rounded-2xl bg-slate-900 text-white flex items-center justify-center font-bold text-base shadow-xs">
+                  <span id="pdpStaffAvatarLetters">KS</span>
+                  <span class="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 rounded-full bg-emerald-500 border-2 border-white"></span>
                 </div>
                 <div>
-                  <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Your Assigned Representative</p>
-                  <p id="pdpStaffName" class="text-xs font-bold text-slate-900">Saurabh Bhai</p>
-                  <p id="pdpStaffFirm" class="text-[11px] text-slate-500">Saurashtra Sarees Trade Desk</p>
+                  <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Dedicated Sales Representative</p>
+                  <p id="pdpStaffName" class="text-sm font-bold text-slate-900">Khushi</p>
+                  <p id="pdpStaffFirm" class="text-[11px] text-slate-500 font-medium">Keya Fashion • Direct Sales Desk</p>
                 </div>
               </div>
-              <a id="pdpStaffCallBtn" href="tel:+919879471039" class="p-2.5 bg-white border border-slate-300 hover:bg-slate-100 rounded-xl text-slate-800 text-xs font-bold transition-all flex items-center gap-1.5 shadow-xs">
+              <a id="pdpStaffCallBtn" href="tel:+919825452528" class="px-3.5 py-2 bg-white border border-slate-300 hover:bg-slate-100 rounded-xl text-slate-800 text-xs font-bold transition-all flex items-center gap-1.5 shadow-xs">
                 <i data-lucide="phone-call" class="w-4 h-4 text-emerald-600"></i>
                 <span>Call</span>
               </a>
             </div>
 
-            <!-- Primary 1-Click WhatsApp Booking -->
-            <div class="space-y-2.5 pt-2">
-              <button onclick="sendPdpWhatsApp()" class="w-full py-4 px-5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm flex items-center justify-center gap-2.5 shadow-xl shadow-emerald-600/20 transition-all">
+            <!-- 5. Primary 1-Click WhatsApp Booking & Social Copy -->
+            <div class="space-y-2.5 pt-1">
+              <button id="pdpWhatsAppBtn" onclick="sendPdpWhatsApp()" class="w-full py-4 px-5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm flex items-center justify-center gap-2.5 shadow-xl shadow-emerald-600/20 transition-all hover:scale-[1.01]">
                 <i data-lucide="message-circle" class="w-5 h-5 fill-current"></i>
-                <span>Inquire & Book via WhatsApp</span>
+                <span id="pdpWhatsAppBtnText">Inquire & Order via WhatsApp</span>
               </button>
 
-              <button onclick="copyPdpSpecs()" class="w-full py-2.5 px-4 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs flex items-center justify-center gap-2 transition-all">
-                <i data-lucide="copy" class="w-3.5 h-3.5"></i>
-                <span>Copy Reseller Specs for WhatsApp/Telegram</span>
+              <button onclick="copyPdpSpecs()" class="w-full py-3 px-4 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-semibold text-xs flex items-center justify-center gap-2 transition-all">
+                <i data-lucide="copy" class="w-3.5 h-3.5 text-slate-500"></i>
+                <span>Copy Saree Details for WhatsApp / Telegram</span>
               </button>
             </div>
 

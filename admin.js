@@ -1,20 +1,139 @@
 // ==========================================================================
-// VELLUM — Super-Admin Portal Logic
+// VELLUM — Super-Admin Logic & Dedicated Staff Links Matrix
+// Architecture & Engineering by BinduGrid Studio
 // ==========================================================================
 
-const ADMIN_PIN = '9879';
+const ADMIN_PINS = ['7401', '9879', '9898', '9898907401'];
 
-const DEFAULT_STAFF_LIST = [
-  { id: 'staff-1', slug: 'saurabh', name: 'Saurabh Bhai', firm: 'saurashtra', phone: '9879471039', whatsapp: '919879471039', role: 'Wholesale Sales Head' },
-  { id: 'staff-2', slug: 'keyur', name: 'Keyur Bhai', firm: 'keya', phone: '9913643433', whatsapp: '919913643433', role: 'Portal & Reseller Specialist' },
-  { id: 'staff-3', slug: 'rajesh', name: 'Rajesh Bhai', firm: 'saurashtra', phone: '9879471039', whatsapp: '919879471039', role: 'B2B Trade Coordinator' },
-  { id: 'staff-4', slug: 'neha', name: 'Neha Ben', firm: 'keya', phone: '9913643433', whatsapp: '919913643433', role: 'Online Catalog Desk' },
-  { id: 'staff-5', slug: 'amit', name: 'Amit Bhai', firm: 'saurashtra', phone: '9879471039', whatsapp: '919879471039', role: 'Senior Sales Executive' },
-  { id: 'staff-6', slug: 'priya', name: 'Priya Ben', firm: 'keya', phone: '9913643433', whatsapp: '919913643433', role: 'Customer Success Manager' }
+const STAFF_PROFILES = [
+  // 1. Keya Fashion [All Retail Rate]
+  {
+    code: 'KH28',
+    letter: 'A',
+    name: 'Khushi',
+    phone: '9825452528',
+    displayPhone: '+91 98254 52528',
+    whatsapp: '919825452528',
+    firm: 'keya',
+    firmName: 'Keya Fashion',
+    rateType: 'retail',
+    rateLabel: 'Retail MRP Rate Only'
+  },
+  {
+    code: 'AN26',
+    letter: 'B',
+    name: 'Anshika',
+    phone: '9825452526',
+    displayPhone: '+91 98254 52526',
+    whatsapp: '919825452526',
+    firm: 'keya',
+    firmName: 'Keya Fashion',
+    rateType: 'retail',
+    rateLabel: 'Retail MRP Rate Only'
+  },
+  {
+    code: 'PR28',
+    letter: 'C',
+    name: 'Priti',
+    phone: '9909352528',
+    displayPhone: '+91 99093 52528',
+    whatsapp: '919909352528',
+    firm: 'keya',
+    firmName: 'Keya Fashion',
+    rateType: 'retail',
+    rateLabel: 'Retail MRP Rate Only'
+  },
+  {
+    code: 'PA28',
+    letter: 'D',
+    name: 'Palak',
+    phone: '9909452528',
+    displayPhone: '+91 99094 52528',
+    whatsapp: '919909452528',
+    firm: 'keya',
+    firmName: 'Keya Fashion',
+    rateType: 'retail',
+    rateLabel: 'Retail MRP Rate Only'
+  },
+  {
+    code: 'JE04',
+    letter: 'E',
+    name: 'Jenish',
+    phone: '9033808104',
+    displayPhone: '+91 90338 08104',
+    whatsapp: '919033808104',
+    firm: 'keya',
+    firmName: 'Keya Fashion',
+    rateType: 'retail',
+    rateLabel: 'Retail MRP Rate Only'
+  },
+
+  // 2. Saurashtra Sarees [All Retail Rate]
+  {
+    code: 'AR38',
+    letter: 'F',
+    name: 'Arvind Sir',
+    phone: '9824982338',
+    displayPhone: '+91 98249 82338',
+    whatsapp: '919824982338',
+    firm: 'saurashtra',
+    firmName: 'Saurashtra Sarees',
+    rateType: 'retail',
+    rateLabel: 'Retail MRP Rate Only'
+  },
+  {
+    code: 'NA39',
+    letter: 'G',
+    name: 'Nayan Sir',
+    phone: '9879471039',
+    displayPhone: '+91 98794 71039',
+    whatsapp: '919879471039',
+    firm: 'saurashtra',
+    firmName: 'Saurashtra Sarees',
+    rateType: 'retail',
+    rateLabel: 'Retail MRP Rate Only'
+  },
+  {
+    code: 'CH33',
+    letter: 'H',
+    name: 'Chetan Sir',
+    phone: '9913643433',
+    displayPhone: '+91 99136 43433',
+    whatsapp: '919913643433',
+    firm: 'saurashtra',
+    firmName: 'Saurashtra Sarees',
+    rateType: 'retail',
+    rateLabel: 'Retail MRP Rate Only'
+  },
+
+  // 3. Saurashtra Sarees [All Rate]
+  {
+    code: 'NA39ALL',
+    letter: 'PRO-1',
+    name: 'Nayan Sir (All Rates)',
+    phone: '9879471039',
+    displayPhone: '+91 98794 71039',
+    whatsapp: '919879471039',
+    firm: 'saurashtra',
+    firmName: 'Saurashtra Sarees',
+    rateType: 'all',
+    rateLabel: 'Super Wholesale + Reseller + Retail'
+  },
+  {
+    code: 'CH33ALL',
+    letter: 'PRO-2',
+    name: 'Chetan Sir (All Rates)',
+    phone: '9913643433',
+    displayPhone: '+91 99136 43433',
+    whatsapp: '919913643433',
+    firm: 'saurashtra',
+    firmName: 'Saurashtra Sarees',
+    rateType: 'all',
+    rateLabel: 'Super Wholesale + Reseller + Retail'
+  }
 ];
 
 let adminCatalogs = [];
-let staffList = [];
 
 document.addEventListener('DOMContentLoaded', async () => {
   if (sessionStorage.getItem('vellum_admin_auth') === 'true') {
@@ -23,10 +142,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('adminPinInput').focus();
   }
 
-  loadStaff();
-  await loadCatalogs();
-  initGenerator();
-  renderStaffTable();
+  await loadAdminCatalogs();
+  renderStaffHub();
+  initCustomGenerator();
   renderRatesTable();
 
   if (window.lucide) lucide.createIcons();
@@ -36,7 +154,7 @@ function unlockAdmin() {
   const pin = document.getElementById('adminPinInput').value.trim();
   const errorMsg = document.getElementById('pinErrorMsg');
 
-  if (pin === ADMIN_PIN || pin === '8080') {
+  if (ADMIN_PINS.includes(pin)) {
     sessionStorage.setItem('vellum_admin_auth', 'true');
     showDashboard();
   } else {
@@ -54,24 +172,21 @@ function showDashboard() {
   document.getElementById('adminDashboard').classList.remove('hidden');
 }
 
-// --------------------------------------------------------------------------
-// TABS SWITCHING
-// --------------------------------------------------------------------------
-function switchTab(tabName) {
-  const tabs = ['links', 'staff', 'rates', 'firms'];
+function switchTab(tabId) {
+  const tabs = ['hub', 'generator', 'rates', 'firms'];
   tabs.forEach(t => {
     const content = document.getElementById(`tabContent-${t}`);
     const btn = document.getElementById(`tabBtn-${t}`);
     const mBtn = document.getElementById(`mTabBtn-${t}`);
 
-    if (t === tabName) {
+    if (t === tabId) {
       if (content) content.classList.remove('hidden');
-      if (btn) btn.className = 'px-3.5 py-1.5 rounded-lg font-bold bg-amber-500 text-slate-950 shadow-xs';
-      if (mBtn) mBtn.className = 'px-3 py-1 rounded-lg font-bold bg-amber-500 text-slate-950 whitespace-nowrap';
+      if (btn) btn.className = 'px-4 py-2 rounded-xl font-bold bg-amber-500 text-slate-950 shadow-xs';
+      if (mBtn) mBtn.className = 'px-3 py-1.5 rounded-lg font-bold bg-amber-500 text-slate-950 whitespace-nowrap';
     } else {
       if (content) content.classList.add('hidden');
-      if (btn) btn.className = 'px-3.5 py-1.5 rounded-lg font-medium text-slate-400 hover:text-white';
-      if (mBtn) mBtn.className = 'px-3 py-1 rounded-lg font-medium text-slate-400 whitespace-nowrap';
+      if (btn) btn.className = 'px-4 py-2 rounded-xl font-medium text-slate-400 hover:text-white';
+      if (mBtn) mBtn.className = 'px-3 py-1.5 rounded-lg font-medium text-slate-400 whitespace-nowrap';
     }
   });
 
@@ -79,231 +194,223 @@ function switchTab(tabName) {
 }
 
 // --------------------------------------------------------------------------
-// TAB 1: SMART LINK GENERATOR LOGIC
+// RENDER STAFF LINKS HUB
 // --------------------------------------------------------------------------
-function loadStaff() {
-  const saved = localStorage.getItem('vellum_staff_list');
-  staffList = saved ? JSON.parse(saved) : DEFAULT_STAFF_LIST;
+function renderStaffHub() {
+  const keyaGrid = document.getElementById('gridKeyaRetail');
+  const saurashtraRetailGrid = document.getElementById('gridSaurashtraRetail');
+  const saurashtraAllGrid = document.getElementById('gridSaurashtraAllRates');
+
+  const keyaList = STAFF_PROFILES.filter(s => s.firm === 'keya' && s.rateType === 'retail');
+  const saurashtraRetailList = STAFF_PROFILES.filter(s => s.firm === 'saurashtra' && s.rateType === 'retail');
+  const saurashtraAllList = STAFF_PROFILES.filter(s => s.rateType === 'all');
+
+  const baseOrigin = window.location.origin;
+  const basePath = window.location.pathname.replace('admin.html', '').replace('admin', '');
+
+  const renderCard = (staff) => {
+    const link = `${baseOrigin}${basePath}?u=${staff.code}`;
+    const badgeBg = staff.rateType === 'all' 
+      ? 'bg-amber-400 text-slate-950' 
+      : (staff.firm === 'keya' ? 'bg-sky-500 text-white' : 'bg-rose-500 text-white');
+
+    return `
+      <div class="bg-slate-950 border border-slate-800 rounded-3xl p-5 flex flex-col justify-between space-y-4 hover:border-slate-700 transition-all shadow-md group">
+        <div>
+          <div class="flex items-center justify-between mb-3">
+            <span class="text-xs font-mono font-extrabold px-3 py-1 rounded-xl shadow-xs ${badgeBg}">
+              ${staff.code}
+            </span>
+            <span class="text-[10px] text-slate-400 font-semibold uppercase tracking-wider">
+              ${staff.letter}. ${staff.firmName}
+            </span>
+          </div>
+
+          <h4 class="font-serif text-lg font-bold text-white">${staff.name}</h4>
+          <p class="text-xs text-amber-300 font-mono mt-0.5 flex items-center gap-1.5">
+            <i data-lucide="phone" class="w-3.5 h-3.5"></i> ${staff.displayPhone}
+          </p>
+          <p class="text-[11px] text-slate-400 mt-1">${staff.rateLabel}</p>
+
+          <!-- Dedicated URL box -->
+          <div class="mt-3 p-2.5 bg-slate-900 rounded-xl border border-slate-800 break-all text-[11px] font-mono text-slate-300 select-all">
+            ${link}
+          </div>
+        </div>
+
+        <div class="space-y-2 pt-2 border-t border-slate-800/80">
+          <div class="flex items-center gap-2">
+            <button onclick="copyToClipboard('${link}', 'Link for ${staff.name} (${staff.code}) copied!')" class="flex-1 py-2 px-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all shadow-xs">
+              <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+              <span>Copy Link</span>
+            </button>
+
+            <a href="${link}" target="_blank" title="Test Live Showroom" class="p-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-700 flex items-center justify-center">
+              <i data-lucide="external-link" class="w-4 h-4"></i>
+            </a>
+          </div>
+
+          <button onclick="copyStaffBroadcast('${staff.code}')" class="w-full py-2 px-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 text-xs font-semibold flex items-center justify-center gap-1.5 transition-all">
+            <i data-lucide="message-circle" class="w-3.5 h-3.5 text-emerald-400"></i>
+            <span>Copy WhatsApp Broadcast</span>
+          </button>
+        </div>
+      </div>
+    `;
+  };
+
+  if (keyaGrid) keyaGrid.innerHTML = keyaList.map(renderCard).join('');
+  if (saurashtraRetailGrid) saurashtraRetailGrid.innerHTML = saurashtraRetailList.map(renderCard).join('');
+  if (saurashtraAllGrid) saurashtraAllGrid.innerHTML = saurashtraAllList.map(renderCard).join('');
 }
 
-async function loadCatalogs() {
+function copyStaffBroadcast(userCode) {
+  const staff = STAFF_PROFILES.find(s => s.code === userCode);
+  if (!staff) return;
+
+  const baseOrigin = window.location.origin;
+  const basePath = window.location.pathname.replace('admin.html', '').replace('admin', '');
+  const link = `${baseOrigin}${basePath}?u=${staff.code}`;
+
+  const msg = 
+`🥻 *${staff.firmName.toUpperCase()} — DIGITAL TEXTILE SHOWROOM* 🥻
+
+Namaste! Please explore our complete live saree catalogue directly on your phone/pc:
+
+🔗 *Click to View Live Collections:*
+${link}
+
+✨ *Showroom Features:*
+• 100% High-Definition Model & Table Shoots
+• Multi-Angle Saree Views (Front, Pallu, Border, Pleats & Blouse)
+• Live Color Variants & Accurate Shades
+• Direct 1-Click WhatsApp Booking
+
+📞 *Your Dedicated Representative:*
+*${staff.name}*
+WhatsApp / Call: ${staff.displayPhone}
+Direct Surat Mill Dispatch • Best Quality Guaranteed`;
+
+  copyToClipboard(msg, `WhatsApp Broadcast text for ${staff.name} copied!`);
+}
+
+// --------------------------------------------------------------------------
+// TAB 2: DEEP-LINK GENERATOR
+// --------------------------------------------------------------------------
+async function loadAdminCatalogs() {
   try {
     const res = await fetch('data/catalogs.json');
     if (res.ok) {
       adminCatalogs = await res.json();
     }
   } catch (e) {
-    console.warn('Could not load catalogs.json:', e);
+    console.warn('Could not load catalogs:', e);
   }
 }
 
-function initGenerator() {
-  // Populate staff dropdown
+function initCustomGenerator() {
   const staffSelect = document.getElementById('genStaffSelect');
   if (staffSelect) {
-    staffSelect.innerHTML = staffList.map(s => {
-      const firmLabel = s.firm === 'keya' ? 'Keya Fashion' : 'Saurashtra Sarees';
-      return `<option value="${s.slug}">[${firmLabel}] ${s.name} (${s.phone})</option>`;
+    staffSelect.innerHTML = STAFF_PROFILES.map(s => {
+      return `<option value="${s.code}">[${s.code}] ${s.name} — ${s.firmName} (${s.displayPhone})</option>`;
     }).join('');
   }
 
-  // Populate catalog dropdown
   const catSelect = document.getElementById('genCatalogSelect');
   if (catSelect) {
     catSelect.innerHTML = `
-      <option value="">-- Open Full Showroom Collection (Home) --</option>
-      ${adminCatalogs.map(c => `<option value="${c.code.toLowerCase()}">${c.name} (${c.code}) - ${c.category}</option>`).join('')}
+      <option value="">-- Open Full Collection (Showroom Home) --</option>
+      ${adminCatalogs.map(c => `<option value="${c.code.toLowerCase()}">${c.name} (${c.code}) — ${c.category}</option>`).join('')}
     `;
   }
 
-  updateGeneratedLink();
+  updateCustomLink();
 }
 
-function updateGeneratedLink() {
-  const firmRadio = document.querySelector('input[name="genFirm"]:checked');
-  const roleRadio = document.querySelector('input[name="genRole"]:checked');
+function updateCustomLink() {
+  const staffCode = document.getElementById('genStaffSelect')?.value || 'KH28';
+  const catCode = document.getElementById('genCatalogSelect')?.value || '';
   const shootRadio = document.querySelector('input[name="genShoot"]:checked');
-  const staffSelect = document.getElementById('genStaffSelect');
-  const catSelect = document.getElementById('genCatalogSelect');
-
-  const firm = firmRadio ? firmRadio.value : 'saurashtra';
-  const role = roleRadio ? roleRadio.value : 'wholesale';
   const shoot = shootRadio ? shootRadio.value : 'all';
-  const staffSlug = staffSelect ? staffSelect.value : 'saurabh';
-  const catCode = catSelect ? catSelect.value : '';
 
-  const staff = staffList.find(s => s.slug === staffSlug) || staffList[0];
+  const staff = STAFF_PROFILES.find(s => s.code === staffCode) || STAFF_PROFILES[0];
 
-  // Base URL
   const baseOrigin = window.location.origin;
   const basePath = window.location.pathname.replace('admin.html', '').replace('admin', '');
-  let url = `${baseOrigin}${basePath}?firm=${firm}&staff=${staff.slug}`;
-
-  if (role === 'wholesale') {
-    url += '&k=prime';
-  } else if (role === 'reseller') {
-    url += '&k=seller';
-  }
-
+  
+  let url = `${baseOrigin}${basePath}?u=${staff.code}`;
   if (shoot !== 'all') {
     url += `&shoot=${shoot}`;
   }
-
   if (catCode) {
     url += `#catalog/${catCode}`;
   }
 
-  // Display URL
-  const urlDisplay = document.getElementById('generatedUrlText');
+  const urlDisplay = document.getElementById('customGeneratedUrlText');
   if (urlDisplay) urlDisplay.textContent = url;
 
-  const testBtn = document.getElementById('previewTestBtn');
+  const testBtn = document.getElementById('customTestLinkBtn');
   if (testBtn) testBtn.href = url;
 
-  // Previews
-  document.getElementById('previewFirmName').textContent = firm === 'keya' ? 'Keya Fashion' : 'Saurashtra Sarees';
-  document.getElementById('previewFirmBadge').textContent = firm === 'keya' ? 'Keya' : 'Saurashtra';
-  document.getElementById('previewFirmBadge').className = firm === 'keya' 
-    ? 'text-[10px] font-bold px-2 py-0.5 rounded bg-sky-600 text-white' 
+  document.getElementById('genPreviewStaff').textContent = `${staff.name} (${staff.displayPhone})`;
+  document.getElementById('genPreviewFirm').textContent = staff.firmName;
+  document.getElementById('genPreviewRate').textContent = staff.rateLabel;
+  document.getElementById('genPreviewFirmBadge').textContent = staff.firmName;
+  document.getElementById('genPreviewFirmBadge').className = staff.firm === 'keya' 
+    ? 'text-[10px] font-bold px-2 py-0.5 rounded bg-brand-sky text-white' 
     : 'text-[10px] font-bold px-2 py-0.5 rounded bg-brand-maroon text-white';
-
-  document.getElementById('previewStaffName').textContent = `${staff.name} (+91 ${staff.phone})`;
-  
-  let roleTitle = 'Super Wholesale (prime)';
-  let roleColor = 'text-emerald-400';
-  if (role === 'reseller') { roleTitle = 'Portal Seller / Reseller (seller)'; roleColor = 'text-blue-400'; }
-  if (role === 'retail') { roleTitle = 'Retail / Catalog MRP (Clean)'; roleColor = 'text-purple-400'; }
-
-  const roleEl = document.getElementById('previewRoleName');
-  if (roleEl) {
-    roleEl.textContent = roleTitle;
-    roleEl.className = `${roleColor} font-bold`;
-  }
-
-  document.getElementById('previewShootName').textContent = shoot === 'all' 
-    ? 'All Shoots (Model + Table)' 
-    : (shoot === 'model' ? 'Model Shoot Only' : 'Table Shoot Only');
 }
 
-function copyGeneratedLink() {
-  const url = document.getElementById('generatedUrlText').textContent;
-  navigator.clipboard.writeText(url).then(() => {
-    showAdminToast('Smart Link copied to clipboard!');
-  });
-}
-
-function copyWhatsAppBroadcast() {
-  const firmRadio = document.querySelector('input[name="genFirm"]:checked');
-  const firm = (firmRadio && firmRadio.value === 'keya') ? 'Keya Fashion' : 'Saurashtra Sarees';
-  const staffSlug = document.getElementById('genStaffSelect').value;
-  const staff = staffList.find(s => s.slug === staffSlug) || staffList[0];
-  const url = document.getElementById('generatedUrlText').textContent;
-
-  const text = 
-`🙏 Greetings from ${firm} (Surat) 🙏
-
-We have updated our latest wholesale saree lookbook. Click below to view all live collections, model drapes, table flat-lays, and video reels:
-
-👉 ${url}
-
-For any inquiries or bulk bookings, feel free to contact me directly:
-👤 Representative: ${staff.name}
-📞 Call / WhatsApp: +91 ${staff.phone}
-${firm} — Surat Manufacturing Unit`;
-
-  navigator.clipboard.writeText(text).then(() => {
-    showAdminToast('WhatsApp message copied with link!');
-  });
+function copyCustomLink() {
+  const url = document.getElementById('customGeneratedUrlText')?.textContent || '';
+  copyToClipboard(url, 'Smart Link copied to clipboard!');
 }
 
 // --------------------------------------------------------------------------
-// TAB 2: STAFF DIRECTORY TABLE
-// --------------------------------------------------------------------------
-function renderStaffTable() {
-  const tbody = document.getElementById('staffTableBody');
-  if (!tbody) return;
-
-  tbody.innerHTML = staffList.map((s, idx) => {
-    const firmName = s.firm === 'keya' ? 'Keya Fashion' : 'Saurashtra Sarees';
-    const firmBadge = s.firm === 'keya' ? 'bg-sky-950 text-sky-400 border border-sky-800' : 'bg-rose-950 text-rose-400 border border-rose-800';
-
-    return `
-      <tr class="hover:bg-slate-900/60 transition-colors">
-        <td class="py-3.5 px-4 font-bold text-white">${s.name} <span class="text-[10px] text-slate-500 block font-normal">${s.role}</span></td>
-        <td class="py-3.5 px-4"><span class="px-2 py-0.5 rounded text-[10px] font-bold ${firmBadge}">${firmName}</span></td>
-        <td class="py-3.5 px-4 font-mono">${s.phone}</td>
-        <td class="py-3.5 px-4 font-mono text-emerald-400">+${s.whatsapp}</td>
-        <td class="py-3.5 px-4 font-mono text-amber-300">?staff=${s.slug}</td>
-        <td class="py-3.5 px-4 text-right space-x-2">
-          <button onclick="copyStaffPermanentLink('${s.slug}', '${s.firm}')" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-amber-400 rounded-lg text-[11px] font-semibold">Copy Link</button>
-        </td>
-      </tr>
-    `;
-  }).join('');
-}
-
-function copyStaffPermanentLink(slug, firm) {
-  const baseOrigin = window.location.origin;
-  const basePath = window.location.pathname.replace('admin.html', '').replace('admin', '');
-  const url = `${baseOrigin}${basePath}?firm=${firm}&staff=${slug}`;
-
-  navigator.clipboard.writeText(url).then(() => {
-    showAdminToast(`Link copied for ${slug}!`);
-  });
-}
-
-function openAddStaffModal() {
-  const name = prompt('Enter Staff Name (e.g. Rahul Bhai):');
-  if (!name) return;
-  const slug = prompt('Enter Short Link Slug (e.g. rahul):', name.toLowerCase().replace(/[^a-z0-9]/g, ''));
-  if (!slug) return;
-  const phone = prompt('Enter Phone Number (e.g. 9879471039):', '9879471039');
-  if (!phone) return;
-  const firm = confirm('Assign to Saurashtra Sarees? (Click Cancel for Keya Fashion)') ? 'saurashtra' : 'keya';
-
-  const newStaff = {
-    id: `staff-${Date.now()}`,
-    slug: slug,
-    name: name,
-    firm: firm,
-    phone: phone,
-    whatsapp: `91${phone}`,
-    role: 'Sales Representative'
-  };
-
-  staffList.push(newStaff);
-  localStorage.setItem('vellum_staff_list', JSON.stringify(staffList));
-  renderStaffTable();
-  initGenerator();
-  showAdminToast(`Staff ${name} added successfully!`);
-}
-
-// --------------------------------------------------------------------------
-// TAB 3: RATES & STOCK TABLE
+// TAB 3: RATES & STOCK EDITOR
 // --------------------------------------------------------------------------
 function renderRatesTable() {
-  const tbody = document.getElementById('ratesTableBody');
-  if (!tbody || !adminCatalogs.length) return;
+  const tbody = document.getElementById('adminRatesTableBody');
+  if (!tbody) return;
 
-  tbody.innerHTML = adminCatalogs.map((c, idx) => {
+  tbody.innerHTML = adminCatalogs.map((cat, i) => {
     return `
       <tr class="hover:bg-slate-900/60 transition-colors">
-        <td class="py-3 px-4 font-bold text-white">${c.name} <span class="text-[10px] text-slate-500 block font-mono">${c.code}</span></td>
-        <td class="py-3 px-4 text-slate-400">${c.category}</td>
+        <td class="py-3 px-4 font-semibold text-white">
+          <div class="font-serif">${cat.name}</div>
+          <div class="text-[10px] font-mono text-slate-400">${cat.code}</div>
+        </td>
+        <td class="py-3 px-4 text-slate-400">${cat.category}</td>
+        <td class="py-3 px-4">${cat.skuCount} Shades</td>
         <td class="py-3 px-4">
-          <input type="number" id="rate-ws-${idx}" value="${c.wholesaleRate}" class="w-24 px-2 py-1 bg-slate-900 border border-slate-700 rounded-lg text-xs font-bold text-emerald-400 text-right">
+          <input 
+            type="number" 
+            id="rate-ws-${cat.code}" 
+            value="${cat.wholesaleRate}" 
+            class="w-24 px-2.5 py-1.5 bg-slate-900 border border-slate-700 rounded-lg text-emerald-400 font-mono font-bold focus:border-amber-400 text-xs"
+          >
         </td>
         <td class="py-3 px-4">
-          <input type="number" id="rate-res-${idx}" value="${c.resellerRate}" class="w-24 px-2 py-1 bg-slate-900 border border-slate-700 rounded-lg text-xs font-bold text-blue-400 text-right">
+          <input 
+            type="number" 
+            id="rate-res-${cat.code}" 
+            value="${cat.resellerRate}" 
+            class="w-24 px-2.5 py-1.5 bg-slate-900 border border-slate-700 rounded-lg text-blue-400 font-mono font-bold focus:border-amber-400 text-xs"
+          >
         </td>
         <td class="py-3 px-4">
-          <input type="number" id="rate-ret-${idx}" value="${c.retailRate}" class="w-24 px-2 py-1 bg-slate-900 border border-slate-700 rounded-lg text-xs font-bold text-purple-400 text-right">
+          <input 
+            type="number" 
+            id="rate-ret-${cat.code}" 
+            value="${cat.retailRate}" 
+            class="w-24 px-2.5 py-1.5 bg-slate-900 border border-slate-700 rounded-lg text-purple-400 font-mono font-bold focus:border-amber-400 text-xs"
+          >
         </td>
         <td class="py-3 px-4">
-          <select id="status-${idx}" class="px-2 py-1 bg-slate-900 border border-slate-700 rounded-lg text-xs font-semibold text-white">
-            <option value="Ready to Dispatch" ${c.status === 'Ready to Dispatch' ? 'selected' : ''}>Ready to Dispatch</option>
-            <option value="In Stock" ${c.status === 'In Stock' ? 'selected' : ''}>In Stock</option>
-            <option value="Sold Out" ${c.status === 'Sold Out' ? 'selected' : ''}>Sold Out</option>
+          <select id="status-${cat.code}" class="px-2.5 py-1.5 bg-slate-900 border border-slate-700 rounded-lg text-white text-xs">
+            <option value="Ready to Dispatch" ${cat.status === 'Ready to Dispatch' ? 'selected' : ''}>Ready to Dispatch</option>
+            <option value="Limited Stock" ${cat.status === 'Limited Stock' ? 'selected' : ''}>Limited Stock</option>
+            <option value="Sold Out" ${cat.status === 'Sold Out' ? 'selected' : ''}>Sold Out</option>
           </select>
         </td>
       </tr>
@@ -311,29 +418,38 @@ function renderRatesTable() {
   }).join('');
 }
 
-function saveRatesToLocal() {
-  adminCatalogs.forEach((c, idx) => {
-    const ws = document.getElementById(`rate-ws-${idx}`);
-    const res = document.getElementById(`rate-res-${idx}`);
-    const ret = document.getElementById(`rate-ret-${idx}`);
-    const stat = document.getElementById(`status-${idx}`);
+function saveRatesChanges() {
+  adminCatalogs.forEach(cat => {
+    const wsInput = document.getElementById(`rate-ws-${cat.code}`);
+    const resInput = document.getElementById(`rate-res-${cat.code}`);
+    const retInput = document.getElementById(`rate-ret-${cat.code}`);
+    const statusSelect = document.getElementById(`status-${cat.code}`);
 
-    if (ws) c.wholesaleRate = parseInt(ws.value) || c.wholesaleRate;
-    if (res) c.resellerRate = parseInt(res.value) || c.resellerRate;
-    if (ret) c.retailRate = parseInt(ret.value) || c.retailRate;
-    if (stat) c.status = stat.value;
+    if (wsInput) cat.wholesaleRate = parseInt(wsInput.value) || cat.wholesaleRate;
+    if (resInput) cat.resellerRate = parseInt(resInput.value) || cat.resellerRate;
+    if (retInput) cat.retailRate = parseInt(retInput.value) || cat.retailRate;
+    if (statusSelect) cat.status = statusSelect.value;
   });
 
-  localStorage.setItem('vellum_custom_catalogs', JSON.stringify(adminCatalogs));
-  showAdminToast('All prices saved successfully!');
+  copyToClipboard(JSON.stringify(adminCatalogs, null, 2), 'Catalog rates saved locally!');
+  showToast('✓ Pricing and stock status updated successfully!');
 }
 
-function showAdminToast(msg) {
+// --------------------------------------------------------------------------
+// UTILITIES
+// --------------------------------------------------------------------------
+function copyToClipboard(text, successMsg) {
+  navigator.clipboard.writeText(text).then(() => {
+    showToast(successMsg || 'Copied to clipboard!');
+  });
+}
+
+function showToast(msg) {
   const toast = document.getElementById('adminToast');
   const toastMsg = document.getElementById('adminToastMsg');
   if (toast && toastMsg) {
     toastMsg.textContent = msg;
     toast.classList.remove('hidden');
-    setTimeout(() => toast.classList.add('hidden'), 3000);
+    setTimeout(() => toast.classList.add('hidden'), 3500);
   }
 }
