@@ -135,19 +135,16 @@
             <i data-lucide="play" class="w-3 h-3 fill-current"></i> Quick Test:
           </span>
           <a href="index.html?u=KH28" target="_blank" class="px-2.5 py-1 rounded-lg bg-sky-50 hover:bg-sky-100 border border-sky-300 text-sky-800 font-mono text-[11px] whitespace-nowrap font-bold shadow-xs">
-            KH28 (Khushi) ↗
-          </a>
-          <a href="index.html?u=AN26" target="_blank" class="px-2.5 py-1 rounded-lg bg-sky-50 hover:bg-sky-100 border border-sky-300 text-sky-800 font-mono text-[11px] whitespace-nowrap font-bold shadow-xs">
-            AN26 (Anshika) ↗
+            KH28 (Retail) ↗
           </a>
           <a href="index.html?u=AR38" target="_blank" class="px-2.5 py-1 rounded-lg bg-rose-50 hover:bg-rose-100 border border-rose-300 text-rose-800 font-mono text-[11px] whitespace-nowrap font-bold shadow-xs">
-            AR38 (Arvind) ↗
+            AR38 (Retail) ↗
           </a>
-          <a href="index.html?u=NA39ALL" target="_blank" class="px-2.5 py-1 rounded-lg bg-amber-100 hover:bg-amber-200 border border-amber-400 text-amber-900 font-mono text-[11px] font-black whitespace-nowrap shadow-xs">
-            NA39ALL (All Rates) ↗
+          <a href="index.html?u=AR38W" target="_blank" class="px-2.5 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 border border-emerald-400 text-emerald-900 font-mono text-[11px] font-black whitespace-nowrap shadow-xs">
+            AR38W (Wholesale) ↗
           </a>
-          <a href="index.html?u=CH33ALL" target="_blank" class="px-2.5 py-1 rounded-lg bg-amber-100 hover:bg-amber-200 border border-amber-400 text-amber-900 font-mono text-[11px] font-black whitespace-nowrap shadow-xs">
-            CH33ALL (All Rates) ↗
+          <a href="index.html?u=AR38P" target="_blank" class="px-2.5 py-1 rounded-lg bg-amber-100 hover:bg-amber-200 border border-amber-400 text-amber-900 font-mono text-[11px] font-black whitespace-nowrap shadow-xs">
+            AR38P (Prime) ↗
           </a>
         </div>
 
@@ -169,71 +166,43 @@
     <main class="flex-1 p-4 sm:p-8 space-y-8 max-w-7xl w-full">
 
       <!-- ==================================================================== -->
-      <!-- TAB 1: DEDICATED STAFF LINKS HUB (KH28 to CH33ALL)                   -->
+      <!-- TAB 1: DEDICATED STAFF DIRECTORY & MULTI-RATE LINKS HUB                -->
       <!-- ==================================================================== -->
-      <section id="tabContent-hub" class="space-y-8">
+      <section id="tabContent-hub" class="space-y-6">
         
         <div class="border-b border-amber-200/80 pb-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
             <h2 class="font-serif text-2xl font-bold text-stone-900 flex items-center gap-2">
-              <span>👥 Staff Dedicated Smart Links Matrix</span>
-              <span class="text-xs bg-emerald-100 text-emerald-800 border border-emerald-300 font-sans px-2.5 py-0.5 rounded-full font-bold">10 Active Links</span>
+              <span>👥 Sales Staff Directory & Rate Link Hub</span>
+              <span id="staffTotalCountBadge" class="text-xs bg-emerald-100 text-emerald-800 border border-emerald-300 font-sans px-2.5 py-0.5 rounded-full font-bold">8 Active Staff</span>
             </h2>
             <p class="text-xs text-stone-600 mt-1">
-              Click any link to test directly in a new tab, or click "Copy Link" to share. All firm brands and staff contacts are permanently locked!
+              Dedicated staff links locked to respective representatives. Base code (<code class="bg-amber-100 px-1 py-0.5 rounded text-amber-900 font-bold">?u=CODE</code>) defaults to Retail Rate. Add suffix <code class="bg-emerald-100 px-1 py-0.5 rounded text-emerald-900 font-bold">W</code> for Wholesale, or <code class="bg-amber-100 px-1 py-0.5 rounded text-amber-950 font-bold">P</code> for Prime.
             </p>
           </div>
+
+          <button onclick="openStaffModal()" class="px-5 py-2.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs uppercase tracking-wider flex items-center gap-2 shadow-xs transition-all shrink-0">
+            <i data-lucide="user-plus" class="w-4 h-4"></i>
+            <span>+ Add Sales Staff Member</span>
+          </button>
         </div>
 
-        <!-- 1. KEYA FASHION [RETAIL RATE] (A to E) -->
-        <div class="space-y-4">
-          <div class="flex items-center justify-between">
-            <div class="flex items-center gap-2.5">
-              <span class="w-3.5 h-3.5 rounded-full bg-brand-sky"></span>
-              <h3 class="font-serif text-lg font-bold text-stone-900">1. Keya Fashion — Retail Rate Showroom</h3>
-            </div>
-            <span class="text-xs font-bold text-sky-800 bg-sky-50 border border-sky-300 px-3 py-1 rounded-full">
-              5 Staff Members (Retail Rate Only)
-            </span>
+        <!-- Rate Architecture Callout Bar -->
+        <div class="p-3.5 bg-gradient-to-r from-amber-50 via-white to-amber-50 rounded-2xl border border-amber-300/80 flex flex-wrap items-center justify-between gap-3 text-xs text-stone-700">
+          <div class="flex items-center gap-2">
+            <span class="text-base">🔑</span>
+            <span class="font-bold text-stone-900">3-Tier Smart Link Architecture:</span>
           </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5" id="gridKeyaRetail">
-            <!-- Rendered by JS -->
-          </div>
-        </div>
-
-        <!-- 2. SAURASHTRA SAREES [RETAIL RATE] (F to H) -->
-        <div class="space-y-4 pt-6 border-t border-amber-200/80">
-          <div class="flex items-center justify-between">
-            <div class="flex items-center gap-2.5">
-              <span class="w-3.5 h-3.5 rounded-full bg-brand-maroon"></span>
-              <h3 class="font-serif text-lg font-bold text-stone-900">2. Saurashtra Sarees — Retail Rate Showroom</h3>
-            </div>
-            <span class="text-xs font-bold text-rose-800 bg-rose-50 border border-rose-300 px-3 py-1 rounded-full">
-              3 Senior Staff Members (Retail Rate Only)
-            </span>
-          </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5" id="gridSaurashtraRetail">
-            <!-- Rendered by JS -->
+          <div class="flex flex-wrap items-center gap-2 font-mono text-[11px]">
+            <span class="px-2.5 py-1 rounded-lg bg-stone-100 border border-stone-300 text-stone-800 font-bold">?u=AR38 (Retail MRP)</span>
+            <span class="px-2.5 py-1 rounded-lg bg-emerald-100 border border-emerald-300 text-emerald-900 font-bold">?u=AR38W (Wholesale)</span>
+            <span class="px-2.5 py-1 rounded-lg bg-amber-100 border border-amber-300 text-amber-950 font-bold">?u=AR38P (Prime Exclusive)</span>
           </div>
         </div>
 
-        <!-- 3. SAURASHTRA SAREES [ALL RATE] (Nayan Sir & Chetan Sir) -->
-        <div class="space-y-4 pt-6 border-t border-amber-200/80">
-          <div class="flex items-center justify-between">
-            <div class="flex items-center gap-2.5">
-              <span class="w-3.5 h-3.5 rounded-full bg-amber-500 animate-pulse"></span>
-              <h3 class="font-serif text-lg font-bold text-stone-900">3. Saurashtra Sarees — Master [All Rates Active]</h3>
-            </div>
-            <span class="text-xs font-bold text-amber-900 bg-amber-100 border border-amber-400 px-3 py-1 rounded-full">
-              2 Master Users (Wholesale + Reseller + Retail)
-            </span>
-          </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-5" id="gridSaurashtraAll">
-            <!-- Rendered by JS -->
-          </div>
+        <!-- Dynamic Staff Cards Container Grouped by Firm -->
+        <div id="staffDirectoryContainer" class="space-y-6">
+          <!-- Rendered dynamically by admin.js with full Edit / Delete & 3 Links -->
         </div>
 
       </section>
@@ -364,36 +333,62 @@
       </section>
 
       <!-- ==================================================================== -->
-      <!-- TAB 3: CATALOG & COLOR STOCK MANAGER                                 -->
+      <!-- TAB 3: CLEAN & FAST CATALOG STOCK MANAGER                              -->
       <!-- ==================================================================== -->
       <section id="tabContent-stock" class="hidden space-y-6">
         
         <div class="border-b border-amber-200/80 pb-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
             <h2 class="font-serif text-2xl font-bold text-stone-900 flex items-center gap-2">
-              <span>📦 Granular Catalog & Color Stock Control</span>
+              <span>📦 Catalog Stock Manager (Fast 1-Click Control)</span>
             </h2>
             <p class="text-xs text-stone-600 mt-1">
-              Toggle stock availability per entire catalog volume or per individual color shade (Temporary Weaving vs Permanent Sold Out).
+              High-efficiency stock toggles. 1-click status updates for Ready Lots, Re-Weaving (3–5 Days), and Sold Out.
             </p>
           </div>
           
+          <div class="flex items-center gap-2">
+            <button onclick="markAllCatalogsInStock()" class="px-4 py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all shadow-xs">
+              <i data-lucide="check-check" class="w-4 h-4 text-emerald-600"></i>
+              <span>Mark All In Stock</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Filter & Search Bar -->
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-3 bg-white p-3.5 rounded-2xl border border-amber-200/80 shadow-xs">
+          <!-- Quick Status Tabs -->
+          <div class="flex flex-wrap items-center gap-1.5 text-xs font-bold">
+            <button onclick="filterStockStatus('all')" id="stockTab-all" class="px-3 py-1.5 rounded-xl bg-amber-600 text-white shadow-xs">
+              All (26)
+            </button>
+            <button onclick="filterStockStatus('in_stock')" id="stockTab-in_stock" class="px-3 py-1.5 rounded-xl bg-stone-100 text-stone-700 hover:bg-stone-200">
+              🟢 Ready Lots
+            </button>
+            <button onclick="filterStockStatus('temp_out_of_stock')" id="stockTab-temp_out_of_stock" class="px-3 py-1.5 rounded-xl bg-stone-100 text-stone-700 hover:bg-stone-200">
+              🟡 Re-Weaving
+            </button>
+            <button onclick="filterStockStatus('perm_out_of_stock')" id="stockTab-perm_out_of_stock" class="px-3 py-1.5 rounded-xl bg-stone-100 text-stone-700 hover:bg-stone-200">
+              🔴 Sold Out
+            </button>
+          </div>
+
           <!-- Search in Stock Manager -->
-          <div class="relative w-full md:w-72">
+          <div class="relative w-full sm:w-72">
             <i data-lucide="search" class="w-4 h-4 text-stone-400 absolute left-3 top-1/2 -translate-y-1/2"></i>
             <input 
               type="text" 
               id="stockSearchInput" 
               oninput="filterStockManager(this.value)" 
-              placeholder="Search catalog or design code..." 
-              class="w-full pl-9 pr-3 py-2 text-xs bg-white border border-stone-300 rounded-xl focus:outline-none focus:border-amber-600"
+              placeholder="Search catalog or category..." 
+              class="w-full pl-9 pr-3 py-2 text-xs bg-stone-50 border border-stone-300 rounded-xl focus:outline-none focus:border-amber-600 text-stone-800"
             >
           </div>
         </div>
 
-        <!-- Catalogs Stock List -->
-        <div id="stockManagerContainer" class="space-y-4">
-          <!-- Rendered dynamically by admin.js -->
+        <!-- Catalogs Clean Stock List / Table -->
+        <div id="stockManagerContainer" class="space-y-3">
+          <!-- Rendered dynamically by admin.js with clean 3-button status pills and optional shades drawer -->
         </div>
 
       </section>
@@ -455,6 +450,38 @@
           </p>
         </div>
 
+        <!-- 1-Minute Activation & SQL Copy Box -->
+        <div class="bg-gradient-to-r from-amber-50 via-white to-amber-50 border-2 border-amber-300 rounded-3xl p-6 space-y-4 shadow-sm">
+          <div class="flex items-start gap-3.5">
+            <div class="p-3 rounded-2xl bg-amber-500/10 text-amber-700 shrink-0 font-bold text-xl border border-amber-300">
+              ⚡
+            </div>
+            <div class="space-y-1">
+              <h4 class="font-bold text-stone-900 text-sm">Why Supabase database is not updated live yet:</h4>
+              <p class="text-xs text-stone-600 leading-relaxed">
+                Your Supabase Project URL and Public Anon Key are configured and connected. However, PostgreSQL tables (<code>app_settings</code>, <code>staff_profiles</code>, <code>catalogs</code>) must be created once in your Supabase project. A browser client anon key cannot run <code>CREATE TABLE</code> (DDL) directly.
+              </p>
+            </div>
+          </div>
+
+          <div class="p-4 bg-white rounded-2xl border border-amber-200/90 space-y-3 text-xs shadow-xs">
+            <strong class="text-stone-900 font-bold block">1-Minute Instant Activation (3 Simple Steps):</strong>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <button onclick="copySqlSchemaToClipboard()" class="py-3 px-4 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-xs transition-all">
+                <i data-lucide="copy" class="w-4 h-4"></i>
+                <span>1. Copy Complete SQL Schema</span>
+              </button>
+              <a href="https://supabase.com/dashboard/project/rdjnbuhmfragtdrfbarc/sql/new" target="_blank" class="py-3 px-4 rounded-xl bg-stone-900 hover:bg-black text-white font-bold text-xs flex items-center justify-center gap-2 shadow-xs transition-all text-center">
+                <i data-lucide="external-link" class="w-4 h-4 text-emerald-400"></i>
+                <span>2. Open Supabase SQL Editor ↗</span>
+              </a>
+            </div>
+            <p class="text-[11px] text-stone-500">
+              Click <strong>"1. Copy Complete SQL Schema"</strong>, open the SQL editor link, paste the query, and click <strong>"Run"</strong>. Realtime PostgreSQL sync activates instantly! In the meantime, all changes are safely preserved in browser storage.
+            </p>
+          </div>
+        </div>
+
         <div class="bg-white border-2 border-emerald-300/80 rounded-2xl p-6 space-y-5 shadow-sm">
           <div class="flex items-center justify-between border-b border-stone-100 pb-4">
             <div class="flex items-center gap-3">
@@ -513,17 +540,24 @@
       </section>
 
       <!-- ==================================================================== -->
-      <!-- TAB 6: FIRMS & BRANDING (Interactive Dual Firm Profile Editor)         -->
+      <!-- TAB 6: UNIVERSAL FIRMS & BRAND ARCHITECTURE MANAGER                  -->
       <!-- ==================================================================== -->
       <section id="tabContent-firms" class="hidden space-y-6">
         
-        <div class="border-b border-amber-200/80 pb-5">
-          <h2 class="font-serif text-2xl font-bold text-stone-900 flex items-center gap-2">
-            <span>🏢 Dual Firm Profile & Contact Editor</span>
-          </h2>
-          <p class="text-xs text-stone-600 mt-1">
-            Edit brand identity, registered showroom address, and dedicated contact desks for Keya Fashion and Saurashtra Sarees. Live changes synchronize instantly to Supabase and reflect across customer showrooms.
-          </p>
+        <div class="border-b border-amber-200/80 pb-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <h2 class="font-serif text-2xl font-bold text-stone-900 flex items-center gap-2">
+              <span>🏢 Universal Firm Profiles & Multi-Firm Manager</span>
+            </h2>
+            <p class="text-xs text-stone-600 mt-1">
+              Universal brand profile management for Keya Fashion, Saurashtra Sarees, and custom firms. Full edit, add new firm, and delete options.
+            </p>
+          </div>
+
+          <button onclick="openFirmModal()" class="px-5 py-2.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs uppercase tracking-wider flex items-center gap-2 shadow-xs transition-all shrink-0">
+            <i data-lucide="plus-circle" class="w-4 h-4"></i>
+            <span>+ Add New Firm</span>
+          </button>
         </div>
 
         <!-- Dual-Firm Architecture Info Banner -->
@@ -531,139 +565,19 @@
           <span class="text-2xl shrink-0">🏛️</span>
           <div class="text-xs text-stone-700 leading-relaxed">
             <strong class="text-stone-900 font-bold block mb-0.5">Dual-Firm Catalog Architecture:</strong>
-            All 26 catalogs exist equally across both firms with identical names, SKUs, and design codes. Each firm maintains its own distinct branding, official address, and dedicated staff phone numbers without catalog duplication.
+            All 26 catalogs exist across all firms with identical names, SKUs, and pricing. Each firm retains its own branding, registered showroom address, and dedicated staff link routing.
           </div>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          
-          <!-- Keya Fashion Profile Editor Form -->
-          <div class="bg-white border-2 border-sky-200 rounded-3xl p-6 space-y-5 shadow-sm">
-            <div class="flex items-center justify-between pb-4 border-b border-sky-100">
-              <div class="flex items-center gap-3">
-                <img src="assets/keya-fashion-logo.jpg" alt="Keya Logo" class="h-12 w-auto object-contain bg-white p-1 rounded-xl border border-sky-200 shadow-xs">
-                <div>
-                  <h4 class="font-bold text-stone-900 text-sm">Keya Fashion</h4>
-                  <span class="text-[10px] font-bold uppercase tracking-wider text-sky-700 bg-sky-50 px-2 py-0.5 rounded-md border border-sky-200">
-                    Retail Rate Focus
-                  </span>
-                </div>
-              </div>
-              <span id="keyaSaveBadge" class="hidden text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-300">
-                ✓ Saved & Synced
-              </span>
-            </div>
-
-            <div class="space-y-4 text-xs">
-              <div>
-                <label class="block text-[11px] font-bold text-stone-700 uppercase mb-1">Firm Display Name</label>
-                <input type="text" id="inputFirmKeyaName" class="w-full px-3.5 py-2.5 bg-stone-50 border border-stone-300 rounded-xl font-bold text-stone-800 focus:outline-none focus:border-sky-500">
-              </div>
-
-              <div>
-                <label class="block text-[11px] font-bold text-stone-700 uppercase mb-1">Official Tagline / Slogan</label>
-                <input type="text" id="inputFirmKeyaTagline" class="w-full px-3.5 py-2.5 bg-stone-50 border border-stone-300 rounded-xl text-stone-800 focus:outline-none focus:border-sky-500">
-              </div>
-
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div>
-                  <label class="block text-[11px] font-bold text-stone-700 uppercase mb-1">Primary Support Phone</label>
-                  <input type="text" id="inputFirmKeyaPrimaryPhone" class="w-full px-3.5 py-2.5 bg-stone-50 border border-stone-300 rounded-xl font-mono text-stone-800 focus:outline-none focus:border-sky-500">
-                </div>
-                <div>
-                  <label class="block text-[11px] font-bold text-stone-700 uppercase mb-1">Order Desk Phone</label>
-                  <input type="text" id="inputFirmKeyaOrderPhone" class="w-full px-3.5 py-2.5 bg-stone-50 border border-stone-300 rounded-xl font-mono text-stone-800 focus:outline-none focus:border-sky-500">
-                </div>
-              </div>
-
-              <div>
-                <label class="block text-[11px] font-bold text-stone-700 uppercase mb-1">Full Registered Address</label>
-                <textarea id="inputFirmKeyaAddress" rows="2" class="w-full px-3.5 py-2.5 bg-stone-50 border border-stone-300 rounded-xl text-stone-800 leading-relaxed focus:outline-none focus:border-sky-500"></textarea>
-              </div>
-
-              <div>
-                <label class="block text-[11px] font-bold text-stone-700 uppercase mb-1">Showroom & Support Timings</label>
-                <input type="text" id="inputFirmKeyaTimings" class="w-full px-3.5 py-2.5 bg-stone-50 border border-stone-300 rounded-xl text-stone-800 focus:outline-none focus:border-sky-500">
-              </div>
-
-              <div class="pt-2">
-                <button onclick="saveFirmProfile('keya')" class="w-full py-3 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-xs">
-                  <i data-lucide="save" class="w-4 h-4"></i>
-                  <span>Save Keya Fashion Profile</span>
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <!-- Saurashtra Sarees Profile Editor Form -->
-          <div class="bg-white border-2 border-rose-200 rounded-3xl p-6 space-y-5 shadow-sm">
-            <div class="flex items-center justify-between pb-4 border-b border-rose-100">
-              <div class="flex items-center gap-3">
-                <img src="assets/saurashtra-sarees-logo.jpg" alt="Saurashtra Logo" class="h-12 w-auto object-contain bg-white p-1 rounded-xl border border-rose-200 shadow-xs">
-                <div>
-                  <h4 class="font-bold text-stone-900 text-sm">Saurashtra Sarees</h4>
-                  <span class="text-[10px] font-bold uppercase tracking-wider text-rose-800 bg-rose-50 px-2 py-0.5 rounded-md border border-rose-200">
-                    Retail & Master All Rates
-                  </span>
-                </div>
-              </div>
-              <span id="saurashtraSaveBadge" class="hidden text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-300">
-                ✓ Saved & Synced
-              </span>
-            </div>
-
-            <div class="space-y-4 text-xs">
-              <div>
-                <label class="block text-[11px] font-bold text-stone-700 uppercase mb-1">Firm Display Name</label>
-                <input type="text" id="inputFirmSaurashtraName" class="w-full px-3.5 py-2.5 bg-stone-50 border border-stone-300 rounded-xl font-bold text-stone-800 focus:outline-none focus:border-rose-500">
-              </div>
-
-              <div>
-                <label class="block text-[11px] font-bold text-stone-700 uppercase mb-1">Official Tagline / Slogan</label>
-                <input type="text" id="inputFirmSaurashtraTagline" class="w-full px-3.5 py-2.5 bg-stone-50 border border-stone-300 rounded-xl text-stone-800 focus:outline-none focus:border-rose-500">
-              </div>
-
-              <div>
-                <label class="block text-[11px] font-bold text-stone-700 uppercase mb-1">Senior Director Phone (Arvind Sir)</label>
-                <input type="text" id="inputFirmSaurashtraDirectorPhone" class="w-full px-3.5 py-2.5 bg-stone-50 border border-stone-300 rounded-xl font-mono text-stone-800 focus:outline-none focus:border-rose-500">
-              </div>
-
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div>
-                  <label class="block text-[11px] font-bold text-stone-700 uppercase mb-1">Managing Partner (Nayan Sir)</label>
-                  <input type="text" id="inputFirmSaurashtraPartner1Phone" class="w-full px-3.5 py-2.5 bg-stone-50 border border-stone-300 rounded-xl font-mono text-stone-800 focus:outline-none focus:border-rose-500">
-                </div>
-                <div>
-                  <label class="block text-[11px] font-bold text-stone-700 uppercase mb-1">Managing Partner (Chetan Sir)</label>
-                  <input type="text" id="inputFirmSaurashtraPartner2Phone" class="w-full px-3.5 py-2.5 bg-stone-50 border border-stone-300 rounded-xl font-mono text-stone-800 focus:outline-none focus:border-rose-500">
-                </div>
-              </div>
-
-              <div>
-                <label class="block text-[11px] font-bold text-stone-700 uppercase mb-1">Full Registered Address</label>
-                <textarea id="inputFirmSaurashtraAddress" rows="2" class="w-full px-3.5 py-2.5 bg-stone-50 border border-stone-300 rounded-xl text-stone-800 leading-relaxed focus:outline-none focus:border-rose-500"></textarea>
-              </div>
-
-              <div>
-                <label class="block text-[11px] font-bold text-stone-700 uppercase mb-1">Showroom & Support Timings</label>
-                <input type="text" id="inputFirmSaurashtraTimings" class="w-full px-3.5 py-2.5 bg-stone-50 border border-stone-300 rounded-xl text-stone-800 focus:outline-none focus:border-rose-500">
-              </div>
-
-              <div class="pt-2">
-                <button onclick="saveFirmProfile('saurashtra')" class="w-full py-3 rounded-xl bg-rose-700 hover:bg-rose-800 text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-xs">
-                  <i data-lucide="save" class="w-4 h-4"></i>
-                  <span>Save Saurashtra Sarees Profile</span>
-                </button>
-              </div>
-            </div>
-          </div>
-
+        <!-- Dynamic Container for Universal Firm Profiles -->
+        <div id="firmsDirectoryContainer" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <!-- Rendered dynamically by admin.js with the universal Keya form format for each firm -->
         </div>
 
       </section>
 
       <!-- ==================================================================== -->
-      <!-- TAB 7: DEEP-LINK BUILDER                                             -->
+      <!-- TAB 7: DEEP-LINK BUILDER & SAVED CAMPAIGN LINKS                      -->
       <!-- ==================================================================== -->
       <section id="tabContent-generator" class="hidden space-y-6">
         
@@ -672,50 +586,192 @@
             <span>🔗 Deep-Link & Campaign URL Builder</span>
           </h2>
           <p class="text-xs text-stone-600 mt-1">
-            Build custom marketing links with pre-filtered catalog categories, shoot modes, or specific products.
+            Build, edit, and manage custom locked marketing links for retail customers, wholesale stockists, or prime resellers.
           </p>
         </div>
 
-        <div class="bg-white border border-amber-200/80 rounded-2xl p-6 space-y-4 shadow-sm max-w-2xl">
-          <div class="space-y-1.5">
-            <label class="block text-[11px] font-bold text-stone-700 uppercase">Assigned Staff Code</label>
-            <select id="genStaffSelect" class="w-full px-3.5 py-2.5 text-xs bg-stone-50 border border-stone-300 rounded-xl font-bold text-stone-800">
-              <option value="KH28">KH28 — Khushi (Keya Fashion - Retail)</option>
-              <option value="AN26">AN26 — Anshika (Keya Fashion - Retail)</option>
-              <option value="PR28">PR28 — Priti (Keya Fashion - Retail)</option>
-              <option value="PA28">PA28 — Palak (Keya Fashion - Retail)</option>
-              <option value="JE04">JE04 — Jenish (Keya Fashion - Retail)</option>
-              <option value="AR38">AR38 — Arvind Sir (Saurashtra Sarees - Retail)</option>
-              <option value="NA39">NA39 — Nayan Sir (Saurashtra Sarees - Retail)</option>
-              <option value="CH33">CH33 — Chetan Sir (Saurashtra Sarees - Retail)</option>
-              <option value="NA39ALL">NA39ALL — Nayan Sir (Saurashtra Sarees - All Rates)</option>
-              <option value="CH33ALL">CH33ALL — Chetan Sir (Saurashtra Sarees - All Rates)</option>
-            </select>
-          </div>
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          
+          <!-- Generator Form -->
+          <div class="lg:col-span-6 bg-white border border-amber-200/80 rounded-3xl p-6 space-y-4 shadow-sm">
+            <h4 class="font-bold text-stone-900 text-sm">Create Campaign Link</h4>
+            
+            <div class="space-y-1.5">
+              <label class="block text-[11px] font-bold text-stone-700 uppercase">Campaign Title (Optional)</label>
+              <input type="text" id="genCampaignTitle" placeholder="e.g. Diwali Stockist Wholesale Broadcast" class="w-full px-3.5 py-2.5 text-xs bg-stone-50 border border-stone-300 rounded-xl text-stone-800">
+            </div>
 
-          <div class="space-y-1.5">
-            <label class="block text-[11px] font-bold text-stone-700 uppercase">Shoot View Preference</label>
-            <select id="genShootSelect" class="w-full px-3.5 py-2.5 text-xs bg-stone-50 border border-stone-300 rounded-xl text-stone-800">
-              <option value="all">All Shoots (Model + Table - Default)</option>
-              <option value="model">Model Shoot Only</option>
-              <option value="table">Table Shoot Only</option>
-            </select>
-          </div>
+            <div class="space-y-1.5">
+              <label class="block text-[11px] font-bold text-stone-700 uppercase">Assigned Staff Representative</label>
+              <select id="genStaffSelect" class="w-full px-3.5 py-2.5 text-xs bg-stone-50 border border-stone-300 rounded-xl font-bold text-stone-800">
+                <!-- Dynamically populated -->
+              </select>
+            </div>
 
-          <button onclick="generateCustomLink()" class="w-full py-3 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs uppercase tracking-wider transition-all shadow-xs">
-            Generate Locked Link
-          </button>
+            <div class="space-y-1.5">
+              <label class="block text-[11px] font-bold text-stone-700 uppercase">Commercial Rate Tier</label>
+              <select id="genRateSelect" class="w-full px-3.5 py-2.5 text-xs bg-stone-50 border border-stone-300 rounded-xl font-bold text-stone-800">
+                <option value="retail">Retail Rate (Base link: ?u=CODE)</option>
+                <option value="wholesale">Wholesale Rate (Suffix: ?u=CODEW)</option>
+                <option value="prime">Prime Exclusive Rate (Suffix: ?u=CODEP)</option>
+              </select>
+            </div>
 
-          <div id="genResultBox" class="hidden pt-3 border-t border-stone-200 space-y-2">
-            <span class="text-[10px] uppercase font-bold text-stone-500">Generated URL:</span>
-            <div class="flex items-center gap-2">
-              <input type="text" id="genResultUrl" readonly class="flex-1 px-3 py-2 text-xs bg-stone-100 border border-stone-300 rounded-xl font-mono text-stone-800">
-              <button onclick="copyGeneratedLink()" class="px-4 py-2 bg-stone-800 hover:bg-black text-white font-bold text-xs rounded-xl">Copy</button>
+            <div class="space-y-1.5">
+              <label class="block text-[11px] font-bold text-stone-700 uppercase">Shoot View Preference</label>
+              <select id="genShootSelect" class="w-full px-3.5 py-2.5 text-xs bg-stone-50 border border-stone-300 rounded-xl text-stone-800">
+                <option value="all">All Shoots (Model + Table - Default)</option>
+                <option value="model">Model Shoot Only</option>
+                <option value="table">Table Shoot Only</option>
+              </select>
+            </div>
+
+            <div class="pt-2 flex gap-2">
+              <button onclick="generateAndSaveLink()" class="flex-1 py-3 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs uppercase tracking-wider transition-all shadow-xs flex items-center justify-center gap-2">
+                <i data-lucide="plus" class="w-4 h-4"></i>
+                <span>Generate & Save Link</span>
+              </button>
+            </div>
+
+            <div id="genResultBox" class="hidden pt-3 border-t border-stone-200 space-y-2">
+              <span class="text-[10px] uppercase font-bold text-stone-500">Live Generated URL:</span>
+              <div class="flex items-center gap-2">
+                <input type="text" id="genResultUrl" readonly class="flex-1 px-3 py-2 text-xs bg-stone-100 border border-stone-300 rounded-xl font-mono text-stone-800">
+                <button onclick="copyGeneratedLink()" class="px-4 py-2 bg-stone-800 hover:bg-black text-white font-bold text-xs rounded-xl">Copy</button>
+              </div>
             </div>
           </div>
+
+          <!-- Saved Links List -->
+          <div class="lg:col-span-6 bg-white border border-amber-200/80 rounded-3xl p-6 space-y-4 shadow-sm">
+            <div class="flex items-center justify-between border-b border-stone-100 pb-3">
+              <h4 class="font-bold text-stone-900 text-sm">Saved Campaign Links</h4>
+              <span id="savedLinksCount" class="text-xs font-bold text-amber-800 bg-amber-50 px-2.5 py-1 rounded-full border border-amber-300">
+                0 Saved
+              </span>
+            </div>
+
+            <div id="savedLinksContainer" class="space-y-3 max-h-96 overflow-y-auto pr-1">
+              <!-- Rendered dynamically by admin.js -->
+            </div>
+          </div>
+
         </div>
 
       </section>
+
+    </main>
+  </div>
+
+  <!-- Modal 1: Add / Edit Staff Member -->
+  <div id="staffModal" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white border-2 border-amber-300 rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl space-y-5">
+      <div class="flex items-center justify-between border-b border-stone-100 pb-3">
+        <h3 id="staffModalTitle" class="font-serif text-lg font-bold text-stone-900">Add Sales Staff Member</h3>
+        <button onclick="closeStaffModal()" class="text-stone-400 hover:text-stone-700">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="space-y-3.5 text-xs">
+        <div>
+          <label class="block text-[11px] font-bold text-stone-700 uppercase mb-1">Staff Full Name</label>
+          <input type="text" id="modalStaffName" placeholder="e.g. Arvind Sir" class="w-full px-3.5 py-2.5 bg-stone-50 border border-stone-300 rounded-xl text-stone-800 font-bold focus:outline-none focus:border-amber-600">
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-[11px] font-bold text-stone-700 uppercase mb-1">Staff Code</label>
+            <input type="text" id="modalStaffCode" placeholder="e.g. AR38" class="w-full px-3.5 py-2.5 bg-stone-50 border border-stone-300 rounded-xl font-mono text-stone-800 font-bold focus:outline-none focus:border-amber-600 uppercase">
+          </div>
+          <div>
+            <label class="block text-[11px] font-bold text-stone-700 uppercase mb-1">Assigned Firm</label>
+            <select id="modalStaffFirm" class="w-full px-3.5 py-2.5 bg-stone-50 border border-stone-300 rounded-xl text-stone-800 font-bold">
+              <!-- Populated dynamically from firms -->
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-[11px] font-bold text-stone-700 uppercase mb-1">10-Digit Mobile / WhatsApp</label>
+          <input type="tel" id="modalStaffPhone" placeholder="e.g. 9824982338" class="w-full px-3.5 py-2.5 bg-stone-50 border border-stone-300 rounded-xl font-mono text-stone-800 focus:outline-none focus:border-amber-600">
+        </div>
+
+        <div>
+          <label class="block text-[11px] font-bold text-stone-700 uppercase mb-1">Designation / Title</label>
+          <input type="text" id="modalStaffTitle" placeholder="e.g. Senior Showroom Director" class="w-full px-3.5 py-2.5 bg-stone-50 border border-stone-300 rounded-xl text-stone-800 focus:outline-none focus:border-amber-600">
+        </div>
+      </div>
+
+      <div class="pt-2 flex items-center justify-end gap-3 border-t border-stone-100">
+        <button onclick="closeStaffModal()" class="px-4 py-2.5 rounded-xl border border-stone-300 text-stone-700 text-xs font-bold hover:bg-stone-50">
+          Cancel
+        </button>
+        <button onclick="saveModalStaff()" class="px-5 py-2.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs uppercase tracking-wider shadow-xs">
+          Save Staff Member
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 2: Add New Firm Modal -->
+  <div id="firmModal" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white border-2 border-amber-300 rounded-3xl p-6 sm:p-8 max-w-lg w-full shadow-2xl space-y-5">
+      <div class="flex items-center justify-between border-b border-stone-100 pb-3">
+        <h3 class="font-serif text-lg font-bold text-stone-900">Add New Manufacturing Firm</h3>
+        <button onclick="closeFirmModal()" class="text-stone-400 hover:text-stone-700">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="space-y-3.5 text-xs">
+        <div>
+          <label class="block text-[11px] font-bold text-stone-700 uppercase mb-1">Firm Unique Key (lowercase, no spaces)</label>
+          <input type="text" id="modalFirmKey" placeholder="e.g. royalheritage" class="w-full px-3.5 py-2.5 bg-stone-50 border border-stone-300 rounded-xl font-mono text-stone-800 font-bold focus:outline-none focus:border-amber-600 lowercase">
+        </div>
+
+        <div>
+          <label class="block text-[11px] font-bold text-stone-700 uppercase mb-1">Firm Display Name</label>
+          <input type="text" id="modalFirmName" placeholder="e.g. Royal Heritage Sarees" class="w-full px-3.5 py-2.5 bg-stone-50 border border-stone-300 rounded-xl text-stone-800 font-bold focus:outline-none focus:border-amber-600">
+        </div>
+
+        <div>
+          <label class="block text-[11px] font-bold text-stone-700 uppercase mb-1">Official Tagline / Slogan</label>
+          <input type="text" id="modalFirmTagline" placeholder="e.g. Weaving Royal Traditions" class="w-full px-3.5 py-2.5 bg-stone-50 border border-stone-300 rounded-xl text-stone-800 focus:outline-none focus:border-amber-600">
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-[11px] font-bold text-stone-700 uppercase mb-1">Primary Support Phone</label>
+            <input type="text" id="modalFirmPrimaryPhone" placeholder="+91 98794 71039" class="w-full px-3.5 py-2.5 bg-stone-50 border border-stone-300 rounded-xl font-mono text-stone-800 focus:outline-none focus:border-amber-600">
+          </div>
+          <div>
+            <label class="block text-[11px] font-bold text-stone-700 uppercase mb-1">Order Desk Phone</label>
+            <input type="text" id="modalFirmOrderPhone" placeholder="+91 99136 43433" class="w-full px-3.5 py-2.5 bg-stone-50 border border-stone-300 rounded-xl font-mono text-stone-800 focus:outline-none focus:border-amber-600">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-[11px] font-bold text-stone-700 uppercase mb-1">Full Registered Address</label>
+          <textarea id="modalFirmAddress" rows="2" class="w-full px-3.5 py-2.5 bg-stone-50 border border-stone-300 rounded-xl text-stone-800 leading-relaxed focus:outline-none focus:border-amber-600">A-1001, Rajhans Fabrizo, Near Polaris Textile City, BRTS Road, Magob, Surat, Gujarat – 395010</textarea>
+        </div>
+
+        <div>
+          <label class="block text-[11px] font-bold text-stone-700 uppercase mb-1">Showroom & Support Timings</label>
+          <input type="text" id="modalFirmTimings" value="09:00 AM–07:00 PM (Monday–Saturday)" class="w-full px-3.5 py-2.5 bg-stone-50 border border-stone-300 rounded-xl text-stone-800 focus:outline-none focus:border-amber-600">
+        </div>
+      </div>
+
+      <div class="pt-2 flex items-center justify-end gap-3 border-t border-stone-100">
+        <button onclick="closeFirmModal()" class="px-4 py-2.5 rounded-xl border border-stone-300 text-stone-700 text-xs font-bold hover:bg-stone-50">
+          Cancel
+        </button>
+        <button onclick="saveModalNewFirm()" class="px-5 py-2.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs uppercase tracking-wider shadow-xs">
+          Create Firm
+        </button>
+      </div>
+    </div>
+  </div>
 
     </main>
   </div>

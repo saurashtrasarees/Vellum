@@ -70,10 +70,19 @@ VALUES
   ('JE04', 'Jenish', '9033808104', '919033808104', 'keya', 'retail', 'Digital Sales Executive'),
   ('AR38', 'Arvind Sir', '9824982338', '919824982338', 'saurashtra', 'retail', 'Senior Showroom Director'),
   ('NA39', 'Nayan Sir', '9879471039', '919879471039', 'saurashtra', 'retail', 'Managing Partner'),
-  ('CH33', 'Chetan Sir', '9913643433', '919913643433', 'saurashtra', 'retail', 'Executive Director'),
-  ('NA39ALL', 'Nayan Sir (All Rates)', '9879471039', '919879471039', 'saurashtra', 'all', 'Managing Partner (Master Rates)'),
-  ('CH33ALL', 'Chetan Sir (All Rates)', '9913643433', '919913643433', 'saurashtra', 'all', 'Executive Director (Master Rates)')
+  ('CH33', 'Chetan Sir', '9913643433', '919913643433', 'saurashtra', 'retail', 'Executive Director')
 ON CONFLICT (code) DO NOTHING;
+
+-- 3. SAVED CAMPAIGN LINKS TABLE
+CREATE TABLE IF NOT EXISTS saved_links (
+  id TEXT PRIMARY KEY,
+  title TEXT NOT NULL,
+  staff TEXT NOT NULL,
+  rate_tier TEXT NOT NULL CHECK (rate_tier IN ('retail', 'wholesale', 'prime')),
+  shoot TEXT DEFAULT 'all',
+  url TEXT NOT NULL,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
 
 -- 3. CATALOGS MASTER TABLE WITH STOCK STATUS
 CREATE TABLE IF NOT EXISTS catalogs (
@@ -120,20 +129,24 @@ CREATE TABLE IF NOT EXISTS catalog_colors (
 ALTER PUBLICATION supabase_realtime ADD TABLE app_settings;
 ALTER PUBLICATION supabase_realtime ADD TABLE catalogs;
 ALTER PUBLICATION supabase_realtime ADD TABLE catalog_colors;
+ALTER PUBLICATION supabase_realtime ADD TABLE saved_links;
 
 -- 6. ENABLE ROW LEVEL SECURITY (Public read for client app, authenticated for admin)
 ALTER TABLE app_settings ENABLE ROW LEVEL SECURITY;
 ALTER TABLE staff_profiles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE catalogs ENABLE ROW LEVEL SECURITY;
 ALTER TABLE catalog_colors ENABLE ROW LEVEL SECURITY;
+ALTER TABLE saved_links ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "Public read app_settings" ON app_settings FOR SELECT USING (true);
 CREATE POLICY "Public read staff_profiles" ON staff_profiles FOR SELECT USING (true);
 CREATE POLICY "Public read catalogs" ON catalogs FOR SELECT USING (true);
 CREATE POLICY "Public read catalog_colors" ON catalog_colors FOR SELECT USING (true);
+CREATE POLICY "Public read saved_links" ON saved_links FOR SELECT USING (true);
 
 -- Admin modification policies (Allows updates when anon key is configured or authorized)
 CREATE POLICY "Allow public update for showroom admin" ON app_settings FOR ALL USING (true);
 CREATE POLICY "Allow public update for catalogs" ON catalogs FOR ALL USING (true);
 CREATE POLICY "Allow public update for catalog_colors" ON catalog_colors FOR ALL USING (true);
 CREATE POLICY "Allow public update for staff_profiles" ON staff_profiles FOR ALL USING (true);
+CREATE POLICY "Allow public update for saved_links" ON saved_links FOR ALL USING (true);

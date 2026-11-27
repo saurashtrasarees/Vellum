@@ -143,38 +143,10 @@ const USER_PROFILES = {
     displayPhone: '+91 99136 43433',
     firm: 'saurashtra',
     rateAccess: 'retail' // Retail only
-  },
-
-  // ------------------------------------------------------------------------
-  // 3. Saurashtra Sarees [All Rate]
-  // ------------------------------------------------------------------------
-  'NA39ALL': {
-    code: 'NA39ALL',
-    slug: 'nayan-all',
-    name: 'Nayan Sir',
-    initials: 'NA',
-    title: 'Head of Sales & Distribution (All Rates)',
-    phone: '9879471039',
-    whatsapp: '919879471039',
-    displayPhone: '+91 98794 71039',
-    firm: 'saurashtra',
-    rateAccess: 'all' // Super Wholesale, Reseller & Retail
-  },
-  'CH33ALL': {
-    code: 'CH33ALL',
-    slug: 'chetan-all',
-    name: 'Chetan Sir',
-    initials: 'CH',
-    title: 'Managing Director (All Rates)',
-    phone: '9913643433',
-    whatsapp: '919913643433',
-    displayPhone: '+91 99136 43433',
-    firm: 'saurashtra',
-    rateAccess: 'all' // Super Wholesale, Reseller & Retail
   }
 };
 
-// 4. Super Admin Configuration
+// 3. Super Admin Configuration
 const SUPER_ADMIN = {
   name: 'Super Admin',
   phone: '9898907401',
@@ -209,14 +181,54 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Sync custom firm profiles if configured in admin or Supabase
   if (window.vellumAdapter) {
     const savedProfiles = window.vellumAdapter.loadFirmProfiles();
-    if (savedProfiles.keya) FIRMS.keya = { ...FIRMS.keya, ...savedProfiles.keya };
-    if (savedProfiles.saurashtra) FIRMS.saurashtra = { ...FIRMS.saurashtra, ...savedProfiles.saurashtra };
+    Object.keys(savedProfiles).forEach(k => {
+      FIRMS[k] = { ...(FIRMS[k] || {}), ...savedProfiles[k] };
+    });
+
+    // Sync dynamic staff profiles from adapter
+    const savedStaff = window.vellumAdapter.loadStaffProfiles();
+    savedStaff.forEach(s => {
+      const codeKey = s.code.toUpperCase();
+      USER_PROFILES[codeKey] = {
+        code: codeKey,
+        slug: s.name.toLowerCase().replace(/[^a-z0-9]/g, '-'),
+        name: s.name,
+        initials: s.name.slice(0, 2).toUpperCase(),
+        title: s.title || 'Dedicated Representative',
+        phone: s.phone,
+        whatsapp: s.whatsapp || ('91' + s.phone),
+        displayPhone: s.displayPhone || ('+91 ' + s.phone),
+        firm: s.firm || 'saurashtra',
+        rateAccess: 'retail'
+      };
+    });
 
     window.addEventListener('vellum:firm-updated', (e) => {
       const updated = e.detail;
-      if (updated.keya) FIRMS.keya = { ...FIRMS.keya, ...updated.keya };
-      if (updated.saurashtra) FIRMS.saurashtra = { ...FIRMS.saurashtra, ...updated.saurashtra };
+      Object.keys(updated).forEach(k => {
+        FIRMS[k] = { ...(FIRMS[k] || {}), ...updated[k] };
+      });
       applyFirmTheme();
+    });
+
+    window.addEventListener('vellum:staff-updated', (e) => {
+      const updatedStaff = e.detail || [];
+      updatedStaff.forEach(s => {
+        const codeKey = s.code.toUpperCase();
+        USER_PROFILES[codeKey] = {
+          code: codeKey,
+          slug: s.name.toLowerCase().replace(/[^a-z0-9]/g, '-'),
+          name: s.name,
+          initials: s.name.slice(0, 2).toUpperCase(),
+          title: s.title || 'Dedicated Representative',
+          phone: s.phone,
+          whatsapp: s.whatsapp || ('91' + s.phone),
+          displayPhone: s.displayPhone || ('+91 ' + s.phone),
+          firm: s.firm || 'saurashtra',
+          rateAccess: 'retail'
+        };
+      });
+      resolveUrlContext();
     });
   }
 
@@ -245,36 +257,53 @@ function resolveUrlContext() {
     state.isSuperAdmin = true;
   }
 
-  // 2. User Code Resolution (e.g., ?u=KH28, ?u=NA39ALL, ?staff=AR38)
+  // 2. User Code Resolution & 3-Tier Rate Suffix
+  // Default link: ?u=AR38 -> Retail rate
+  // Wholesale link: ?u=AR38W -> Wholesale rate
+  // Prime link: ?u=AR38P -> Prime rate
   let rawUser = (params.get('u') || params.get('user') || params.get('staff') || '').toUpperCase().trim();
   rawUser = rawUser.replace(/[^A-Z0-9]/g, '');
 
-  let matchedUser = USER_PROFILES[rawUser];
+  let baseCode = rawUser;
+  let rateTier = 'retail'; // Default is always Retail MRP
+
+  if (rawUser) {
+    if (rawUser.endsWith('W') && !USER_PROFILES[rawUser]) {
+      const candidate = rawUser.slice(0, -1);
+      if (USER_PROFILES[candidate]) {
+        baseCode = candidate;
+        rateTier = 'wholesale';
+      }
+    } else if (rawUser.endsWith('P') && !USER_PROFILES[rawUser]) {
+      const candidate = rawUser.slice(0, -1);
+      if (USER_PROFILES[candidate]) {
+        baseCode = candidate;
+        rateTier = 'prime';
+      }
+    }
+  }
+
+  let matchedUser = USER_PROFILES[baseCode];
 
   // Also check if someone passed the slug (e.g. ?staff=khushi)
-  if (!matchedUser && rawUser) {
-    matchedUser = Object.values(USER_PROFILES).find(p => p.slug.toUpperCase().replace(/[^A-Z0-9]/g, '') === rawUser);
+  if (!matchedUser && baseCode) {
+    matchedUser = Object.values(USER_PROFILES).find(p => p.slug.toUpperCase().replace(/[^A-Z0-9]/g, '') === baseCode);
   }
 
   if (matchedUser) {
     state.activeUser = matchedUser;
     state.activeFirm = matchedUser.firm;
     state.isLocked = true; // Firm and user are locked!
-    
-    if (matchedUser.rateAccess === 'all') {
-      state.currentRole = 'all';
-    } else {
-      state.currentRole = 'retail';
-    }
+    state.currentRole = rateTier;
   } else {
     // If no user code supplied: check firm param or default
     const firmParam = (params.get('firm') || params.get('f') || '').toLowerCase().trim();
     if (firmParam === 'keya' || firmParam === 'keyafashion') {
       state.activeFirm = 'keya';
-      state.activeUser = USER_PROFILES['KH28'];
+      state.activeUser = USER_PROFILES['KH28'] || Object.values(USER_PROFILES).find(p => p.firm === 'keya');
     } else {
       state.activeFirm = 'saurashtra';
-      state.activeUser = USER_PROFILES['AR38'];
+      state.activeUser = USER_PROFILES['AR38'] || Object.values(USER_PROFILES).find(p => p.firm === 'saurashtra');
     }
     state.isLocked = false;
     state.currentRole = 'retail';
@@ -407,18 +436,18 @@ function updateRoleUI() {
   let badgeText = 'Retail / Catalog MRP Rate';
   let badgeClass = 'text-purple-700';
 
-  if (state.currentRole === 'all') {
-    labelText = 'All Rates Active';
-    badgeText = 'All Rates (Wholesale, Reseller & Retail)';
-    badgeClass = 'text-amber-700';
-  } else if (state.currentRole === 'wholesale') {
+  if (state.currentRole === 'wholesale') {
     labelText = 'Wholesale Rate';
-    badgeText = 'Super Wholesale Rate';
+    badgeText = 'Super Wholesale B2B Rate';
     badgeClass = 'text-emerald-700';
-  } else if (state.currentRole === 'reseller') {
-    labelText = 'Portal Seller Rate';
-    badgeText = 'Reseller / Portal Rate';
-    badgeClass = 'text-blue-700';
+  } else if (state.currentRole === 'prime' || state.currentRole === 'reseller') {
+    labelText = 'Prime Rate';
+    badgeText = 'Prime Wholesale Rate';
+    badgeClass = 'text-amber-800';
+  } else if (state.currentRole === 'all') {
+    labelText = 'All Rates Active';
+    badgeText = 'All Rates (Wholesale, Prime & Retail)';
+    badgeClass = 'text-amber-700';
   }
 
   if (labelEl) labelEl.textContent = labelText;
@@ -707,7 +736,7 @@ function renderCatalogCount() {
 
 function getActiveRate(cat) {
   if (state.currentRole === 'wholesale') return cat.wholesaleRate;
-  if (state.currentRole === 'reseller') return cat.resellerRate;
+  if (state.currentRole === 'prime' || state.currentRole === 'reseller') return cat.resellerRate;
   return cat.retailRate; // Default to retailRate
 }
 
@@ -1008,8 +1037,12 @@ function renderPdpScreen() {
     if (allRatesCard) allRatesCard.classList.add('hidden');
     if (singlePriceCard) {
       singlePriceCard.classList.remove('hidden');
-      document.getElementById('pdpPrice').textContent = `₹${cat.retailRate}`;
-      document.getElementById('pdpRoleName').textContent = 'Catalog MRP / Retail Rate';
+      const activeRate = getActiveRate(cat);
+      document.getElementById('pdpPrice').textContent = `₹${activeRate}`;
+      let roleLabel = 'Catalog MRP / Retail Rate';
+      if (state.currentRole === 'wholesale') roleLabel = 'Wholesale Price (Direct Mill)';
+      else if (state.currentRole === 'prime') roleLabel = 'Prime Wholesale Rate';
+      document.getElementById('pdpRoleName').textContent = roleLabel;
     }
   }
 
@@ -1315,7 +1348,7 @@ function sendPdpWhatsApp() {
   if (!cat) return;
   const activeDesign = cat.designs[state.activePdpDesignIndex] || {};
   const colorObj = getAccurateColor(activeDesign.color);
-  const rate = cat.retailRate;
+  const rate = getActiveRate(cat);
 
   sendStaffWhatsApp(cat.code, `${colorObj.label} (Design ${activeDesign.code})`, rate);
 }
@@ -1327,9 +1360,14 @@ function copyPdpSpecs() {
   const user = state.activeUser || USER_PROFILES['AR38'];
   const isAllRatesUser = user.rateAccess === 'all' || state.currentRole === 'all';
 
-  const priceText = isAllRatesUser
-    ? `• Super Wholesale: ₹${cat.wholesaleRate}/-\n• Reseller Rate: ₹${cat.resellerRate}/-\n• Catalog MRP: ₹${cat.retailRate}/-`
-    : `₹${cat.retailRate}/- Only (All Inclusive)`;
+  let priceText = `₹${cat.retailRate}/- (Catalog MRP)`;
+  if (state.currentRole === 'wholesale') {
+    priceText = `₹${cat.wholesaleRate}/- (Wholesale B2B Mill Price)`;
+  } else if (state.currentRole === 'prime') {
+    priceText = `₹${cat.resellerRate}/- (Prime Wholesale Price)`;
+  } else if (isAllRatesUser) {
+    priceText = `• Wholesale: ₹${cat.wholesaleRate}/-\n• Prime: ₹${cat.resellerRate}/-\n• Catalog MRP: ₹${cat.retailRate}/-`;
+  }
 
   const textToCopy = 
 `🌸 *PREMIUM DESIGNER SAREE COLLECTION* 🌸

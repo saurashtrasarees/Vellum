@@ -9,6 +9,8 @@ const STORAGE_KEYS = {
   STOCK_OVERRIDES: 'vellum_stock_overrides',
   CUSTOM_RATES: 'vellum_custom_rates',
   FIRM_PROFILES: 'vellum_firm_profiles',
+  STAFF_PROFILES: 'vellum_staff_profiles',
+  SAVED_LINKS: 'vellum_saved_links',
 };
 
 // Default Cloud Drive Shoot Folders
@@ -27,7 +29,7 @@ const DEFAULT_SUPABASE_CONFIG = {
   isEnabled: true
 };
 
-// Default Dual Firm Configuration with Verified Surat Address
+// Default Universal Firm Configuration with Verified Surat Address
 const DEFAULT_FIRM_PROFILES = {
   keya: {
     id: 'keya',
@@ -40,6 +42,7 @@ const DEFAULT_FIRM_PROFILES = {
     whatsapp: '919825452528',
     themeClass: 'theme-keya',
     accentColor: '#f59e0b',
+    logo: 'assets/keya-fashion-logo.jpg',
     lastUpdated: new Date().toISOString()
   },
   saurashtra: {
@@ -48,15 +51,111 @@ const DEFAULT_FIRM_PROFILES = {
     tagline: 'Make Occasion Better',
     address: 'A-1001, Rajhans Fabrizo, Near Polaris Textile City, BRTS Road, Magob, Surat, Gujarat – 395010',
     timings: '09:00 AM–07:00 PM (Monday–Saturday)',
-    directorPhone: '+91 98249 82338',
-    partner1Phone: '+91 98794 71039',
-    partner2Phone: '+91 99136 43433',
+    primaryPhone: '+91 98249 82338',
+    orderPhone: '+91 98794 71039',
+    secondaryPhone: '+91 99136 43433',
     whatsapp: '919879471039',
     themeClass: 'theme-saurashtra',
-    accentColor: '#d4af37',
+    accentColor: '#8b1d40',
+    logo: 'assets/saurashtra-sarees-logo.jpg',
     lastUpdated: new Date().toISOString()
   }
 };
+
+// Default Verified Sales Staff Profiles (A through H)
+const DEFAULT_STAFF_PROFILES = [
+  // 1. Keya Fashion
+  {
+    code: 'KH28',
+    name: 'Khushi',
+    letter: 'A',
+    phone: '9825452528',
+    displayPhone: '+91 98254 52528',
+    whatsapp: '919825452528',
+    firm: 'keya',
+    firmName: 'Keya Fashion',
+    title: 'Dedicated Catalog Representative'
+  },
+  {
+    code: 'AN26',
+    name: 'Anshika',
+    letter: 'B',
+    phone: '9825452526',
+    displayPhone: '+91 98254 52526',
+    whatsapp: '919825452526',
+    firm: 'keya',
+    firmName: 'Keya Fashion',
+    title: 'Client Relationship Executive'
+  },
+  {
+    code: 'PR28',
+    name: 'Priti',
+    letter: 'C',
+    phone: '9909352528',
+    displayPhone: '+91 99093 52528',
+    whatsapp: '919909352528',
+    firm: 'keya',
+    firmName: 'Keya Fashion',
+    title: 'Customer Sales Coordinator'
+  },
+  {
+    code: 'PA28',
+    name: 'Palak',
+    letter: 'D',
+    phone: '9909452528',
+    displayPhone: '+91 99094 52528',
+    whatsapp: '919909452528',
+    firm: 'keya',
+    firmName: 'Keya Fashion',
+    title: 'Order Desk Manager'
+  },
+  {
+    code: 'JE04',
+    name: 'Jenish',
+    letter: 'E',
+    phone: '9033808104',
+    displayPhone: '+91 90338 08104',
+    whatsapp: '919033808104',
+    firm: 'keya',
+    firmName: 'Keya Fashion',
+    title: 'Digital Sales Executive'
+  },
+
+  // 2. Saurashtra Sarees
+  {
+    code: 'AR38',
+    name: 'Arvind Sir',
+    letter: 'F',
+    phone: '9824982338',
+    displayPhone: '+91 98249 82338',
+    whatsapp: '919824982338',
+    firm: 'saurashtra',
+    firmName: 'Saurashtra Sarees',
+    title: 'Senior Sales Director'
+  },
+  {
+    code: 'NA39',
+    name: 'Nayan Sir',
+    letter: 'G',
+    phone: '9879471039',
+    displayPhone: '+91 98794 71039',
+    whatsapp: '919879471039',
+    firm: 'saurashtra',
+    firmName: 'Saurashtra Sarees',
+    title: 'Managing Partner'
+  },
+  {
+    code: 'CH33',
+    name: 'Chetan Sir',
+    letter: 'H',
+    phone: '9913643433',
+    displayPhone: '+91 99136 43433',
+    whatsapp: '919913643433',
+    firm: 'saurashtra',
+    firmName: 'Saurashtra Sarees',
+    title: 'Executive Director'
+  }
+];
 
 class VellumDataAdapter {
   constructor() {
@@ -224,12 +323,101 @@ class VellumDataAdapter {
     return this.saveFirmProfiles(current);
   }
 
+  deleteFirmProfile(firmId) {
+    const current = this.loadFirmProfiles();
+    if (Object.keys(current).length <= 1) {
+      console.warn('Cannot delete the last remaining firm');
+      return false;
+    }
+    delete current[firmId];
+    return this.saveFirmProfiles(current);
+  }
+
   getFirmProfile(firmId) {
     const profiles = this.loadFirmProfiles();
     return profiles[firmId] || DEFAULT_FIRM_PROFILES[firmId] || null;
   }
 
-  // 4. Supabase Credentials & Connection
+  // 4. Staff Profiles Management (Full Add/Edit/Delete CRUD)
+  loadStaffProfiles() {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEYS.STAFF_PROFILES);
+      if (saved) return JSON.parse(saved);
+    } catch (e) {
+      console.warn('Failed to parse staff profiles from localStorage', e);
+    }
+    return [...DEFAULT_STAFF_PROFILES];
+  }
+
+  saveStaffProfiles(profiles) {
+    try {
+      localStorage.setItem(STORAGE_KEYS.STAFF_PROFILES, JSON.stringify(profiles));
+      window.dispatchEvent(new CustomEvent('vellum:staff-updated', { detail: profiles }));
+      this.syncToSupabaseIfConnected('staff_profiles', profiles);
+      return true;
+    } catch (e) {
+      console.error('Error saving staff profiles:', e);
+      return false;
+    }
+  }
+
+  saveStaffProfile(staffObj) {
+    const list = this.loadStaffProfiles();
+    const idx = list.findIndex(s => s.code.toUpperCase() === staffObj.code.toUpperCase());
+    if (idx >= 0) {
+      list[idx] = { ...list[idx], ...staffObj };
+    } else {
+      list.push(staffObj);
+    }
+    return this.saveStaffProfiles(list);
+  }
+
+  deleteStaffProfile(code) {
+    let list = this.loadStaffProfiles();
+    list = list.filter(s => s.code.toUpperCase() !== code.toUpperCase());
+    return this.saveStaffProfiles(list);
+  }
+
+  // 5. Custom Saved Links / Campaigns Management
+  loadSavedLinks() {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEYS.SAVED_LINKS);
+      if (saved) return JSON.parse(saved);
+    } catch (e) {
+      console.warn('Failed to parse saved links from localStorage', e);
+    }
+    return [];
+  }
+
+  saveSavedLinks(links) {
+    try {
+      localStorage.setItem(STORAGE_KEYS.SAVED_LINKS, JSON.stringify(links));
+      window.dispatchEvent(new CustomEvent('vellum:links-updated', { detail: links }));
+      this.syncToSupabaseIfConnected('saved_links', links);
+      return true;
+    } catch (e) {
+      console.error('Error saving links:', e);
+      return false;
+    }
+  }
+
+  addSavedLink(linkObj) {
+    const list = this.loadSavedLinks();
+    list.unshift({
+      id: 'link_' + Date.now(),
+      created_at: new Date().toISOString(),
+      ...linkObj
+    });
+    return this.saveSavedLinks(list);
+  }
+
+  deleteSavedLink(id) {
+    let list = this.loadSavedLinks();
+    list = list.filter(l => l.id !== id);
+    return this.saveSavedLinks(list);
+  }
+
+  // 6. Supabase Credentials & Connection
   loadSupabaseConfig() {
     try {
       const saved = localStorage.getItem(STORAGE_KEYS.SUPABASE_CONFIG);
@@ -298,6 +486,14 @@ class VellumDataAdapter {
             if (payload.new && payload.new.key === 'shoot_assignments') {
               localStorage.setItem('vellum_shoot_assignments', JSON.stringify(payload.new.value));
               window.dispatchEvent(new CustomEvent('vellum:shoot-updated', { detail: payload.new.value }));
+            }
+            if (payload.new && payload.new.key === 'staff_profiles') {
+              localStorage.setItem(STORAGE_KEYS.STAFF_PROFILES, JSON.stringify(payload.new.value));
+              window.dispatchEvent(new CustomEvent('vellum:staff-updated', { detail: payload.new.value }));
+            }
+            if (payload.new && payload.new.key === 'saved_links') {
+              localStorage.setItem(STORAGE_KEYS.SAVED_LINKS, JSON.stringify(payload.new.value));
+              window.dispatchEvent(new CustomEvent('vellum:links-updated', { detail: payload.new.value }));
             }
           }
         )
