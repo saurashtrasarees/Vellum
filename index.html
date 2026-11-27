@@ -12,6 +12,10 @@
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
   
+  <!-- Supabase Client SDK & Vellum Adapter -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-adapter.js"></script>
+  
   <!-- Custom Styles -->
   <link rel="stylesheet" href="styles.css">
   
@@ -179,36 +183,47 @@
   <!-- ====================================================================== -->
   <div id="screenHome" class="view-screen flex-1 flex flex-col">
     
-    <!-- Hero Banner -->
-    <section class="relative bg-gradient-to-b from-white via-slate-50 to-slate-100/70 pt-8 pb-7 px-4 sm:px-6 lg:px-8 border-b border-slate-200/80">
-      <div class="max-w-7xl mx-auto text-center">
-        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100 border border-slate-300 text-slate-800 text-xs font-bold mb-3 shadow-xs">
-          <i data-lucide="sparkles" class="w-3.5 h-3.5 text-amber-500"></i>
+    <!-- Hero Banner (100% Light Luxury Textile Showcase) -->
+    <section class="relative bg-gradient-to-b from-amber-50/60 via-white to-amber-50/40 pt-7 pb-6 px-4 sm:px-6 lg:px-8 border-b border-amber-200/60">
+      <div class="max-w-7xl mx-auto text-center space-y-2.5">
+        <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white border border-amber-300/80 text-amber-900 text-xs font-bold shadow-xs">
+          <i data-lucide="sparkles" class="w-3.5 h-3.5 text-amber-500 fill-amber-400"></i>
           <span id="heroFirmTag">Saurashtra Sarees Direct Wholesale</span>
-          <span class="text-slate-300">•</span>
-          <span class="font-normal text-slate-600">26 Exclusive Volumes</span>
+          <span class="text-amber-300">•</span>
+          <span class="font-normal text-stone-600">26 Exclusive Volumes</span>
+          <span class="text-amber-300">•</span>
+          <span class="text-emerald-700 font-semibold flex items-center gap-1">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+            Surat Mill Direct
+          </span>
         </div>
-        <h2 id="heroMainHeading" class="font-serif text-3xl sm:text-5xl font-extrabold text-slate-900 tracking-tight max-w-3xl mx-auto leading-tight">
-          Curated Wholesale Saree Collections
+
+        <h2 id="heroMainHeading" class="font-serif text-2xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 tracking-tight max-w-4xl mx-auto leading-tight flex items-center justify-center gap-2 flex-wrap">
+          <span>✨</span>
+          <span>Curated Wholesale Saree Collections</span>
+          <span>🥻</span>
         </h2>
-        <p class="mt-2.5 text-xs sm:text-sm text-slate-600 max-w-2xl mx-auto leading-relaxed">
-          High-fashion model drapes and flat-lay table weave details. Dedicated B2B wholesale lookbook for bulk stockists, portal sellers, and premium boutiques.
+
+        <p class="text-xs sm:text-sm text-stone-600 max-w-2xl mx-auto leading-relaxed">
+          High-fashion model drapes and flat-lay table weave details. Direct B2B wholesale lookbook for stockists, portal sellers, and boutiques.
         </p>
 
-        <!-- Active Context Chips -->
-        <div class="mt-5 flex flex-wrap items-center justify-center gap-2.5 text-xs">
-          <div class="flex items-center gap-1.5 px-3 py-1.5 bg-white border border-slate-200 rounded-full shadow-xs">
-            <span class="text-slate-400">View Mode:</span>
-            <strong id="badgeShootActive" class="text-slate-900 font-bold">All Shoots (Model + Table)</strong>
-          </div>
-          <div class="flex items-center gap-1.5 px-3 py-1.5 bg-white border border-slate-200 rounded-full shadow-xs">
-            <span class="text-slate-400">Rate Tier:</span>
-            <strong id="badgeRoleActive" class="text-emerald-700 font-bold">Wholesale Rate</strong>
-          </div>
-          <div class="flex items-center gap-1.5 px-3 py-1.5 bg-white border border-slate-200 rounded-full shadow-xs">
-            <span class="text-slate-400">Representative:</span>
-            <strong id="badgeStaffActive" class="text-slate-800 font-bold">Sales Desk</strong>
-          </div>
+        <!-- Elegant Single-Line Trust Strip (Replaces Clunky Debug Context Bar) -->
+        <div class="pt-2 flex flex-wrap items-center justify-center gap-3 sm:gap-6 text-[11px] font-semibold text-stone-600">
+          <span class="flex items-center gap-1.5">
+            <i data-lucide="shield-check" class="w-3.5 h-3.5 text-amber-600"></i>
+            100% Verified Handloom Lots
+          </span>
+          <span class="hidden sm:inline text-amber-300">•</span>
+          <span class="flex items-center gap-1.5">
+            <i data-lucide="truck" class="w-3.5 h-3.5 text-emerald-600"></i>
+            24–48h Nationwide Dispatch
+          </span>
+          <span class="hidden sm:inline text-amber-300">•</span>
+          <span class="flex items-center gap-1.5">
+            <i data-lucide="sparkles" class="w-3.5 h-3.5 text-amber-600"></i>
+            Model & Table Shoot HD Visuals
+          </span>
         </div>
       </div>
     </section>
@@ -614,17 +629,17 @@
 
     </main>
 
-    <!-- Mobile Sticky Bottom Action Bar (Fixed on mobile phones for 80% mobile shoppers) -->
+    <!-- Mobile Sticky Bottom Action Bar (100% Light Luxury Glassmorphism) -->
     <div id="pdpMobileStickyBar" class="lg:hidden mobile-sticky-action-bar flex items-center justify-between gap-3">
       <div class="flex flex-col">
-        <span class="text-[9px] uppercase tracking-wider text-slate-400 font-bold">Catalog Price</span>
-        <span id="pdpMobilePrice" class="font-serif text-lg font-bold text-white leading-tight">₹1,849</span>
+        <span class="text-[9px] uppercase tracking-wider text-stone-500 font-extrabold">Catalog Rate</span>
+        <span id="pdpMobilePrice" class="font-serif text-lg font-extrabold text-slate-900 leading-tight">₹1,849</span>
       </div>
       <div class="flex items-center gap-2 flex-1 justify-end">
-        <a id="pdpMobileCallBtn" href="tel:+919879471039" class="p-2.5 rounded-xl bg-slate-800 text-slate-200 border border-slate-700 flex items-center justify-center">
+        <a id="pdpMobileCallBtn" href="tel:+919879471039" class="p-2.5 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 flex items-center justify-center shadow-xs">
           <i data-lucide="phone" class="w-4 h-4"></i>
         </a>
-        <button onclick="sendPdpWhatsApp()" class="py-2.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-lg shadow-emerald-600/30">
+        <button onclick="sendPdpWhatsApp()" class="py-2.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-md shadow-emerald-600/25">
           <i data-lucide="message-circle" class="w-4 h-4 fill-current"></i>
           <span id="pdpMobileWhatsAppText">Order on WhatsApp</span>
         </button>
@@ -633,35 +648,35 @@
 
   </div>
 
-  <!-- Info & Policy Modal for Showroom Pages -->
-  <div id="infoModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md overflow-y-auto">
-    <div class="relative w-full max-w-2xl bg-slate-900 border border-slate-800 rounded-3xl overflow-hidden shadow-2xl my-8 text-slate-200">
+  <!-- Info & Policy Modal for Showroom Pages (100% Light Luxury Modal) -->
+  <div id="infoModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-stone-900/40 backdrop-blur-md overflow-y-auto">
+    <div class="relative w-full max-w-2xl bg-white border-2 border-amber-200/90 rounded-3xl overflow-hidden shadow-2xl my-8 text-stone-800">
       
       <!-- Modal Header -->
-      <div class="p-6 border-b border-slate-800 flex items-center justify-between bg-slate-950/70">
+      <div class="p-6 border-b border-amber-200/80 flex items-center justify-between bg-gradient-to-r from-amber-50 via-white to-orange-50">
         <div>
-          <h3 id="infoModalTitle" class="font-serif text-xl font-bold text-white flex items-center gap-2">
+          <h3 id="infoModalTitle" class="font-serif text-xl font-bold text-stone-900 flex items-center gap-2">
             Page Title
           </h3>
-          <p id="infoModalSubtitle" class="text-xs text-amber-400 mt-0.5">Showroom Guidelines</p>
+          <p id="infoModalSubtitle" class="text-xs text-amber-800 font-semibold mt-0.5">Showroom Guidelines</p>
         </div>
-        <button onclick="closeInfoModal()" class="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 flex items-center justify-center text-slate-300 hover:text-white transition-all">
+        <button onclick="closeInfoModal()" class="w-8 h-8 rounded-full bg-amber-100/80 hover:bg-amber-200 flex items-center justify-center text-amber-900 transition-all">
           <i data-lucide="x" class="w-4 h-4"></i>
         </button>
       </div>
 
       <!-- Modal Content Body -->
-      <div id="infoModalContent" class="p-6 sm:p-7 max-h-[70vh] overflow-y-auto space-y-4 text-xs text-slate-300 leading-relaxed">
+      <div id="infoModalContent" class="p-6 sm:p-7 max-h-[70vh] overflow-y-auto space-y-4 text-xs text-stone-700 leading-relaxed">
         <!-- Rendered dynamically by JS -->
       </div>
 
       <!-- Modal Footer -->
-      <div class="p-4 bg-slate-950 border-t border-slate-800 flex items-center justify-between gap-3 text-xs">
-        <div class="flex items-center gap-2 text-slate-400 text-[11px]">
-          <i data-lucide="clock" class="w-3.5 h-3.5 text-amber-400"></i>
+      <div class="p-4 bg-amber-50/70 border-t border-amber-200/80 flex items-center justify-between gap-3 text-xs">
+        <div class="flex items-center gap-2 text-stone-600 text-[11px] font-medium">
+          <i data-lucide="clock" class="w-3.5 h-3.5 text-amber-700"></i>
           <span>Support: 09:00 AM–07:00 PM (Mon–Sat)</span>
         </div>
-        <button onclick="closeInfoModal()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs transition-all">
+        <button onclick="closeInfoModal()" class="px-4 py-2 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs transition-all shadow-xs">
           Close Window
         </button>
       </div>
@@ -670,22 +685,24 @@
   </div>
 
   <!-- Video Reel Modal -->
-  <div id="videoModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md">
-    <div class="relative w-full max-w-sm bg-black rounded-3xl overflow-hidden shadow-2xl border border-white/10 flex flex-col items-center">
-      <div class="w-full p-4 flex items-center justify-between text-white border-b border-white/10">
-        <span id="videoModalTitle" class="text-xs font-bold">Drape Video Reel</span>
-        <button onclick="closeVideoModal()" class="w-7 h-7 rounded-full bg-white/20 flex items-center justify-center text-white">
+  <div id="videoModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-stone-900/50 backdrop-blur-md">
+    <div class="relative w-full max-w-sm bg-white rounded-3xl overflow-hidden shadow-2xl border-2 border-amber-300 flex flex-col items-center">
+      <div class="w-full p-4 flex items-center justify-between text-stone-900 border-b border-amber-200 bg-amber-50">
+        <span id="videoModalTitle" class="text-xs font-bold flex items-center gap-1.5 text-amber-900">
+          <i data-lucide="video" class="w-3.5 h-3.5 text-amber-600"></i> Drape Video Reel
+        </span>
+        <button onclick="closeVideoModal()" class="w-7 h-7 rounded-full bg-amber-200/70 hover:bg-amber-300 flex items-center justify-center text-amber-900">
           <i data-lucide="x" class="w-4 h-4"></i>
         </button>
       </div>
-      <div class="w-full aspect-[9/16] bg-slate-900 flex items-center justify-center relative">
-        <div class="text-center p-6 text-white space-y-3">
-          <div class="w-16 h-16 rounded-full bg-slate-800 mx-auto flex items-center justify-center animate-pulse">
-            <i data-lucide="play" class="w-8 h-8 fill-current text-white ml-1"></i>
+      <div class="w-full aspect-[9/16] bg-amber-50/50 flex items-center justify-center relative">
+        <div class="text-center p-6 text-stone-900 space-y-3">
+          <div class="w-16 h-16 rounded-full bg-amber-100 border border-amber-300 text-amber-800 mx-auto flex items-center justify-center shadow-md animate-pulse">
+            <i data-lucide="play" class="w-8 h-8 fill-current ml-1"></i>
           </div>
-          <p id="videoFileName" class="text-xs text-slate-300 font-mono">100.mp4</p>
-          <p class="text-xs text-amber-300 font-medium">Ready in High Definition</p>
-          <a id="videoDriveLink" href="#" target="_blank" class="inline-block mt-2 px-4 py-2 bg-white/10 hover:bg-white/20 rounded-xl text-xs font-bold text-white border border-white/20">
+          <p id="videoFileName" class="text-xs text-stone-600 font-mono">100.mp4</p>
+          <p class="text-xs text-amber-800 font-bold">Ready in High Definition</p>
+          <a id="videoDriveLink" href="#" target="_blank" class="inline-block mt-2 px-4 py-2 bg-amber-600 hover:bg-amber-700 rounded-xl text-xs font-bold text-white shadow-xs">
             Open File in Google Drive ↗
           </a>
         </div>
@@ -694,51 +711,51 @@
   </div>
 
   <!-- Toast Notification -->
-  <div id="toast" class="hidden fixed bottom-6 right-6 z-50 bg-slate-900 text-white px-4 py-3 rounded-2xl shadow-xl text-xs font-semibold flex items-center gap-2 border border-slate-700 animate-slideUp">
-    <i data-lucide="check-circle" class="w-4 h-4 text-emerald-400"></i>
+  <div id="toast" class="hidden fixed bottom-6 right-6 z-50 bg-white text-stone-900 px-4 py-3 rounded-2xl shadow-2xl text-xs font-bold flex items-center gap-2 border-2 border-amber-400 animate-slideUp">
+    <i data-lucide="check-circle" class="w-4 h-4 text-emerald-600"></i>
     <span id="toastMsg">Link copied to clipboard!</span>
   </div>
 
-  <!-- Comprehensive Multi-Firm & Customer Care Footer -->
-  <footer class="bg-slate-950 text-slate-400 text-xs py-14 px-4 sm:px-6 lg:px-8 mt-24 border-t border-slate-800">
-    <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-10 pb-12 border-b border-slate-800/90">
+  <!-- Comprehensive Multi-Firm & Customer Care Footer (100% Light Luxury Aesthetics) -->
+  <footer class="bg-gradient-to-b from-[#fdfbf7] via-[#faf6ee] to-[#f4ebe0] text-stone-700 text-xs py-14 px-4 sm:px-6 lg:px-8 mt-24 border-t-2 border-amber-300/80 shadow-inner">
+    <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-10 pb-12 border-b border-amber-200/90">
       
       <!-- Col 1: Firm Brand & Contact Support (md:col-span-4) -->
       <div class="md:col-span-4 space-y-4">
         <div class="flex items-center gap-3">
-          <img id="footerFirmLogo" src="assets/saurashtra-sarees-logo.jpg" alt="Firm Logo" class="h-10 w-auto object-contain bg-white p-1 rounded-xl">
+          <img id="footerFirmLogo" src="assets/saurashtra-sarees-logo.jpg" alt="Firm Logo" class="h-10 w-auto object-contain bg-white p-1 rounded-xl shadow-xs border border-amber-200">
           <div>
-            <h4 id="footerFirmName" class="font-serif text-base font-bold text-white">Saurashtra Sarees</h4>
-            <p id="footerFirmTagline" class="text-[11px] text-amber-400 font-medium">Make Occasion Better</p>
+            <h4 id="footerFirmName" class="font-serif text-base font-bold text-stone-900">Saurashtra Sarees</h4>
+            <p id="footerFirmTagline" class="text-[11px] text-amber-800 font-semibold">Make Occasion Better</p>
           </div>
         </div>
 
-        <p class="text-slate-400 text-xs leading-relaxed">
+        <p class="text-stone-600 text-xs leading-relaxed">
           Premier Indian saree manufacturer and bulk textile supply house in Surat, Gujarat. Serving wholesale stockists, portal sellers, and independent boutiques nationwide.
         </p>
 
-        <!-- Contact Support & Timings Box -->
-        <div class="p-4 rounded-2xl bg-slate-900/90 border border-slate-800 space-y-2">
+        <!-- Contact Support & Timings Box (Light Luxury) -->
+        <div class="p-4 rounded-2xl bg-white border border-amber-200/90 shadow-xs space-y-2">
           <div class="flex items-center justify-between">
-            <span class="text-[10px] font-extrabold uppercase tracking-wider text-amber-400 flex items-center gap-1.5">
-              <i data-lucide="headphones" class="w-3.5 h-3.5"></i> Contact Support
+            <span class="text-[10px] font-extrabold uppercase tracking-wider text-amber-800 flex items-center gap-1.5">
+              <i data-lucide="headphones" class="w-3.5 h-3.5 text-amber-700"></i> Contact Support
             </span>
-            <span class="text-[9px] bg-emerald-950 text-emerald-400 px-2 py-0.5 rounded font-mono font-bold border border-emerald-800">
+            <span class="text-[9px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-mono font-bold border border-emerald-300">
               Live Desk
             </span>
           </div>
 
-          <div class="text-[11px] text-slate-300 space-y-1 pt-1">
-            <p class="flex items-center gap-1.5 text-white font-medium">
-              <i data-lucide="clock" class="w-3.5 h-3.5 text-amber-400 shrink-0"></i>
+          <div class="text-[11px] text-stone-700 space-y-1 pt-1">
+            <p class="flex items-center gap-1.5 text-stone-900 font-medium">
+              <i data-lucide="clock" class="w-3.5 h-3.5 text-amber-700 shrink-0"></i>
               <span>09:00 AM–07:00 PM (Monday–Saturday)</span>
             </p>
             <p class="flex items-center gap-1.5 pt-1">
-              <i data-lucide="phone" class="w-3.5 h-3.5 text-slate-400 shrink-0"></i>
-              <span>Direct: <strong class="text-white">+91 98794 71039</strong> / <strong class="text-white">+91 99136 43433</strong></span>
+              <i data-lucide="phone" class="w-3.5 h-3.5 text-stone-500 shrink-0"></i>
+              <span>Direct: <strong class="text-stone-900">+91 98794 71039</strong> / <strong class="text-stone-900">+91 99136 43433</strong></span>
             </p>
             <p class="flex items-center gap-1.5">
-              <i data-lucide="map-pin" class="w-3.5 h-3.5 text-slate-400 shrink-0"></i>
+              <i data-lucide="map-pin" class="w-3.5 h-3.5 text-stone-500 shrink-0"></i>
               <span>Ring Road Textile Market, Surat, Gujarat 395002</span>
             </p>
           </div>
@@ -747,37 +764,37 @@
 
       <!-- Col 2: Policies & Compliance (md:col-span-2) -->
       <div class="md:col-span-2 space-y-3">
-        <h5 class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
+        <h5 class="text-xs font-bold text-stone-900 uppercase tracking-wider flex items-center gap-1.5">
           <span>Policies & Trust</span>
         </h5>
-        <ul class="space-y-2 text-slate-400 text-xs">
+        <ul class="space-y-2 text-stone-600 text-xs">
           <li>
-            <button onclick="openInfoPage('terms')" class="hover:text-amber-300 transition-colors flex items-center gap-1.5 text-left">
+            <button onclick="openInfoPage('terms')" class="hover:text-amber-800 transition-colors flex items-center gap-1.5 text-left font-medium">
               <span>📜</span> <span>Terms & Conditions</span>
             </button>
           </li>
           <li>
-            <button onclick="openInfoPage('shipping')" class="hover:text-amber-300 transition-colors flex items-center gap-1.5 text-left">
+            <button onclick="openInfoPage('shipping')" class="hover:text-amber-800 transition-colors flex items-center gap-1.5 text-left font-medium">
               <span>🚚</span> <span>Shipping Policy</span>
             </button>
           </li>
           <li>
-            <button onclick="openInfoPage('return')" class="hover:text-amber-300 transition-colors flex items-center gap-1.5 text-left">
+            <button onclick="openInfoPage('return')" class="hover:text-amber-800 transition-colors flex items-center gap-1.5 text-left font-medium">
               <span>🔄</span> <span>Return Policy</span>
             </button>
           </li>
           <li>
-            <button onclick="openInfoPage('privacy')" class="hover:text-amber-300 transition-colors flex items-center gap-1.5 text-left">
+            <button onclick="openInfoPage('privacy')" class="hover:text-amber-800 transition-colors flex items-center gap-1.5 text-left font-medium">
               <span>🔒</span> <span>Privacy Policy</span>
             </button>
           </li>
           <li>
-            <button onclick="openInfoPage('refund')" class="hover:text-amber-300 transition-colors flex items-center gap-1.5 text-left">
+            <button onclick="openInfoPage('refund')" class="hover:text-amber-800 transition-colors flex items-center gap-1.5 text-left font-medium">
               <span>💳</span> <span>Refund Policy</span>
             </button>
           </li>
           <li>
-            <button onclick="openInfoPage('esg')" class="hover:text-amber-300 transition-colors flex items-center gap-1.5 text-left">
+            <button onclick="openInfoPage('esg')" class="hover:text-amber-800 transition-colors flex items-center gap-1.5 text-left font-medium">
               <span>🌿</span> <span>ESG Policy</span>
             </button>
           </li>
@@ -786,92 +803,92 @@
 
       <!-- Col 3: Customer Care & Showroom Services (md:col-span-2) -->
       <div class="md:col-span-2 space-y-3">
-        <h5 class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
+        <h5 class="text-xs font-bold text-stone-900 uppercase tracking-wider flex items-center gap-1.5">
           <span>Customer Care</span>
         </h5>
-        <ul class="space-y-2 text-slate-400 text-xs">
+        <ul class="space-y-2 text-stone-600 text-xs">
           <li>
-            <button onclick="openInfoPage('about-us')" class="hover:text-amber-300 transition-colors flex items-center gap-1.5 text-left">
+            <button onclick="openInfoPage('about-us')" class="hover:text-amber-800 transition-colors flex items-center gap-1.5 text-left font-medium">
               <span>🏛️</span> <span>About Us</span>
             </button>
           </li>
           <li>
-            <button onclick="openInfoPage('track-order')" class="hover:text-amber-300 transition-colors flex items-center gap-1.5 text-left">
+            <button onclick="openInfoPage('track-order')" class="hover:text-amber-800 transition-colors flex items-center gap-1.5 text-left font-medium">
               <span>📦</span> <span>Track Order</span>
             </button>
           </li>
           <li>
-            <button onclick="openInfoPage('store-locator')" class="hover:text-amber-300 transition-colors flex items-center gap-1.5 text-left">
+            <button onclick="openInfoPage('store-locator')" class="hover:text-amber-800 transition-colors flex items-center gap-1.5 text-left font-medium">
               <span>📍</span> <span>Store Locator</span>
             </button>
           </li>
           <li>
-            <button onclick="openInfoPage('bulk-order')" class="hover:text-amber-300 transition-colors flex items-center gap-1.5 text-left">
+            <button onclick="openInfoPage('bulk-order')" class="hover:text-amber-800 transition-colors flex items-center gap-1.5 text-left font-medium">
               <span>💼</span> <span>Bulk Order Query</span>
             </button>
           </li>
           <li>
-            <button onclick="openInfoPage('faqs')" class="hover:text-amber-300 transition-colors flex items-center gap-1.5 text-left">
+            <button onclick="openInfoPage('faqs')" class="hover:text-amber-800 transition-colors flex items-center gap-1.5 text-left font-medium">
               <span>❓</span> <span>FAQ's</span>
             </button>
           </li>
           <li class="pt-1">
-            <a href="admin.html" class="text-amber-400 hover:underline flex items-center gap-1 text-left font-semibold">
-              <i data-lucide="settings" class="w-3.5 h-3.5"></i> <span>Super-Admin</span> ↗
+            <a href="admin.html" class="text-amber-700 hover:text-amber-900 hover:underline flex items-center gap-1 text-left font-bold">
+              <i data-lucide="settings" class="w-3.5 h-3.5 text-amber-700"></i> <span>Super-Admin</span> ↗
             </a>
           </li>
         </ul>
       </div>
 
-      <!-- Col 4: Official BinduGrid Studio [ØG] Tech Section (md:col-span-4) -->
-      <div class="md:col-span-4 bg-slate-900/60 border border-slate-800 rounded-3xl p-5 space-y-3.5">
+      <!-- Col 4: Official BinduGrid Studio [ØG] Tech Section (100% Light Luxury) -->
+      <div class="md:col-span-4 bg-white border-2 border-amber-300/80 rounded-3xl p-5 space-y-3.5 shadow-md">
         
-        <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div class="flex items-center justify-between border-b border-amber-200/80 pb-3">
           <div class="flex items-center gap-3">
-            <!-- Emblem / Monogram: ØG (Cyber Cyan Slashed Zero Ø + Pure White G) -->
-            <div class="w-10 h-10 rounded-2xl bg-slate-950 border border-slate-800 flex items-center justify-center font-mono font-black text-xl shadow-inner">
-              <span class="text-cyan-400">Ø</span><span class="text-white">G</span>
+            <!-- Emblem / Monogram: ØG (Cyber Cyan Slashed Zero Ø + Royal Crimson G) -->
+            <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-amber-50 to-orange-50 border-2 border-amber-300 flex items-center justify-center font-mono font-black text-xl shadow-xs">
+              <span class="text-cyan-600">Ø</span><span class="text-rose-900">G</span>
             </div>
             <div>
               <div class="flex items-center gap-2">
-                <h4 class="font-serif text-sm font-bold text-white tracking-wide">BinduGrid Studio</h4>
-                <span class="text-[9px] bg-cyan-950/80 text-cyan-300 border border-cyan-800/80 px-2 py-0.5 rounded-full font-mono font-bold">ØG</span>
+                <h4 class="font-serif text-sm font-bold text-stone-900 tracking-wide">BinduGrid Studio</h4>
+                <span class="text-[9px] bg-cyan-100 text-cyan-800 border border-cyan-300 px-2 py-0.5 rounded-full font-mono font-bold">ØG</span>
               </div>
-              <p class="text-[9px] tracking-widest uppercase font-extrabold text-cyan-400">FROM THE ORIGIN TO THE GRID</p>
+              <p class="text-[9px] tracking-widest uppercase font-extrabold text-cyan-700">FROM THE ORIGIN TO THE GRID</p>
             </div>
           </div>
           
-          <a href="mailto:bindugrid@gmail.com" title="Email Studio" class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-cyan-400 border border-slate-700 transition-all">
+          <a href="mailto:bindugrid@gmail.com" title="Email Studio" class="p-2 rounded-xl bg-amber-100/70 hover:bg-amber-200 text-cyan-800 border border-amber-300 transition-all shadow-xs">
             <i data-lucide="mail" class="w-4 h-4"></i>
           </a>
         </div>
 
-        <p class="text-slate-300 text-[11px] leading-relaxed">
+        <p class="text-stone-600 text-[11px] leading-relaxed font-normal">
           Digital product studio & creative engineering hub bridging foundational computation (the <em>Bindu</em> / Origin) with high-precision UI/UX craft & frontend performance (the <em>Grid</em>).
         </p>
 
         <!-- Core Focus Pills -->
-        <div class="flex flex-wrap gap-1.5 text-[9px] font-semibold text-slate-300">
-          <span class="px-2 py-0.5 rounded-lg bg-slate-950 border border-slate-800">⚡ Digital Product Dev</span>
-          <span class="px-2 py-0.5 rounded-lg bg-slate-950 border border-slate-800">🛠️ Creative Web Engineering</span>
-          <span class="px-2 py-0.5 rounded-lg bg-slate-950 border border-slate-800">🎨 UI/UX Systems</span>
+        <div class="flex flex-wrap gap-1.5 text-[9px] font-semibold text-stone-700">
+          <span class="px-2 py-0.5 rounded-lg bg-amber-50 border border-amber-200">⚡ Digital Product Dev</span>
+          <span class="px-2 py-0.5 rounded-lg bg-amber-50 border border-amber-200">🛠️ Creative Web Engineering</span>
+          <span class="px-2 py-0.5 rounded-lg bg-amber-50 border border-amber-200">🎨 UI/UX Systems</span>
         </div>
 
         <!-- Official Social Directory Handles -->
-        <div class="pt-2 flex items-center justify-between text-xs border-t border-slate-800/80">
+        <div class="pt-2 flex items-center justify-between text-xs border-t border-amber-200/80">
           <div class="flex items-center gap-1.5 font-mono text-[11px]">
-            <span class="text-slate-400">Handle:</span>
-            <span class="text-cyan-400 font-bold">@bindugrid</span>
+            <span class="text-stone-500">Handle:</span>
+            <span class="text-cyan-700 font-bold">@bindugrid</span>
           </div>
 
-          <div class="flex items-center gap-2 text-slate-400">
-            <a href="https://youtube.com/@bindugrid" target="_blank" title="YouTube: @bindugrid" class="p-1.5 rounded-xl bg-slate-950 hover:bg-slate-800 hover:text-rose-400 border border-slate-800 transition-all">
+          <div class="flex items-center gap-2 text-stone-600">
+            <a href="https://youtube.com/@bindugrid" target="_blank" title="YouTube: @bindugrid" class="p-1.5 rounded-xl bg-amber-50 hover:bg-amber-100 hover:text-rose-600 border border-amber-200 transition-all shadow-xs">
               <i data-lucide="youtube" class="w-3.5 h-3.5"></i>
             </a>
-            <a href="https://x.com/bindugrid" target="_blank" title="X (Twitter): @bindugrid" class="p-1.5 rounded-xl bg-slate-950 hover:bg-slate-800 hover:text-sky-400 border border-slate-800 transition-all">
+            <a href="https://x.com/bindugrid" target="_blank" title="X (Twitter): @bindugrid" class="p-1.5 rounded-xl bg-amber-50 hover:bg-amber-100 hover:text-sky-600 border border-amber-200 transition-all shadow-xs">
               <i data-lucide="twitter" class="w-3.5 h-3.5"></i>
             </a>
-            <a href="https://instagram.com/bindugrid" target="_blank" title="Instagram: @bindugrid" class="p-1.5 rounded-xl bg-slate-950 hover:bg-slate-800 hover:text-pink-400 border border-slate-800 transition-all">
+            <a href="https://instagram.com/bindugrid" target="_blank" title="Instagram: @bindugrid" class="p-1.5 rounded-xl bg-amber-50 hover:bg-amber-100 hover:text-pink-600 border border-amber-200 transition-all shadow-xs">
               <i data-lucide="instagram" class="w-3.5 h-3.5"></i>
             </a>
           </div>
@@ -885,16 +902,16 @@
     <div class="max-w-7xl mx-auto pt-8 space-y-4">
       
       <!-- Disclaimer -->
-      <div class="p-4 rounded-2xl bg-slate-900/60 border border-slate-800/80 text-[11px] text-slate-400 leading-relaxed">
-        <strong class="text-slate-300">Disclaimer:</strong> All catalog saree designs, high-resolution model/table photographs, textile colorways, fabric specifications, and trade brandings displayed across this digital showroom are proprietary to <strong id="footerDisclaimerFirm" class="text-white">Saurashtra Sarees</strong>. Authorized wholesale dealers, portal sellers, and catalog distributors are granted permission to share digital assets strictly for customer presentation and bulk order fulfillment. Unauthorized reproduction or trademark infringement is prohibited.
+      <div class="p-4 rounded-2xl bg-white border border-amber-200 text-[11px] text-stone-600 leading-relaxed shadow-xs">
+        <strong class="text-stone-900">Disclaimer:</strong> All catalog saree designs, high-resolution model/table photographs, textile colorways, fabric specifications, and trade brandings displayed across this digital showroom are proprietary to <strong id="footerDisclaimerFirm" class="text-stone-900">Saurashtra Sarees</strong>. Authorized wholesale dealers, portal sellers, and catalog distributors are granted permission to share digital assets strictly for customer presentation and bulk order fulfillment. Unauthorized reproduction or trademark infringement is prohibited.
       </div>
 
       <!-- Copyright Bar -->
-      <div class="flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px] text-slate-500 pt-2 border-t border-slate-800/60">
-        <p id="footerCopyright">Saurashtra Sarees 2026. All rights reserved.</p>
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px] text-stone-500 pt-2 border-t border-amber-200">
+        <p id="footerCopyright" class="font-medium">Saurashtra Sarees 2026. All rights reserved.</p>
         <p class="flex items-center gap-1.5 font-mono">
           <span>Engineered by</span>
-          <strong class="text-slate-300 font-semibold">BinduGrid Studio [ØG]</strong>
+          <strong class="text-stone-800 font-bold">BinduGrid Studio [ØG]</strong>
         </p>
       </div>
 

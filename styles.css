@@ -1,49 +1,81 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,500;0,600;0,700;0,800;1,400;1,600&family=Inter:wght@400;500;600;700&display=swap');
 
 :root {
-  /* Default Saurashtra Sarees Theme (Royal Heritage Maroon & Gold) */
+  /* Default Saurashtra Sarees Luxury Theme (Royal Heritage Maroon & Antique Gold) */
   --theme-primary: #8b1d40;
-  --theme-primary-dark: #5e0f28;
-  --theme-primary-light: #fbf0f3;
+  --theme-primary-hover: #701432;
+  --theme-primary-light: #fdf2f5;
   --theme-accent: #d4af37;
-  --theme-accent-light: #fcf8e8;
+  --theme-accent-hover: #b89628;
+  --theme-accent-light: #fefcf3;
   --theme-surface: #ffffff;
-  --theme-bg: #f8fafc;
-  --text-main: #0f172a;
+  --theme-bg: #fffdfa;
+  --theme-card-bg: #ffffff;
+  --text-main: #1e293b;
   --text-muted: #64748b;
-  --border: #e2e8f0;
+  --border: #f1e5d1;
+  --border-gold: rgba(212, 175, 55, 0.35);
+  --shadow-luxury: 0 12px 30px -10px rgba(139, 29, 64, 0.12), 0 4px 12px -2px rgba(0, 0, 0, 0.04);
 }
 
-/* Keya Fashion Theme (Vibrant Sky Blue, Sun Gold & Fresh Modern Accents) */
+/* ==============================================================================
+   KEYA FASHION THEME (Vibrant Festive Cyan, Sunburst Marigold & Emerald Accents)
+   ============================================================================== */
 body.theme-keya {
   --theme-primary: #0284c7;
-  --theme-primary-dark: #0369a1;
+  --theme-primary-hover: #0369a1;
   --theme-primary-light: #f0f9ff;
   --theme-accent: #f59e0b;
-  --theme-accent-light: #fef3c7;
+  --theme-accent-hover: #d97706;
+  --theme-accent-light: #fffbeb;
   --theme-surface: #ffffff;
   --theme-bg: #f8fafc;
+  --theme-card-bg: #ffffff;
+  --text-main: #0f172a;
+  --text-muted: #475569;
+  --border: #e0f2fe;
+  --border-gold: rgba(245, 158, 11, 0.4);
+  --shadow-luxury: 0 12px 30px -10px rgba(2, 132, 199, 0.15), 0 4px 12px -2px rgba(0, 0, 0, 0.04);
+
+  /* Textured Jacquard Textile Weave (Light Festive Micro-Grid) */
+  background-color: #f8fafc;
   background-image: 
-    radial-gradient(rgba(2, 132, 199, 0.05) 1px, transparent 1px),
-    radial-gradient(rgba(245, 158, 11, 0.04) 1px, transparent 1px);
-  background-size: 24px 24px, 48px 48px;
-  background-position: 0 0, 12px 12px;
+    radial-gradient(circle at 50% 50%, rgba(2, 132, 199, 0.07) 1.5px, transparent 1.5px),
+    radial-gradient(circle at 0 0, rgba(245, 158, 11, 0.06) 1.5px, transparent 1.5px),
+    linear-gradient(to right, rgba(2, 132, 199, 0.02) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(245, 158, 11, 0.02) 1px, transparent 1px);
+  background-size: 28px 28px, 28px 28px, 14px 14px, 14px 14px;
+  background-position: 0 0, 14px 14px, 0 0, 0 0;
 }
 
-/* Saurashtra Sarees Theme (Deep Heritage Crimson Maroon & Antique Gold) */
+/* ==============================================================================
+   SAURASHTRA SAREES THEME (Royal Heritage Crimson Maroon & Antique Temple Gold)
+   ============================================================================== */
 body.theme-saurashtra {
   --theme-primary: #8b1d40;
-  --theme-primary-dark: #5e0f28;
-  --theme-primary-light: #fbf0f3;
+  --theme-primary-hover: #701432;
+  --theme-primary-light: #fdf2f5;
   --theme-accent: #d4af37;
-  --theme-accent-light: #fcf8e8;
+  --theme-accent-hover: #b89628;
+  --theme-accent-light: #fefcf3;
   --theme-surface: #ffffff;
-  --theme-bg: #faf7f5;
+  --theme-bg: #fffdfa;
+  --theme-card-bg: #ffffff;
+  --text-main: #1e293b;
+  --text-muted: #64748b;
+  --border: #faecd8;
+  --border-gold: rgba(212, 175, 55, 0.4);
+  --shadow-luxury: 0 12px 30px -10px rgba(139, 29, 64, 0.12), 0 4px 12px -2px rgba(0, 0, 0, 0.04);
+
+  /* Textured Royal Zari Silk Weave Pattern */
+  background-color: #fffdfa;
   background-image: 
-    radial-gradient(rgba(139, 29, 64, 0.05) 1px, transparent 1px),
-    radial-gradient(rgba(212, 175, 55, 0.06) 1px, transparent 1px);
-  background-size: 24px 24px, 48px 48px;
-  background-position: 0 0, 12px 12px;
+    radial-gradient(circle at 50% 50%, rgba(139, 29, 64, 0.06) 1.5px, transparent 1.5px),
+    radial-gradient(circle at 0 0, rgba(212, 175, 55, 0.07) 1.5px, transparent 1.5px),
+    linear-gradient(45deg, rgba(212, 175, 55, 0.025) 25%, transparent 25%, transparent 75%, rgba(212, 175, 55, 0.025) 75%),
+    linear-gradient(-45deg, rgba(139, 29, 64, 0.02) 25%, transparent 25%, transparent 75%, rgba(139, 29, 64, 0.02) 75%);
+  background-size: 32px 32px, 32px 32px, 16px 16px, 16px 16px;
+  background-position: 0 0, 16px 16px, 0 0, 0 0;
 }
 
 body {
@@ -51,70 +83,104 @@ body {
   background-color: var(--theme-bg);
   color: var(--text-main);
   -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
 }
 
 .font-serif {
   font-family: 'Playfair Display', Georgia, serif;
 }
 
-/* Glassmorphism Header */
+/* ==============================================================================
+   LIGHT LUXURY GLASSMORPHISM HEADER & NAV
+   ============================================================================== */
 .glass-nav {
-  background: rgba(255, 255, 255, 0.92);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border-bottom: 1px solid rgba(226, 232, 240, 0.85);
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border-gold);
+  box-shadow: 0 4px 20px -2px rgba(180, 83, 9, 0.05);
 }
 
-/* Custom Scrollbar */
+/* Custom Scrollbar in Luxury Warm Cream */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 7px;
+  height: 7px;
 }
 ::-webkit-scrollbar-track {
-  background: #f1f5f9;
+  background: #fdfaf5;
 }
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-  border-radius: 4px;
+  background: #e2d3be;
+  border-radius: 9999px;
+  border: 1px solid #f3ebe0;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: #c5af8d;
 }
 
-/* Shopify-Grade Catalog Card */
+/* ==============================================================================
+   SHOPIFY-GRADE LUXURY CATALOG CARDS
+   ============================================================================== */
 .catalog-card {
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.catalog-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 20px 25px -5px rgba(15, 23, 42, 0.08), 0 8px 10px -6px rgba(15, 23, 42, 0.04);
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  background: #ffffff;
+  border: 1px solid var(--border);
+  box-shadow: 0 4px 15px -3px rgba(0, 0, 0, 0.04);
 }
 
-/* Color Swatches with Tooltips */
+.catalog-card:hover {
+  transform: translateY(-6px);
+  border-color: var(--border-gold);
+  box-shadow: var(--shadow-luxury), 0 0 0 1px var(--border-gold);
+}
+
+/* Out of Stock Card Overlay / Treatment */
+.catalog-card.is-temp-out {
+  border-color: #fde68a;
+  background: #fffefb;
+}
+
+.catalog-card.is-perm-out {
+  border-color: #f1f5f9;
+  background: #fcfcfd;
+  opacity: 0.88;
+}
+
+.catalog-card.is-perm-out img {
+  filter: grayscale(40%);
+}
+
+/* ==============================================================================
+   COLOR SWATCHES WITH ACCURATE TOOLTIPS & OUT-OF-STOCK STRIKE-THROUGH
+   ============================================================================== */
 .swatch-wrapper {
   position: relative;
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .swatch-tooltip {
   visibility: hidden;
   position: absolute;
-  bottom: 125%;
+  bottom: 135%;
   left: 50%;
-  transform: translateX(-50%);
-  background-color: #0f172a;
+  transform: translateX(-50%) translateY(4px);
+  background: #1e293b;
   color: #ffffff;
   text-align: center;
-  padding: 3px 8px;
-  border-radius: 6px;
-  font-size: 10px;
-  font-weight: 600;
+  padding: 4px 9px;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
   white-space: nowrap;
-  z-index: 50;
+  z-index: 60;
   opacity: 0;
-  transition: opacity 0.2s, visibility 0.2s;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   pointer-events: none;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 8px 16px -2px rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(212, 175, 55, 0.4);
 }
 
 .swatch-tooltip::after {
@@ -122,98 +188,79 @@ body {
   position: absolute;
   top: 100%;
   left: 50%;
-  margin-left: -4px;
-  border-width: 4px;
+  margin-left: -5px;
+  border-width: 5px;
   border-style: solid;
-  border-color: #0f172a transparent transparent transparent;
+  border-color: #1e293b transparent transparent transparent;
 }
 
 .swatch-wrapper:hover .swatch-tooltip {
   visibility: visible;
   opacity: 1;
+  transform: translateX(-50%) translateY(0);
 }
 
-/* Smooth Image Crossfade */
-.hero-image-fade {
-  transition: opacity 0.25s ease-in-out;
+/* Swatch Out of Stock Diagonal Crossline */
+.swatch-btn.is-sold-out {
+  position: relative;
+  opacity: 0.55;
+  cursor: not-allowed;
+  filter: grayscale(60%);
 }
 
-/* Badges */
-.badge-all {
-  background: #f1f5f9;
-  color: #334155;
-  border: 1px solid #cbd5e1;
-}
-.badge-model {
-  background: #eff6ff;
-  color: #1d4ed8;
-  border: 1px solid #bfdbfe;
-}
-.badge-table {
-  background: #fef3c7;
-  color: #b45309;
-  border: 1px solid #fde68a;
+.swatch-btn.is-sold-out::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: -2px;
+  right: -2px;
+  height: 2px;
+  background: #ef4444;
+  transform: rotate(-45deg);
+  box-shadow: 0 0 2px rgba(255, 255, 255, 0.8);
 }
 
-/* Shopify Product Screen Transitions */
-.view-screen {
-  animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+/* Selected Colorway Ring */
+.swatch-btn.is-selected {
+  outline: 2.5px solid #d4af37;
+  outline-offset: 2.5px;
+  transform: scale(1.15);
+  box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* Image Zoom Magnifier */
-.zoom-container {
-  overflow: hidden;
-  cursor: crosshair;
-}
-.zoom-container img {
-  transition: transform 0.3s ease;
-}
-.zoom-container:hover img {
-  transform: scale(1.4);
-}
-
-/* Luxury Micro-Interactions */
-.glow-dot {
-  box-shadow: 0 0 10px rgba(16, 185, 129, 0.6);
-}
-
-/* Active PDP tab transition */
-.pdp-tab-active {
-  border-bottom: 2px solid #0f172a;
-  color: #0f172a;
-  background-color: #ffffff;
-  font-weight: 700;
-}
-.pdp-tab-inactive {
-  border-bottom: 2px solid transparent;
-  color: #64748b;
-  font-weight: 500;
-}
-.pdp-tab-inactive:hover {
-  color: #1e293b;
-}
-
-/* Mobile-First Sticky Action Bar on PDP */
+/* ==============================================================================
+   LIGHT LUXURY MOBILE BOTTOM ACTION BAR (Strictly Light Glassmorphism)
+   ============================================================================== */
 .mobile-sticky-action-bar {
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
   z-index: 50;
-  background: rgba(15, 23, 42, 0.95);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 1.5px solid var(--border-gold);
   padding: 10px 16px;
-  box-shadow: 0 -10px 25px -5px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 -8px 25px -4px rgba(180, 83, 9, 0.12), 0 -2px 6px -1px rgba(0, 0, 0, 0.04);
 }
 
-/* Micro Animations & Emojis Bounce */
+/* ==============================================================================
+   LIVELY MICRO-ANIMATIONS, GOLD SHIMMER & EMOJI GLOW
+   ============================================================================== */
+@keyframes shimmerGold {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.badge-shimmer-gold {
+  background: linear-gradient(90deg, #fffbeb 0%, #fef3c7 25%, #fde68a 50%, #fef3c7 75%, #fffbeb 100%);
+  background-size: 200% 100%;
+  animation: shimmerGold 4s infinite linear;
+  border: 1px solid #fde68a;
+  color: #92400e;
+}
+
 @keyframes bounceSubtle {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-3px); }
@@ -223,23 +270,55 @@ body {
 }
 
 @keyframes pulseGlow {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.85; transform: scale(1.04); }
+  0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
+  50% { transform: scale(1.02); box-shadow: 0 0 12px 3px rgba(16, 185, 129, 0.3); }
 }
 .animate-pulse-glow {
-  animation: pulseGlow 3s infinite ease-in-out;
+  animation: pulseGlow 2.5s infinite ease-in-out;
 }
 
-/* BinduGrid Studio [ØG] Monogram */
-.monogram-og {
+@keyframes pulseGoldGlow {
+  0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.4); }
+  50% { transform: scale(1.02); box-shadow: 0 0 14px 4px rgba(212, 175, 55, 0.35); }
+}
+.animate-gold-glow {
+  animation: pulseGoldGlow 3s infinite ease-in-out;
+}
+
+/* Image Zoom Magnifier */
+.zoom-container {
+  overflow: hidden;
+  cursor: crosshair;
+}
+.zoom-container img {
+  transition: transform 0.35s ease;
+}
+.zoom-container:hover img {
+  transform: scale(1.4);
+}
+
+/* ==============================================================================
+   BINDUGRID STUDIO [ØG] LIGHT LUXURY MONOGRAM
+   ============================================================================== */
+.monogram-og-light {
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   letter-spacing: -0.05em;
   font-weight: 900;
 }
-.monogram-zero {
-  color: #00f0ff;
-  text-shadow: 0 0 12px rgba(0, 240, 255, 0.6);
+.monogram-zero-light {
+  color: #0284c7;
+  text-shadow: 0 0 8px rgba(2, 132, 199, 0.35);
 }
-.monogram-g {
-  color: #ffffff;
+.monogram-g-light {
+  color: #8b1d40;
+}
+
+/* View Screen Transition */
+.view-screen {
+  animation: screenFadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes screenFadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
 }

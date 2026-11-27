@@ -3,128 +3,196 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Super-Admin Control Center | BinduGrid Studio</title>
+  <title>Super-Admin Control Center | BinduGrid Studio [ØG]</title>
   
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Supabase Client SDK & Vellum Adapter -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-adapter.js"></script>
   <!-- Custom Styles -->
   <link rel="stylesheet" href="styles.css">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              maroon: '#8b1d40',
+              gold: '#d4af37',
+              sky: '#0284c7',
+              amber: '#f59e0b',
+            }
+          }
+        }
+      }
+    }
+  </script>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col antialiased">
+<body class="bg-[#fcfaf7] text-stone-800 min-h-screen flex antialiased">
 
-  <!-- ====================================================================== -->
-  <!-- SUPER-ADMIN MAIN DASHBOARD (NO LOCKOUT BARRIER)                         -->
-  <!-- ====================================================================== -->
-  <div id="adminDashboard" class="flex-1 flex flex-col">
+  <!-- ============================================================================== -->
+  <!-- 1. LEFT-HAND VERTICAL SIDEBAR NAVIGATION (Modern SaaS Console Layout)         -->
+  <!-- ============================================================================== -->
+  <aside class="w-64 sm:w-72 bg-white border-r border-amber-200/90 flex flex-col shrink-0 min-h-screen sticky top-0 h-screen z-40 shadow-sm">
     
-    <!-- Top Admin Header -->
-    <header class="bg-slate-900 border-b border-slate-800 sticky top-0 z-40 shadow-xl">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col md:flex-row items-center justify-between gap-4">
-        
-        <div class="flex items-center gap-3.5">
-          <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center font-bold text-slate-950 text-xl shadow-lg shadow-amber-500/20">
-            <i data-lucide="shield-check" class="w-6 h-6"></i>
-          </div>
-          <div>
-            <div class="flex items-center gap-2">
-              <h1 class="font-serif text-lg font-bold text-white tracking-wide">Super-Admin Control Center</h1>
-              <span class="text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40">
-                Superior Access
-              </span>
-            </div>
-            <p class="text-xs text-slate-400 mt-0.5 flex items-center gap-2">
-              <span>Master Admin: <strong class="text-white">+91 98989 07401</strong></span>
-              <span class="text-slate-600">•</span>
-              <span class="text-emerald-400 font-semibold">Active & Authenticated</span>
-            </p>
-          </div>
+    <!-- Sidebar Header & Emblem -->
+    <div class="p-5 border-b border-amber-200/80 flex items-center gap-3 bg-gradient-to-r from-amber-50/70 via-white to-orange-50/50">
+      <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-amber-500 to-amber-700 flex items-center justify-center font-bold text-white shadow-md shadow-amber-500/25 shrink-0">
+        <i data-lucide="shield-check" class="w-6 h-6"></i>
+      </div>
+      <div class="overflow-hidden">
+        <div class="flex items-center gap-1.5">
+          <h1 class="font-serif text-sm font-black text-stone-900 tracking-tight truncate">Super-Admin Hub</h1>
+          <span class="text-[9px] font-black uppercase px-1.5 py-0.5 rounded bg-amber-100 text-amber-900 border border-amber-300">
+            PRO
+          </span>
         </div>
+        <p class="text-[10px] text-stone-500 truncate flex items-center gap-1 mt-0.5">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+          <span>+91 98989 07401</span>
+        </p>
+      </div>
+    </div>
 
-        <!-- Navigation Tabs -->
-        <nav class="flex items-center gap-1.5 bg-slate-950 p-1.5 rounded-2xl border border-slate-800 text-xs font-semibold overflow-x-auto max-w-full">
-          <button onclick="switchTab('hub')" id="tabBtn-hub" class="px-4 py-2 rounded-xl font-bold bg-amber-500 text-slate-950 shadow-xs whitespace-nowrap">
-            👥 Staff Links Hub (1-3)
-          </button>
-          <button onclick="switchTab('generator')" id="tabBtn-generator" class="px-4 py-2 rounded-xl font-medium text-slate-400 hover:text-white whitespace-nowrap">
-            🔗 Deep-Link Generator
-          </button>
-          <button onclick="switchTab('rates')" id="tabBtn-rates" class="px-4 py-2 rounded-xl font-medium text-slate-400 hover:text-white whitespace-nowrap">
-            💰 Rates & Stock Editor
-          </button>
-          <button onclick="switchTab('firms')" id="tabBtn-firms" class="px-4 py-2 rounded-xl font-medium text-slate-400 hover:text-white whitespace-nowrap">
-            🏢 Firms & Themes
-          </button>
-        </nav>
+    <!-- Vertical Navigation Links -->
+    <nav class="p-3 space-y-1 flex-1 overflow-y-auto text-xs font-semibold">
+      
+      <div class="px-3 pt-2 pb-1 text-[10px] font-extrabold uppercase tracking-wider text-stone-400">
+        Showroom Management
+      </div>
 
-        <div class="flex items-center gap-2.5">
-          <a href="index.html" target="_blank" class="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs font-bold text-slate-200 flex items-center gap-2 shadow-xs transition-all">
-            <span>Live Showroom</span>
-            <i data-lucide="external-link" class="w-3.5 h-3.5 text-amber-400"></i>
+      <button onclick="switchTab('hub')" id="sidebarBtn-hub" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-bold bg-amber-100 text-amber-950 border-l-4 border-amber-600 transition-all text-left">
+        <i data-lucide="users" class="w-4 h-4 text-amber-700 shrink-0"></i>
+        <span>Staff Links Hub</span>
+      </button>
+
+      <button onclick="switchTab('drive')" id="sidebarBtn-drive" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-stone-600 hover:bg-amber-50 hover:text-stone-900 transition-all text-left">
+        <i data-lucide="folder-git-2" class="w-4 h-4 text-stone-500 shrink-0"></i>
+        <span>Google Drive Folders</span>
+      </button>
+
+      <button onclick="switchTab('stock')" id="sidebarBtn-stock" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-stone-600 hover:bg-amber-50 hover:text-stone-900 transition-all text-left">
+        <i data-lucide="package" class="w-4 h-4 text-stone-500 shrink-0"></i>
+        <span>Catalog & Color Stock</span>
+      </button>
+
+      <button onclick="switchTab('rates')" id="sidebarBtn-rates" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-stone-600 hover:bg-amber-50 hover:text-stone-900 transition-all text-left">
+        <i data-lucide="coins" class="w-4 h-4 text-stone-500 shrink-0"></i>
+        <span>Rates & Pricing Matrix</span>
+      </button>
+
+      <div class="px-3 pt-4 pb-1 text-[10px] font-extrabold uppercase tracking-wider text-stone-400">
+        Infrastructure & Cloud
+      </div>
+
+      <button onclick="switchTab('supabase')" id="sidebarBtn-supabase" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-stone-600 hover:bg-amber-50 hover:text-stone-900 transition-all text-left">
+        <i data-lucide="database" class="w-4 h-4 text-emerald-600 shrink-0"></i>
+        <span>Supabase Cloud Sync</span>
+      </button>
+
+      <button onclick="switchTab('firms')" id="sidebarBtn-firms" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-stone-600 hover:bg-amber-50 hover:text-stone-900 transition-all text-left">
+        <i data-lucide="palette" class="w-4 h-4 text-rose-600 shrink-0"></i>
+        <span>Firms & Branding</span>
+      </button>
+
+      <button onclick="switchTab('generator')" id="sidebarBtn-generator" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-stone-600 hover:bg-amber-50 hover:text-stone-900 transition-all text-left">
+        <i data-lucide="link" class="w-4 h-4 text-stone-500 shrink-0"></i>
+        <span>Deep-Link Builder</span>
+      </button>
+
+    </nav>
+
+    <!-- Sidebar Bottom Footer -->
+    <div class="p-3 border-t border-amber-200/80 bg-amber-50/40 space-y-2">
+      <a href="index.html" target="_blank" class="w-full py-2.5 px-3 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-sm transition-all">
+        <span>Open Live Showroom</span>
+        <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+      </a>
+      
+      <div class="text-[10px] text-center text-stone-500 font-mono">
+        BinduGrid Studio [ØG]
+      </div>
+    </div>
+
+  </aside>
+
+  <!-- ============================================================================== -->
+  <!-- 2. MAIN ADMIN CONTENT VIEWPORT                                                 -->
+  <!-- ============================================================================== -->
+  <div class="flex-1 flex flex-col min-h-screen min-w-0">
+    
+    <!-- Top Bar: Simulator Quick Links & Host Status -->
+    <header class="bg-white border-b border-amber-200/80 sticky top-0 z-30 shadow-xs px-4 sm:px-8 py-3">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        
+        <!-- Live Quick Simulator -->
+        <div class="flex items-center gap-2 overflow-x-auto text-xs py-0.5 no-scrollbar">
+          <span class="text-[10px] uppercase font-black text-amber-800 whitespace-nowrap flex items-center gap-1">
+            <i data-lucide="play" class="w-3 h-3 fill-current"></i> Quick Test:
+          </span>
+          <a href="index.html?u=KH28" target="_blank" class="px-2.5 py-1 rounded-lg bg-sky-50 hover:bg-sky-100 border border-sky-300 text-sky-800 font-mono text-[11px] whitespace-nowrap font-bold shadow-xs">
+            KH28 (Khushi) ↗
+          </a>
+          <a href="index.html?u=AN26" target="_blank" class="px-2.5 py-1 rounded-lg bg-sky-50 hover:bg-sky-100 border border-sky-300 text-sky-800 font-mono text-[11px] whitespace-nowrap font-bold shadow-xs">
+            AN26 (Anshika) ↗
+          </a>
+          <a href="index.html?u=AR38" target="_blank" class="px-2.5 py-1 rounded-lg bg-rose-50 hover:bg-rose-100 border border-rose-300 text-rose-800 font-mono text-[11px] whitespace-nowrap font-bold shadow-xs">
+            AR38 (Arvind) ↗
+          </a>
+          <a href="index.html?u=NA39ALL" target="_blank" class="px-2.5 py-1 rounded-lg bg-amber-100 hover:bg-amber-200 border border-amber-400 text-amber-900 font-mono text-[11px] font-black whitespace-nowrap shadow-xs">
+            NA39ALL (All Rates) ↗
+          </a>
+          <a href="index.html?u=CH33ALL" target="_blank" class="px-2.5 py-1 rounded-lg bg-amber-100 hover:bg-amber-200 border border-amber-400 text-amber-900 font-mono text-[11px] font-black whitespace-nowrap shadow-xs">
+            CH33ALL (All Rates) ↗
           </a>
         </div>
 
-      </div>
+        <!-- System Status -->
+        <div class="flex items-center gap-3 shrink-0 text-xs">
+          <span class="hidden md:inline text-[11px] font-mono text-stone-500 bg-stone-100 px-2.5 py-1 rounded-lg border border-stone-200">
+            Local Server: http://localhost:8080/
+          </span>
+          <span class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-300 font-bold text-[10px]">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            Super Admin Active
+          </span>
+        </div>
 
-      <!-- Quick 1-Click Live Simulator Bar -->
-      <div class="bg-slate-950 border-t border-slate-800/80 px-4 sm:px-8 py-2.5 flex items-center gap-2 overflow-x-auto text-xs">
-        <span class="text-[10px] uppercase font-bold text-amber-400 whitespace-nowrap flex items-center gap-1">
-          <i data-lucide="play" class="w-3 h-3 fill-current"></i> Quick Test:
-        </span>
-        <a href="index.html?u=KH28" target="_blank" class="px-2.5 py-1 rounded-lg bg-sky-950 hover:bg-sky-900 border border-sky-800 text-sky-200 font-mono text-[11px] whitespace-nowrap">
-          KH28 (Khushi - Keya) ↗
-        </a>
-        <a href="index.html?u=AN26" target="_blank" class="px-2.5 py-1 rounded-lg bg-sky-950 hover:bg-sky-900 border border-sky-800 text-sky-200 font-mono text-[11px] whitespace-nowrap">
-          AN26 (Anshika - Keya) ↗
-        </a>
-        <a href="index.html?u=AR38" target="_blank" class="px-2.5 py-1 rounded-lg bg-rose-950 hover:bg-rose-900 border border-rose-800 text-rose-200 font-mono text-[11px] whitespace-nowrap">
-          AR38 (Arvind - Saurashtra) ↗
-        </a>
-        <a href="index.html?u=NA39" target="_blank" class="px-2.5 py-1 rounded-lg bg-rose-950 hover:bg-rose-900 border border-rose-800 text-rose-200 font-mono text-[11px] whitespace-nowrap">
-          NA39 (Nayan - Saurashtra) ↗
-        </a>
-        <a href="index.html?u=NA39ALL" target="_blank" class="px-2.5 py-1 rounded-lg bg-amber-950 hover:bg-amber-900 border border-amber-700 text-amber-300 font-mono text-[11px] font-bold whitespace-nowrap">
-          NA39ALL (All Rates) ↗
-        </a>
-        <a href="index.html?u=CH33ALL" target="_blank" class="px-2.5 py-1 rounded-lg bg-amber-950 hover:bg-amber-900 border border-amber-700 text-amber-300 font-mono text-[11px] font-bold whitespace-nowrap">
-          CH33ALL (All Rates) ↗
-        </a>
       </div>
     </header>
 
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full flex-1 space-y-8">
-      
-      <!-- ================================================================== -->
-      <!-- TAB 1: DEDICATED STAFF LINKS HUB (No. 1, 2, 3)                     -->
-      <!-- ================================================================== -->
-      <div id="tabContent-hub" class="space-y-8">
+    <!-- Main Dynamic Tab Content -->
+    <main class="flex-1 p-4 sm:p-8 space-y-8 max-w-7xl w-full">
+
+      <!-- ==================================================================== -->
+      <!-- TAB 1: DEDICATED STAFF LINKS HUB (KH28 to CH33ALL)                   -->
+      <!-- ==================================================================== -->
+      <section id="tabContent-hub" class="space-y-8">
         
-        <div class="border-b border-slate-800 pb-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div class="border-b border-amber-200/80 pb-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <h2 class="font-serif text-2xl font-bold text-white flex items-center gap-2">
-              <span>Staff Dedicated Smart Links Matrix</span>
-              <span class="text-xs bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 font-sans px-2.5 py-0.5 rounded-full font-bold">10 Active Links</span>
+            <h2 class="font-serif text-2xl font-bold text-stone-900 flex items-center gap-2">
+              <span>👥 Staff Dedicated Smart Links Matrix</span>
+              <span class="text-xs bg-emerald-100 text-emerald-800 border border-emerald-300 font-sans px-2.5 py-0.5 rounded-full font-bold">10 Active Links</span>
             </h2>
-            <p class="text-xs text-slate-400 mt-1">
+            <p class="text-xs text-stone-600 mt-1">
               Click any link to test directly in a new tab, or click "Copy Link" to share. All firm brands and staff contacts are permanently locked!
             </p>
           </div>
-          <div class="flex items-center gap-2">
-            <span class="text-xs bg-slate-900 text-amber-300 font-mono px-3.5 py-1.5 rounded-xl border border-slate-800">
-              Showroom Host: http://localhost:8080/
-            </span>
-          </div>
         </div>
 
-        <!-- 1. KEYA FASHION [ALL RETAIL RATE] (A to E) -->
+        <!-- 1. KEYA FASHION [RETAIL RATE] (A to E) -->
         <div class="space-y-4">
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-2.5">
               <span class="w-3.5 h-3.5 rounded-full bg-brand-sky"></span>
-              <h3 class="font-serif text-lg font-bold text-white">1. Keya Fashion — Retail Rate Showroom</h3>
+              <h3 class="font-serif text-lg font-bold text-stone-900">1. Keya Fashion — Retail Rate Showroom</h3>
             </div>
-            <span class="text-xs font-bold text-sky-400 bg-sky-950 border border-sky-800 px-3 py-1 rounded-full">
+            <span class="text-xs font-bold text-sky-800 bg-sky-50 border border-sky-300 px-3 py-1 rounded-full">
               5 Staff Members (Retail Rate Only)
             </span>
           </div>
@@ -134,14 +202,14 @@
           </div>
         </div>
 
-        <!-- 2. SAURASHTRA SAREES [ALL RETAIL RATE] (F to H) -->
-        <div class="space-y-4 pt-6 border-t border-slate-800">
+        <!-- 2. SAURASHTRA SAREES [RETAIL RATE] (F to H) -->
+        <div class="space-y-4 pt-6 border-t border-amber-200/80">
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-2.5">
               <span class="w-3.5 h-3.5 rounded-full bg-brand-maroon"></span>
-              <h3 class="font-serif text-lg font-bold text-white">2. Saurashtra Sarees — Retail Rate Showroom</h3>
+              <h3 class="font-serif text-lg font-bold text-stone-900">2. Saurashtra Sarees — Retail Rate Showroom</h3>
             </div>
-            <span class="text-xs font-bold text-rose-400 bg-rose-950 border border-rose-800 px-3 py-1 rounded-full">
+            <span class="text-xs font-bold text-rose-800 bg-rose-50 border border-rose-300 px-3 py-1 rounded-full">
               3 Senior Staff Members (Retail Rate Only)
             </span>
           </div>
@@ -152,218 +220,397 @@
         </div>
 
         <!-- 3. SAURASHTRA SAREES [ALL RATE] (Nayan Sir & Chetan Sir) -->
-        <div class="space-y-4 pt-6 border-t border-slate-800">
+        <div class="space-y-4 pt-6 border-t border-amber-200/80">
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-2.5">
-              <span class="w-3.5 h-3.5 rounded-full bg-amber-400 animate-pulse"></span>
-              <h3 class="font-serif text-lg font-bold text-white">3. Saurashtra Sarees — Master [All Rates Active]</h3>
+              <span class="w-3.5 h-3.5 rounded-full bg-amber-500 animate-pulse"></span>
+              <h3 class="font-serif text-lg font-bold text-stone-900">3. Saurashtra Sarees — Master [All Rates Active]</h3>
             </div>
-            <span class="text-xs font-bold text-amber-300 bg-amber-950 border border-amber-700 px-3 py-1 rounded-full">
-              Super Wholesale + Reseller + Retail All Rates Active
+            <span class="text-xs font-bold text-amber-900 bg-amber-100 border border-amber-400 px-3 py-1 rounded-full">
+              2 Master Users (Wholesale + Reseller + Retail)
             </span>
           </div>
 
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-5" id="gridSaurashtraAllRates">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5" id="gridSaurashtraAll">
             <!-- Rendered by JS -->
           </div>
         </div>
 
-      </div>
+      </section>
 
-      <!-- ================================================================== -->
-      <!-- TAB 2: DEEP-LINK GENERATOR                                         -->
-      <!-- ================================================================== -->
-      <div id="tabContent-generator" class="hidden space-y-8">
+      <!-- ==================================================================== -->
+      <!-- TAB 2: GOOGLE DRIVE SHOOT FOLDERS CONFIGURATION                      -->
+      <!-- ==================================================================== -->
+      <section id="tabContent-drive" class="hidden space-y-6">
         
-        <div class="border-b border-slate-800 pb-5">
-          <h2 class="font-serif text-2xl font-bold text-white">Catalog Deep-Link Generator</h2>
-          <p class="text-xs text-slate-400 mt-1">
-            Generate direct links to specific catalog collections for any staff member.
+        <div class="border-b border-amber-200/80 pb-5">
+          <h2 class="font-serif text-2xl font-bold text-stone-900 flex items-center gap-2">
+            <span>📁 Google Drive Shoot Folders & Media Routing</span>
+          </h2>
+          <p class="text-xs text-stone-600 mt-1">
+            Configure the central Google Drive folders containing Model Shoots and Table Shoots. You can update the folder URLs or Folder IDs anytime without editing code.
           </p>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           
-          <div class="lg:col-span-7 bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-7 space-y-5">
-            
-            <!-- Select Representative -->
-            <div>
-              <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">1. Select Staff Representative</label>
-              <select id="genStaffSelect" onchange="updateCustomLink()" class="w-full px-4 py-3 bg-slate-950 border border-slate-700 rounded-xl text-xs text-white font-semibold focus:outline-none focus:border-amber-400">
-                <!-- Populated by JS -->
-              </select>
-            </div>
-
-            <!-- Select Catalog -->
-            <div>
-              <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">2. Direct Catalog Target (Optional)</label>
-              <select id="genCatalogSelect" onchange="updateCustomLink()" class="w-full px-4 py-3 bg-slate-950 border border-slate-700 rounded-xl text-xs text-white font-semibold focus:outline-none focus:border-amber-400">
-                <!-- Populated by JS -->
-              </select>
-            </div>
-
-            <!-- Shoot Filter -->
-            <div>
-              <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">3. Shoot Mode Default</label>
-              <div class="grid grid-cols-3 gap-3">
-                <label class="flex items-center gap-2 p-3 rounded-xl border border-slate-700 bg-slate-950 cursor-pointer text-xs">
-                  <input type="radio" name="genShoot" value="all" checked onchange="updateCustomLink()" class="text-amber-500">
-                  <span>🌟 All Shoots</span>
-                </label>
-                <label class="flex items-center gap-2 p-3 rounded-xl border border-slate-700 bg-slate-950 cursor-pointer text-xs">
-                  <input type="radio" name="genShoot" value="model" onchange="updateCustomLink()" class="text-amber-500">
-                  <span>👗 Model Shoot</span>
-                </label>
-                <label class="flex items-center gap-2 p-3 rounded-xl border border-slate-700 bg-slate-950 cursor-pointer text-xs">
-                  <input type="radio" name="genShoot" value="table" onchange="updateCustomLink()" class="text-amber-500">
-                  <span>🪑 Table Shoot</span>
-                </label>
-              </div>
-            </div>
-
-          </div>
-
-          <!-- Preview & Action Box -->
-          <div class="lg:col-span-5 bg-gradient-to-br from-slate-900 to-slate-950 border border-amber-500/30 rounded-3xl p-6 sm:p-7 flex flex-col justify-between space-y-6 shadow-2xl">
-            
-            <div class="space-y-4">
-              <div class="flex items-center justify-between">
-                <span class="text-xs font-extrabold text-amber-400 uppercase tracking-widest flex items-center gap-1.5">
-                  <i data-lucide="check-circle" class="w-4 h-4"></i> Generated Ready Link
-                </span>
-                <span id="genPreviewFirmBadge" class="text-[10px] font-bold px-2 py-0.5 rounded bg-brand-maroon text-white">Saurashtra</span>
-              </div>
-
-              <div class="p-4 bg-slate-950 rounded-2xl border border-slate-800 break-all text-xs font-mono text-amber-200">
-                <span id="customGeneratedUrlText">http://localhost:8080/?u=KH28</span>
-              </div>
-
-              <div class="p-4 rounded-2xl bg-slate-900/80 border border-slate-800 text-xs space-y-2 text-slate-300">
-                <div class="flex justify-between">
-                  <span class="text-slate-500">Representative:</span>
-                  <strong id="genPreviewStaff" class="text-white">Khushi (+91 98254 52528)</strong>
-                </div>
-                <div class="flex justify-between">
-                  <span class="text-slate-500">Firm Brand:</span>
-                  <strong id="genPreviewFirm" class="text-white">Keya Fashion</strong>
-                </div>
-                <div class="flex justify-between">
-                  <span class="text-slate-500">Pricing Tier:</span>
-                  <strong id="genPreviewRate" class="text-purple-400">Retail Rate Only</strong>
+          <!-- Model Shoot Folder Card -->
+          <div class="bg-white border-2 border-amber-200/90 rounded-2xl p-6 space-y-4 shadow-sm">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <span class="p-2 rounded-xl bg-sky-100 text-sky-800 font-bold text-sm">👗</span>
+                <div>
+                  <h4 class="font-bold text-stone-900 text-sm">Model Shoot Folder</h4>
+                  <p class="text-[11px] text-stone-500">High-fashion drape photography</p>
                 </div>
               </div>
-            </div>
-
-            <div class="space-y-2.5">
-              <button onclick="copyCustomLink()" class="w-full py-3.5 px-4 rounded-2xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-md shadow-amber-500/20">
-                <i data-lucide="copy" class="w-4 h-4"></i>
-                <span>Copy Link to Clipboard</span>
-              </button>
-
-              <a id="customTestLinkBtn" href="#" target="_blank" class="w-full py-3 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-xs flex items-center justify-center gap-2 transition-all border border-slate-700">
-                <i data-lucide="external-link" class="w-4 h-4 text-amber-400"></i>
-                <span>Test Live Showroom ↗</span>
+              <a id="linkOpenModelDrive" href="https://drive.google.com/open?id=1JregR_hN7mL3fynLcGOq4ZYaTRHAj91e&usp=drive_fs" target="_blank" class="text-xs text-sky-700 hover:underline flex items-center gap-1 font-semibold">
+                Open in Drive ↗
               </a>
             </div>
 
+            <div class="space-y-1.5">
+              <label class="block text-[11px] font-bold text-stone-700 uppercase">Google Drive Folder URL / Link</label>
+              <input 
+                type="text" 
+                id="inputModelDriveUrl" 
+                value="https://drive.google.com/open?id=1JregR_hN7mL3fynLcGOq4ZYaTRHAj91e&usp=drive_fs" 
+                class="w-full px-3.5 py-2.5 text-xs bg-stone-50 border border-stone-300 rounded-xl focus:outline-none focus:border-amber-600 font-mono text-stone-800"
+                placeholder="https://drive.google.com/open?id=..."
+              >
+            </div>
+
+            <div class="space-y-1.5">
+              <label class="block text-[11px] font-bold text-stone-700 uppercase">Extracted Folder ID</label>
+              <input 
+                type="text" 
+                id="inputModelFolderId" 
+                value="1JregR_hN7mL3fynLcGOq4ZYaTRHAj91e" 
+                class="w-full px-3.5 py-2 text-xs bg-stone-100 border border-stone-200 rounded-xl font-mono text-stone-600"
+                readonly
+              >
+            </div>
+          </div>
+
+          <!-- Table Shoot Folder Card -->
+          <div class="bg-white border-2 border-amber-200/90 rounded-2xl p-6 space-y-4 shadow-sm">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <span class="p-2 rounded-xl bg-amber-100 text-amber-800 font-bold text-sm">🪑</span>
+                <div>
+                  <h4 class="font-bold text-stone-900 text-sm">Table Shoot Folder</h4>
+                  <p class="text-[11px] text-stone-500">Flat-lay fabric & border detail photography</p>
+                </div>
+              </div>
+              <a id="linkOpenTableDrive" href="https://drive.google.com/open?id=1JregR_hN7mL3fynLcGOq4ZYaTRHAj91e&usp=drive_fs" target="_blank" class="text-xs text-amber-700 hover:underline flex items-center gap-1 font-semibold">
+                Open in Drive ↗
+              </a>
+            </div>
+
+            <div class="space-y-1.5">
+              <label class="block text-[11px] font-bold text-stone-700 uppercase">Google Drive Folder URL / Link</label>
+              <input 
+                type="text" 
+                id="inputTableDriveUrl" 
+                value="https://drive.google.com/open?id=1JregR_hN7mL3fynLcGOq4ZYaTRHAj91e&usp=drive_fs" 
+                class="w-full px-3.5 py-2.5 text-xs bg-stone-50 border border-stone-300 rounded-xl focus:outline-none focus:border-amber-600 font-mono text-stone-800"
+                placeholder="https://drive.google.com/open?id=..."
+              >
+            </div>
+
+            <div class="space-y-1.5">
+              <label class="block text-[11px] font-bold text-stone-700 uppercase">Extracted Folder ID</label>
+              <input 
+                type="text" 
+                id="inputTableFolderId" 
+                value="1JregR_hN7mL3fynLcGOq4ZYaTRHAj91e" 
+                class="w-full px-3.5 py-2 text-xs bg-stone-100 border border-stone-200 rounded-xl font-mono text-stone-600"
+                readonly
+              >
+            </div>
           </div>
 
         </div>
 
-      </div>
+        <div class="flex items-center justify-between pt-2">
+          <button onclick="saveDriveSettings()" class="px-6 py-3 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs uppercase tracking-wider flex items-center gap-2 shadow-sm transition-all">
+            <i data-lucide="save" class="w-4 h-4"></i>
+            <span>Save Google Drive Folder Settings</span>
+          </button>
+          <span id="driveSaveStatus" class="hidden text-xs text-emerald-700 font-bold flex items-center gap-1.5">
+            <i data-lucide="check" class="w-4 h-4"></i> Saved & Synced!
+          </span>
+        </div>
 
-      <!-- ================================================================== -->
-      <!-- TAB 3: RATES & STOCK EDITOR                                        -->
-      <!-- ================================================================== -->
-      <div id="tabContent-rates" class="hidden space-y-6">
+      </section>
+
+      <!-- ==================================================================== -->
+      <!-- TAB 3: CATALOG & COLOR STOCK MANAGER                                 -->
+      <!-- ==================================================================== -->
+      <section id="tabContent-stock" class="hidden space-y-6">
         
-        <div class="border-b border-slate-800 pb-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div class="border-b border-amber-200/80 pb-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <h2 class="font-serif text-2xl font-bold text-white">Catalog Rates & Stock Manager</h2>
-            <p class="text-xs text-slate-400 mt-1">Edit Wholesale, Reseller and Retail MRP prices for all 26 collections.</p>
+            <h2 class="font-serif text-2xl font-bold text-stone-900 flex items-center gap-2">
+              <span>📦 Granular Catalog & Color Stock Control</span>
+            </h2>
+            <p class="text-xs text-stone-600 mt-1">
+              Toggle stock availability per entire catalog volume or per individual color shade (Temporary Weaving vs Permanent Sold Out).
+            </p>
           </div>
-          <div class="flex items-center gap-3">
-            <button onclick="saveRatesChanges()" class="px-5 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs uppercase tracking-wider flex items-center gap-2 shadow-lg shadow-emerald-500/20">
-              <i data-lucide="save" class="w-4 h-4"></i>
-              <span>Save Changes</span>
-            </button>
+          
+          <!-- Search in Stock Manager -->
+          <div class="relative w-full md:w-72">
+            <i data-lucide="search" class="w-4 h-4 text-stone-400 absolute left-3 top-1/2 -translate-y-1/2"></i>
+            <input 
+              type="text" 
+              id="stockSearchInput" 
+              oninput="filterStockManager(this.value)" 
+              placeholder="Search catalog or design code..." 
+              class="w-full pl-9 pr-3 py-2 text-xs bg-white border border-stone-300 rounded-xl focus:outline-none focus:border-amber-600"
+            >
           </div>
         </div>
 
-        <div class="bg-slate-900 border border-slate-800 rounded-3xl overflow-hidden shadow-xl">
+        <!-- Catalogs Stock List -->
+        <div id="stockManagerContainer" class="space-y-4">
+          <!-- Rendered dynamically by admin.js -->
+        </div>
+
+      </section>
+
+      <!-- ==================================================================== -->
+      <!-- TAB 4: RATES & PRICING MATRIX                                        -->
+      <!-- ==================================================================== -->
+      <section id="tabContent-rates" class="hidden space-y-6">
+        
+        <div class="border-b border-amber-200/80 pb-5 flex items-center justify-between">
+          <div>
+            <h2 class="font-serif text-2xl font-bold text-stone-900 flex items-center gap-2">
+              <span>💰 Wholesale, Reseller & Retail Rate Matrix</span>
+            </h2>
+            <p class="text-xs text-stone-600 mt-1">
+              Manage commercial price tiers for all 26 catalog collections. Changes reflect across all smart links instantly.
+            </p>
+          </div>
+          <button onclick="saveAllRates()" class="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs uppercase tracking-wider flex items-center gap-2 shadow-xs transition-all">
+            <i data-lucide="save" class="w-4 h-4"></i>
+            <span>Save Rate Matrix</span>
+          </button>
+        </div>
+
+        <div class="bg-white border border-amber-200/80 rounded-2xl overflow-hidden shadow-xs">
           <div class="overflow-x-auto">
-            <table class="w-full text-left text-xs text-slate-300">
-              <thead class="bg-slate-950 border-b border-slate-800 text-[10px] uppercase font-bold text-slate-400 tracking-wider">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-amber-50/70 border-b border-amber-200/80 text-[10px] uppercase font-bold text-stone-600">
                 <tr>
-                  <th class="py-3.5 px-4">Catalogue</th>
-                  <th class="py-3.5 px-4">Category</th>
-                  <th class="py-3.5 px-4">Colors</th>
-                  <th class="py-3.5 px-4 text-emerald-400">Wholesale (₹)</th>
-                  <th class="py-3.5 px-4 text-blue-400">Reseller (₹)</th>
-                  <th class="py-3.5 px-4 text-purple-400">Retail MRP (₹)</th>
-                  <th class="py-3.5 px-4">Stock Status</th>
+                  <th class="p-3.5">Catalog</th>
+                  <th class="p-3.5">Category</th>
+                  <th class="p-3.5">Wholesale (₹)</th>
+                  <th class="p-3.5">Reseller (₹)</th>
+                  <th class="p-3.5">Retail / MRP (₹)</th>
+                  <th class="p-3.5">Stock Status</th>
                 </tr>
               </thead>
-              <tbody id="adminRatesTableBody" class="divide-y divide-slate-800/80">
-                <!-- Populated by JS -->
+              <tbody id="ratesTableBody" class="divide-y divide-stone-100 font-medium">
+                <!-- Rendered dynamically by admin.js -->
               </tbody>
             </table>
           </div>
         </div>
 
-      </div>
+      </section>
 
-      <!-- ================================================================== -->
-      <!-- TAB 4: FIRMS & THEMES                                              -->
-      <!-- ================================================================== -->
-      <div id="tabContent-firms" class="hidden space-y-6">
-        <div class="border-b border-slate-800 pb-5">
-          <h2 class="font-serif text-2xl font-bold text-white">Manufacturing Firms & Brand Identities</h2>
-          <p class="text-xs text-slate-400 mt-1">Brand configurations for Saurashtra Sarees & Keya Fashion.</p>
+      <!-- ==================================================================== -->
+      <!-- TAB 5: SUPABASE CLOUD SYNC & REALTIME CONFIG                         -->
+      <!-- ==================================================================== -->
+      <section id="tabContent-supabase" class="hidden space-y-6">
+        
+        <div class="border-b border-amber-200/80 pb-5">
+          <h2 class="font-serif text-2xl font-bold text-stone-900 flex items-center gap-2">
+            <span>⚡ Supabase Database & Realtime Sync</span>
+            <span class="text-xs bg-emerald-100 text-emerald-800 border border-emerald-300 px-2.5 py-0.5 rounded-full font-bold">PostgreSQL Engine</span>
+          </h2>
+          <p class="text-xs text-stone-600 mt-1">
+            Replace slow Google Sheets with high-speed Postgres. Enables instant sub-30ms latency and real-time live inventory updates for all active showroom shoppers.
+          </p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div class="bg-white border-2 border-emerald-300/80 rounded-2xl p-6 space-y-5 shadow-sm">
+          <div class="flex items-center justify-between border-b border-stone-100 pb-4">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold">
+                <i data-lucide="zap" class="w-5 h-5"></i>
+              </div>
+              <div>
+                <h4 class="font-bold text-stone-900 text-sm">Supabase Connection Credentials</h4>
+                <p class="text-[11px] text-stone-500">Found in your Supabase Project Settings > API</p>
+              </div>
+            </div>
+            <span id="supabaseStatusPill" class="text-xs px-3 py-1 rounded-full font-bold bg-stone-100 text-stone-600 border border-stone-200">
+              Not Connected (Using Local Fallback)
+            </span>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="space-y-1.5">
+              <label class="block text-[11px] font-bold text-stone-700 uppercase">Project URL</label>
+              <input 
+                type="text" 
+                id="inputSupabaseUrl" 
+                placeholder="https://your-project.supabase.co" 
+                class="w-full px-3.5 py-2.5 text-xs bg-stone-50 border border-stone-300 rounded-xl focus:outline-none focus:border-emerald-600 font-mono text-stone-800"
+              >
+            </div>
+            <div class="space-y-1.5">
+              <label class="block text-[11px] font-bold text-stone-700 uppercase">Anon Public API Key</label>
+              <input 
+                type="password" 
+                id="inputSupabaseAnonKey" 
+                placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." 
+                class="w-full px-3.5 py-2.5 text-xs bg-stone-50 border border-stone-300 rounded-xl focus:outline-none focus:border-emerald-600 font-mono text-stone-800"
+              >
+            </div>
+          </div>
+
+          <div class="flex flex-wrap items-center justify-between gap-3 pt-2">
+            <div class="flex items-center gap-3">
+              <button onclick="saveSupabaseSettings()" class="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs uppercase tracking-wider flex items-center gap-2 shadow-sm transition-all">
+                <i data-lucide="check-circle" class="w-4 h-4"></i>
+                <span>Connect & Save Supabase</span>
+              </button>
+              <button onclick="testSupabaseConnection()" class="px-4 py-2.5 rounded-xl bg-stone-100 hover:bg-stone-200 text-stone-800 font-bold text-xs border border-stone-300">
+                Test Connection
+              </button>
+            </div>
+
+            <a href="supabase_schema.sql" target="_blank" class="text-xs text-emerald-700 hover:underline flex items-center gap-1 font-semibold">
+              <i data-lucide="file-code" class="w-4 h-4"></i>
+              <span>View SQL Schema File (supabase_schema.sql) ↗</span>
+            </a>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ==================================================================== -->
+      <!-- TAB 6: FIRMS & BRANDING                                              -->
+      <!-- ==================================================================== -->
+      <section id="tabContent-firms" class="hidden space-y-6">
+        
+        <div class="border-b border-amber-200/80 pb-5">
+          <h2 class="font-serif text-2xl font-bold text-stone-900 flex items-center gap-2">
+            <span>🏢 Dual Firm Profiles & Support Numbers</span>
+          </h2>
+          <p class="text-xs text-stone-600 mt-1">
+            Verified brand assets and customer support contact details for Keya Fashion and Saurashtra Sarees.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           
-          <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 space-y-4">
-            <div class="flex items-center gap-4">
-              <img src="assets/saurashtra-sarees-logo.jpg" alt="Saurashtra Logo" class="h-14 w-auto object-contain bg-white p-1 rounded-xl">
+          <!-- Keya Fashion Profile -->
+          <div class="bg-white border-2 border-sky-200 rounded-2xl p-6 space-y-4 shadow-sm">
+            <div class="flex items-center gap-3 pb-3 border-b border-sky-100">
+              <img src="assets/keya-fashion-logo.jpg" alt="Keya Logo" class="h-12 w-auto object-contain bg-white p-1 rounded-xl border border-sky-200">
               <div>
-                <h3 class="font-serif text-lg font-bold text-white">Saurashtra Sarees</h3>
-                <p class="text-xs text-amber-400 italic">"MAKE OCCASION BETTER"</p>
+                <h4 class="font-bold text-stone-900 text-sm">Keya Fashion</h4>
+                <p class="text-[11px] text-sky-700 font-semibold">"Stop wishing. Start living...."</p>
               </div>
             </div>
-            <p class="text-xs text-slate-400 leading-relaxed">
-              Royal Heritage Maroon & Antique Gold color palette. Dedicated to traditional handlooms, heavy bridal zari collections, and master weaver sarees.
-            </p>
+            <div class="text-xs space-y-2 text-stone-600">
+              <p>• <strong>Theme Palette:</strong> Festive Cyan Blue, Sunny Gold & Emerald</p>
+              <p>• <strong>Primary Support:</strong> +91 98254 52528 (Khushi)</p>
+              <p>• <strong>Order Desk:</strong> +91 99094 52528 (Palak)</p>
+              <p>• <strong>Default Rate Tier:</strong> All Retail MRP</p>
+            </div>
           </div>
 
-          <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 space-y-4">
-            <div class="flex items-center gap-4">
-              <img src="assets/keya-fashion-logo.jpg" alt="Keya Logo" class="h-14 w-auto object-contain bg-white p-1 rounded-xl">
+          <!-- Saurashtra Sarees Profile -->
+          <div class="bg-white border-2 border-rose-200 rounded-2xl p-6 space-y-4 shadow-sm">
+            <div class="flex items-center gap-3 pb-3 border-b border-rose-100">
+              <img src="assets/saurashtra-sarees-logo.jpg" alt="Saurashtra Logo" class="h-12 w-auto object-contain bg-white p-1 rounded-xl border border-rose-200">
               <div>
-                <h3 class="font-serif text-lg font-bold text-white">Keya Fashion</h3>
-                <p class="text-xs text-sky-400 italic">"Stop wishing. Start living...."</p>
+                <h4 class="font-bold text-stone-900 text-sm">Saurashtra Sarees</h4>
+                <p class="text-[11px] text-rose-800 font-semibold">"Make Occasion Better"</p>
               </div>
             </div>
-            <p class="text-xs text-slate-400 leading-relaxed">
-              Sky Blue, Warm Gold & Spring Green color palette. Tailored for portal sellers, contemporary designer prints, and rapid retail collections.
-            </p>
+            <div class="text-xs space-y-2 text-stone-600">
+              <p>• <strong>Theme Palette:</strong> Royal Crimson Maroon & Antique Gold</p>
+              <p>• <strong>Senior Director:</strong> +91 98249 82338 (Arvind Sir)</p>
+              <p>• <strong>Managing Partners:</strong> +91 98794 71039 & +91 99136 43433</p>
+              <p>• <strong>Default Rate Tier:</strong> Retail & Master All Rates</p>
+            </div>
           </div>
 
         </div>
-      </div>
+
+      </section>
+
+      <!-- ==================================================================== -->
+      <!-- TAB 7: DEEP-LINK BUILDER                                             -->
+      <!-- ==================================================================== -->
+      <section id="tabContent-generator" class="hidden space-y-6">
+        
+        <div class="border-b border-amber-200/80 pb-5">
+          <h2 class="font-serif text-2xl font-bold text-stone-900 flex items-center gap-2">
+            <span>🔗 Deep-Link & Campaign URL Builder</span>
+          </h2>
+          <p class="text-xs text-stone-600 mt-1">
+            Build custom marketing links with pre-filtered catalog categories, shoot modes, or specific products.
+          </p>
+        </div>
+
+        <div class="bg-white border border-amber-200/80 rounded-2xl p-6 space-y-4 shadow-sm max-w-2xl">
+          <div class="space-y-1.5">
+            <label class="block text-[11px] font-bold text-stone-700 uppercase">Assigned Staff Code</label>
+            <select id="genStaffSelect" class="w-full px-3.5 py-2.5 text-xs bg-stone-50 border border-stone-300 rounded-xl font-bold text-stone-800">
+              <option value="KH28">KH28 — Khushi (Keya Fashion - Retail)</option>
+              <option value="AN26">AN26 — Anshika (Keya Fashion - Retail)</option>
+              <option value="PR28">PR28 — Priti (Keya Fashion - Retail)</option>
+              <option value="PA28">PA28 — Palak (Keya Fashion - Retail)</option>
+              <option value="JE04">JE04 — Jenish (Keya Fashion - Retail)</option>
+              <option value="AR38">AR38 — Arvind Sir (Saurashtra Sarees - Retail)</option>
+              <option value="NA39">NA39 — Nayan Sir (Saurashtra Sarees - Retail)</option>
+              <option value="CH33">CH33 — Chetan Sir (Saurashtra Sarees - Retail)</option>
+              <option value="NA39ALL">NA39ALL — Nayan Sir (Saurashtra Sarees - All Rates)</option>
+              <option value="CH33ALL">CH33ALL — Chetan Sir (Saurashtra Sarees - All Rates)</option>
+            </select>
+          </div>
+
+          <div class="space-y-1.5">
+            <label class="block text-[11px] font-bold text-stone-700 uppercase">Shoot View Preference</label>
+            <select id="genShootSelect" class="w-full px-3.5 py-2.5 text-xs bg-stone-50 border border-stone-300 rounded-xl text-stone-800">
+              <option value="all">All Shoots (Model + Table - Default)</option>
+              <option value="model">Model Shoot Only</option>
+              <option value="table">Table Shoot Only</option>
+            </select>
+          </div>
+
+          <button onclick="generateCustomLink()" class="w-full py-3 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs uppercase tracking-wider transition-all shadow-xs">
+            Generate Locked Link
+          </button>
+
+          <div id="genResultBox" class="hidden pt-3 border-t border-stone-200 space-y-2">
+            <span class="text-[10px] uppercase font-bold text-stone-500">Generated URL:</span>
+            <div class="flex items-center gap-2">
+              <input type="text" id="genResultUrl" readonly class="flex-1 px-3 py-2 text-xs bg-stone-100 border border-stone-300 rounded-xl font-mono text-stone-800">
+              <button onclick="copyGeneratedLink()" class="px-4 py-2 bg-stone-800 hover:bg-black text-white font-bold text-xs rounded-xl">Copy</button>
+            </div>
+          </div>
+        </div>
+
+      </section>
 
     </main>
-
   </div>
 
-  <!-- Toast -->
-  <div id="adminToast" class="hidden fixed bottom-6 right-6 z-50 bg-slate-900 text-white px-5 py-3.5 rounded-2xl shadow-2xl text-xs font-semibold flex items-center gap-2.5 border border-amber-500/40">
-    <i data-lucide="check-circle" class="w-4 h-4 text-emerald-400"></i>
-    <span id="adminToastMsg">Copied successfully!</span>
+  <!-- Toast Notification -->
+  <div id="adminToast" class="hidden fixed bottom-6 right-6 z-50 bg-white text-stone-900 px-4 py-3 rounded-2xl shadow-2xl text-xs font-bold flex items-center gap-2 border-2 border-amber-400">
+    <i data-lucide="check-circle" class="w-4 h-4 text-emerald-600"></i>
+    <span id="adminToastMsg">Action completed!</span>
   </div>
 
-  <!-- Admin JS -->
   <script src="admin.js"></script>
 </body>
 </html>

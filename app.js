@@ -284,7 +284,7 @@ function applyFirmTheme() {
   const body = document.getElementById('appBody');
   
   if (body) {
-    body.className = `${firm.themeClass} min-h-screen flex flex-col antialiased selection:bg-slate-900 selection:text-white`;
+    body.className = `${firm.themeClass} min-h-screen flex flex-col antialiased selection:bg-white border border-amber-200 text-stone-800 selection:text-white`;
   }
 
   // Update Page Title & Firm Logos
@@ -342,11 +342,7 @@ function applyLockdownUI() {
   // 3. For No. 1 & 2 (Retail only), hide role dropdown completely
   // For No. 3 (All Rate users), keep role visible or show All Rates badge
   if (roleDropdownContainer) {
-    if (state.activeUser && state.activeUser.rateAccess === 'all') {
-      roleDropdownContainer.classList.remove('hidden');
-    } else {
-      roleDropdownContainer.classList.add('hidden');
-    }
+    roleDropdownContainer.classList.add('hidden'); // Strictly locked, no selection button on home screen
   }
 }
 
@@ -595,7 +591,7 @@ function renderCategoryPills() {
     const val = cat === 'All Collections' ? 'all' : cat;
     const isActive = state.selectedCategory === val;
     const activeClass = isActive 
-      ? 'bg-slate-900 text-white font-bold shadow-xs'
+      ? 'bg-white border border-amber-200 text-stone-800 text-white font-bold shadow-xs'
       : 'bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium';
 
     return `
@@ -720,30 +716,46 @@ function renderCatalogGrid() {
     const wholesaleRate = cat.wholesaleRate;
     const resellerRate = cat.resellerRate;
 
+    const catStock = window.vellumAdapter ? window.vellumAdapter.getCatalogStock(cat.id) : 'in_stock';
+    let stockBadgeHtml = `
+      <span class="text-[9px] sm:text-[10px] font-bold px-1.5 sm:px-2 py-0.5 rounded-full bg-emerald-600 text-white shadow-xs flex items-center gap-1">
+        <span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
+        <span class="hidden sm:inline">Ready Lot</span>
+        <span class="sm:hidden">Ready</span>
+      </span>`;
+    if (catStock === 'temp_out_of_stock') {
+      stockBadgeHtml = `
+        <span class="text-[9px] sm:text-[10px] font-bold px-1.5 sm:px-2 py-0.5 rounded-full bg-amber-500 text-amber-950 shadow-xs flex items-center gap-1">
+          <span class="w-1.5 h-1.5 rounded-full bg-amber-950 animate-pulse"></span>
+          <span>⏳ Weaving</span>
+        </span>`;
+    } else if (catStock === 'perm_out_of_stock') {
+      stockBadgeHtml = `
+        <span class="text-[9px] sm:text-[10px] font-bold px-1.5 sm:px-2 py-0.5 rounded-full bg-rose-600 text-white shadow-xs flex items-center gap-1">
+          <span>🚫 Sold Out</span>
+        </span>`;
+    }
+
     return `
-      <div class="catalog-card bg-white rounded-2xl sm:rounded-3xl border border-slate-200/90 overflow-hidden shadow-xs hover:shadow-xl transition-all duration-300 flex flex-col justify-between group active:scale-[0.99]">
+      <div class="catalog-card ${catStock === 'temp_out_of_stock' ? 'is-temp-out' : (catStock === 'perm_out_of_stock' ? 'is-perm-out' : '')} bg-white rounded-2xl sm:rounded-3xl border border-amber-200/80 overflow-hidden shadow-xs hover:shadow-xl transition-all duration-300 flex flex-col justify-between group active:scale-[0.99]">
         
         <!-- Top Media Area -->
-        <div class="relative aspect-[3/4] bg-slate-900 overflow-hidden cursor-pointer" onclick="navigateToProduct('${cat.code}')">
+        <div class="relative aspect-[3/4] bg-stone-100 overflow-hidden cursor-pointer" onclick="navigateToProduct('${cat.code}')">
           <img 
             id="card-hero-${cat.code}" 
             src="${heroImg}" 
             referrerpolicy="no-referrer"
             alt="${cat.name}" 
             class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-106 hero-image-fade"
-            onerror="this.onerror=null; this.src='https://placehold.co/600x800/1e293b/d4af37?text=${encodeURIComponent(cat.name)}';"
+            onerror="this.onerror=null; this.src='https://placehold.co/600x800/f8fafc/8b1d40?text=${encodeURIComponent(cat.name)}';"
           >
 
           <!-- Top Status & Shoot Badges -->
           <div class="absolute top-2 sm:top-3 left-2 sm:left-3 right-2 sm:right-3 flex items-center justify-between pointer-events-none">
-            <span class="text-[9px] sm:text-[10px] font-extrabold px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full uppercase tracking-wider bg-white/95 text-slate-900 shadow-sm backdrop-blur-xs">
+            <span class="text-[9px] sm:text-[10px] font-extrabold px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full uppercase tracking-wider bg-white/95 text-stone-900 shadow-sm backdrop-blur-xs border border-amber-200/60">
               ${cat.has2mb ? '👗 Model' : '🪑 Table'}
             </span>
-            <span class="text-[9px] sm:text-[10px] font-bold px-1.5 sm:px-2 py-0.5 rounded-full bg-emerald-500 text-white shadow-sm flex items-center gap-1">
-              <span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
-              <span class="hidden sm:inline">${cat.status}</span>
-              <span class="sm:hidden">Ready</span>
-            </span>
+            ${stockBadgeHtml}
           </div>
 
           <!-- Video Play Icon Pill -->
@@ -765,8 +777,8 @@ function renderCatalogGrid() {
           
           <div>
             <div class="flex items-center justify-between gap-1">
-              <span class="text-[9px] sm:text-[10px] font-extrabold tracking-wider text-slate-400 uppercase truncate">${cat.category}</span>
-              <span class="text-[9px] sm:text-[10px] font-mono text-slate-400 font-bold shrink-0">${cat.code}</span>
+              <span class="text-[9px] sm:text-[10px] font-extrabold tracking-wider text-stone-600 uppercase truncate">${cat.category}</span>
+              <span class="text-[9px] sm:text-[10px] font-mono text-stone-600 font-bold shrink-0">${cat.code}</span>
             </div>
             
             <h3 onclick="navigateToProduct('${cat.code}')" class="font-serif text-sm sm:text-lg font-bold text-slate-900 group-hover:text-brand-maroon transition-colors line-clamp-1 cursor-pointer mt-0.5">
@@ -778,20 +790,21 @@ function renderCatalogGrid() {
               <div class="flex items-center gap-1 sm:gap-1.5 flex-wrap">
                 ${cat.designs.slice(0, 5).map((d, dIdx) => {
                   const dColor = getAccurateColor(d.color);
+                  const isColorSold = window.vellumAdapter && window.vellumAdapter.getColorStock(cat.id, d.code) === 'sold_out';
                   return `
                     <div class="swatch-wrapper">
-                      <span class="swatch-tooltip">Design ${d.code}: ${dColor.label}</span>
+                      <span class="swatch-tooltip">Design ${d.code}: ${dColor.label} ${isColorSold ? '(Sold Out)' : ''}</span>
                       <button 
                         type="button"
                         onclick="event.stopPropagation(); switchCardDesign('${cat.code}', ${dIdx})" 
-                        class="card-dot-${cat.code} w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full border border-white shadow-xs inline-block transition-transform hover:scale-125 ${dIdx === 0 ? 'ring-2 ring-slate-900 scale-110' : 'opacity-85'}"
+                        class="card-dot-${cat.code} ${isColorSold ? 'is-sold-out' : ''} w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full border border-white shadow-xs inline-block transition-transform hover:scale-125 ${dIdx === 0 ? 'ring-2 ring-stone-900 scale-110' : 'opacity-85'}"
                         style="background-color: ${dColor.hex};"
                       ></button>
                     </div>
                   `;
                 }).join('')}
                 ${cat.designs.length > 5 ? `
-                  <span class="text-[9px] font-bold text-slate-400 ml-0.5">+${cat.designs.length - 5}</span>
+                  <span class="text-[9px] font-bold text-stone-600 ml-0.5">+${cat.designs.length - 5}</span>
                 ` : ''}
               </div>
 
@@ -823,7 +836,7 @@ function renderCatalogGrid() {
               <!-- Single Retail MRP Rate for No. 1 and No. 2 Users -->
               <div class="flex items-baseline justify-between">
                 <div>
-                  <span class="text-[9px] sm:text-[10px] text-slate-400 uppercase font-semibold">Catalog MRP</span>
+                  <span class="text-[9px] sm:text-[10px] text-stone-600 uppercase font-semibold">Catalog MRP</span>
                   <p class="font-serif text-base sm:text-xl font-extrabold text-slate-900 leading-tight">₹${retailRate}</p>
                 </div>
                 <span class="text-[9px] sm:text-[10px] text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded font-bold">✨ In Stock</span>
@@ -834,7 +847,7 @@ function renderCatalogGrid() {
             <div class="flex items-center gap-1.5 sm:gap-2 mt-2.5 sm:mt-3">
               <button 
                 onclick="navigateToProduct('${cat.code}')" 
-                class="flex-1 py-1.5 sm:py-2 px-2 sm:px-3 rounded-lg sm:rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-[11px] sm:text-xs font-bold transition-all text-center flex items-center justify-center gap-1 shadow-xs"
+                class="flex-1 py-1.5 sm:py-2 px-2 sm:px-3 rounded-lg sm:rounded-xl bg-white border border-amber-200 text-stone-800 hover:bg-slate-800 text-white text-[11px] sm:text-xs font-bold transition-all text-center flex items-center justify-center gap-1 shadow-xs"
               >
                 <span>View Details</span>
                 <i data-lucide="arrow-right" class="w-3 h-3 sm:w-3.5 sm:h-3.5"></i>
@@ -1072,18 +1085,20 @@ function renderPdpColorSwatches() {
   const container = document.getElementById('pdpColorSwatchesContainer');
   if (!container) return;
 
+  const catStock = window.vellumAdapter ? window.vellumAdapter.getCatalogStock(cat.id) : 'in_stock';
   container.innerHTML = cat.designs.map((d, idx) => {
     const isSelected = idx === state.activePdpDesignIndex;
     const colorObj = getAccurateColor(d.color);
-    const activeClass = isSelected ? 'ring-3 ring-offset-2 ring-slate-900 scale-120 shadow-md' : 'opacity-85 hover:opacity-100 hover:scale-110';
+    const isColorSold = window.vellumAdapter && window.vellumAdapter.getColorStock(cat.id, d.code) === 'sold_out';
+    const activeClass = isSelected ? 'ring-3 ring-offset-2 ring-amber-600 scale-120 shadow-md is-selected' : 'opacity-85 hover:opacity-100 hover:scale-110';
 
     return `
       <div class="swatch-wrapper">
-        <span class="swatch-tooltip">Design ${d.code}: ${colorObj.label}</span>
+        <span class="swatch-tooltip">Design ${d.code}: ${colorObj.label} ${isColorSold ? '(SOLD OUT 🚫)' : '🟢'}</span>
         <button 
           type="button"
           onclick="selectPdpDesign(${idx})" 
-          class="w-7 h-7 rounded-full border-2 border-white shadow-xs transition-all ${activeClass}"
+          class="swatch-btn ${isColorSold ? 'is-sold-out' : ''} w-7 h-7 rounded-full border-2 border-white shadow-xs transition-all ${activeClass}"
           style="background-color: ${colorObj.hex};"
         ></button>
       </div>
@@ -1092,7 +1107,21 @@ function renderPdpColorSwatches() {
 
   const activeDesign = cat.designs[state.activePdpDesignIndex] || {};
   const activeColorObj = getAccurateColor(activeDesign.color);
-  document.getElementById('pdpSelectedColorLabel').textContent = `Design ${activeDesign.code || '101'} — ${activeColorObj.label}`;
+  const isCurrentColorSold = window.vellumAdapter && window.vellumAdapter.getColorStock(cat.id, activeDesign.code) === 'sold_out';
+  
+  let statusBadge = '<span class="text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full font-bold border border-emerald-200">🟢 In Stock</span>';
+  if (catStock === 'temp_out_of_stock') {
+    statusBadge = '<span class="text-amber-800 bg-amber-50 px-2 py-0.5 rounded-full font-bold border border-amber-300">⏳ Weaving in Progress (3–5 Days)</span>';
+  } else if (catStock === 'perm_out_of_stock') {
+    statusBadge = '<span class="text-rose-700 bg-rose-50 px-2 py-0.5 rounded-full font-bold border border-rose-200">🚫 Lot Discontinued / Sold Out</span>';
+  } else if (isCurrentColorSold) {
+    statusBadge = '<span class="text-rose-700 bg-rose-50 px-2 py-0.5 rounded-full font-bold border border-rose-200">🚫 This Color Sold Out</span>';
+  }
+
+  const labelEl = document.getElementById('pdpSelectedColorLabel');
+  if (labelEl) {
+    labelEl.innerHTML = `<span class="font-bold text-stone-900">Design ${activeDesign.code || '101'} — ${activeColorObj.label}</span> ${statusBadge}`;
+  }
 }
 
 function selectPdpDesign(idx) {
@@ -1139,7 +1168,7 @@ function updatePdpGallery() {
       const angleLabel = i === 0 ? 'Front Drape' : i === 1 ? 'Pallu Weave' : i === 2 ? 'Border Zari' : i === 3 ? 'Pleats' : 'Blouse Piece';
 
       return `
-        <div onclick="selectPdpAngle(${i})" class="flex-shrink-0 w-20 h-24 rounded-2xl overflow-hidden cursor-pointer border-2 transition-all relative group bg-slate-900 ${borderClass}">
+        <div onclick="selectPdpAngle(${i})" class="flex-shrink-0 w-20 h-24 rounded-2xl overflow-hidden cursor-pointer border-2 transition-all relative group bg-white border border-amber-200 text-stone-800 ${borderClass}">
           <img 
             src="${imgUrl}" 
             referrerpolicy="no-referrer"
@@ -1189,7 +1218,7 @@ function renderRelatedCatalogs() {
 
     return `
       <div onclick="navigateToProduct('${item.code}')" class="bg-slate-50 hover:bg-white rounded-2xl p-3 border border-slate-200 cursor-pointer transition-all hover:shadow-lg group flex flex-col justify-between">
-        <div class="relative aspect-[3/4] bg-slate-900 rounded-xl overflow-hidden mb-3">
+        <div class="relative aspect-[3/4] bg-white border border-amber-200 text-stone-800 rounded-xl overflow-hidden mb-3">
           <img 
             src="${itemImg}" 
             referrerpolicy="no-referrer"
@@ -1202,7 +1231,7 @@ function renderRelatedCatalogs() {
           </span>
         </div>
         <div>
-          <span class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">${item.category}</span>
+          <span class="text-[9px] font-bold text-stone-600 uppercase tracking-wider">${item.category}</span>
           <h4 class="font-serif text-sm font-bold text-slate-900 group-hover:text-brand-maroon transition-colors line-clamp-1">${item.name}</h4>
           <div class="flex items-baseline justify-between mt-1">
             <span class="font-serif text-base font-extrabold text-slate-900">
@@ -1229,7 +1258,7 @@ function sendStaffWhatsApp(catalogCode, color, rate) {
     `🥻 Catalog: ${catalogCode}\n` +
     `🎨 Color/Design: ${color}\n` +
     `💰 Price: ₹${rate}/- Only\n` +
-    `View Mode: ${state.currentShoot.toUpperCase()}\n\n` +
+    `📦 Availability: Immediate / Restock Inquiry\n\n` +
     `Please share stock availability and dispatch schedule.`
   );
   window.open(`https://wa.me/${user.whatsapp}?text=${msg}`, '_blank');
@@ -1334,24 +1363,24 @@ const INFO_PAGES = {
         <p class="leading-relaxed">Welcome to the digital showroom of <strong>${firm.name}</strong>. By browsing, sharing smart links, or booking saree catalogs through this platform, trade buyers and retail clients agree to the terms outlined below.</p>
         
         <div class="space-y-3 pt-2">
-          <div class="p-3.5 rounded-2xl bg-slate-950 border border-slate-800">
-            <h5 class="font-bold text-white mb-1">1. Authenticity & Direct Manufacturing</h5>
-            <p class="text-slate-400">All catalogs displayed represent direct production lots woven in our Surat manufacturing units. Fabrics, borders, and blouse cuts comply with verified industrial handloom specifications.</p>
+          <div class="p-3.5 rounded-2xl bg-amber-50/70 border border-amber-200/80">
+            <h5 class="font-bold text-stone-900 mb-1">1. Authenticity & Direct Manufacturing</h5>
+            <p class="text-stone-600">All catalogs displayed represent direct production lots woven in our Surat manufacturing units. Fabrics, borders, and blouse cuts comply with verified industrial handloom specifications.</p>
           </div>
 
-          <div class="p-3.5 rounded-2xl bg-slate-950 border border-slate-800">
-            <h5 class="font-bold text-white mb-1">2. Smart Link Pricing & Roles</h5>
-            <p class="text-slate-400">Customer pricing is tied to the authorized URL tier. Wholesale and reseller rates are trade confidential. Altering parameters to circumvent assigned pricing tiers is strictly monitored and voided.</p>
+          <div class="p-3.5 rounded-2xl bg-amber-50/70 border border-amber-200/80">
+            <h5 class="font-bold text-stone-900 mb-1">2. Smart Link Pricing & Roles</h5>
+            <p class="text-stone-600">Customer pricing is tied to the authorized URL tier. Wholesale and reseller rates are trade confidential. Altering parameters to circumvent assigned pricing tiers is strictly monitored and voided.</p>
           </div>
 
-          <div class="p-3.5 rounded-2xl bg-slate-950 border border-slate-800">
-            <h5 class="font-bold text-white mb-1">3. Color Accuracy Disclaimer</h5>
-            <p class="text-slate-400">While all sarees are shot in professional studio conditions (Model and Table shoots), minor natural shade variations of 5–10% may occur due to diverse display color calibrations.</p>
+          <div class="p-3.5 rounded-2xl bg-amber-50/70 border border-amber-200/80">
+            <h5 class="font-bold text-stone-900 mb-1">3. Color Accuracy Disclaimer</h5>
+            <p class="text-stone-600">While all sarees are shot in professional studio conditions (Model and Table shoots), minor natural shade variations of 5–10% may occur due to diverse display color calibrations.</p>
           </div>
 
-          <div class="p-3.5 rounded-2xl bg-slate-950 border border-slate-800">
-            <h5 class="font-bold text-white mb-1">4. Order Placement & GST Compliance</h5>
-            <p class="text-slate-400">Orders are booked via your dedicated sales executive <strong>${user.name}</strong>. All dispatches carry formal GST invoices under the standard 5% textile tax classification.</p>
+          <div class="p-3.5 rounded-2xl bg-amber-50/70 border border-amber-200/80">
+            <h5 class="font-bold text-stone-900 mb-1">4. Order Placement & GST Compliance</h5>
+            <p class="text-stone-600">Orders are booked via your dedicated sales executive <strong>${user.name}</strong>. All dispatches carry formal GST invoices under the standard 5% textile tax classification.</p>
           </div>
         </div>
       </div>
@@ -1366,19 +1395,19 @@ const INFO_PAGES = {
         <p class="leading-relaxed"><strong>${firm.name}</strong> operates a centralized automated dispatch hub in Surat, Gujarat, ensuring safe, expedited delivery across all Indian pin codes and export ports.</p>
         
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
-          <div class="p-3.5 rounded-2xl bg-slate-950 border border-slate-800">
+          <div class="p-3.5 rounded-2xl bg-amber-50/70 border border-amber-200/80">
             <p class="font-bold text-emerald-400 text-xs mb-1">⚡ Dispatch Speed</p>
-            <p class="text-slate-400">Confirmed orders are packaged and handed to express couriers within 24–48 hours from our Surat warehouse.</p>
+            <p class="text-stone-600">Confirmed orders are packaged and handed to express couriers within 24–48 hours from our Surat warehouse.</p>
           </div>
-          <div class="p-3.5 rounded-2xl bg-slate-950 border border-slate-800">
+          <div class="p-3.5 rounded-2xl bg-amber-50/70 border border-amber-200/80">
             <p class="font-bold text-sky-400 text-xs mb-1">🛡️ 100% Transit Insured</p>
-            <p class="text-slate-400">Every single consignment and bulk parcel bale is fully insured against theft, loss, or transit damage.</p>
+            <p class="text-stone-600">Every single consignment and bulk parcel bale is fully insured against theft, loss, or transit damage.</p>
           </div>
         </div>
 
-        <div class="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-2">
-          <h5 class="font-bold text-white">Estimated Delivery Timelines:</h5>
-          <ul class="space-y-1.5 text-slate-400">
+        <div class="p-4 rounded-2xl bg-amber-50/70 border border-amber-200/80 space-y-2">
+          <h5 class="font-bold text-stone-900">Estimated Delivery Timelines:</h5>
+          <ul class="space-y-1.5 text-stone-600">
             <li>• <strong>Gujarat & Western Zone:</strong> 1 to 2 business days</li>
             <li>• <strong>Metro Cities (Delhi, Mumbai, Bengaluru, Hyderabad, Chennai, Kolkata):</strong> 2 to 4 business days</li>
             <li>• <strong>Rest of India (Tier 2/3 Cities & North-East):</strong> 4 to 6 business days</li>
@@ -1405,7 +1434,7 @@ const INFO_PAGES = {
           </p>
         </div>
 
-        <div class="space-y-2 text-slate-400">
+        <div class="space-y-2 text-stone-600">
           <p>• <strong>Eligibility Window:</strong> Return requests for genuine manufacturing defects must be reported within <strong>7 days</strong> of delivery.</p>
           <p>• <strong>Condition:</strong> Saree must be in unworn, unwashed condition with original brand tags and folded with its unstitched blouse piece intact.</p>
           <p>• <strong>Non-Returnable:</strong> Minor loose weave threads (inherent to jacquard weaving) or items altered/tailored cannot be returned.</p>
@@ -1421,17 +1450,17 @@ const INFO_PAGES = {
       <div class="space-y-4">
         <p class="leading-relaxed"><strong>${firm.name}</strong> is committed to preserving the trade privacy of our boutique partners, resellers, and direct patrons.</p>
         
-        <div class="divide-y divide-slate-800 text-slate-400">
+        <div class="divide-y divide-slate-800 text-stone-600">
           <div class="py-2.5">
-            <strong class="text-white">1. Zero Third-Party Data Monetization:</strong>
+            <strong class="text-stone-900">1. Zero Third-Party Data Monetization:</strong>
             <p class="mt-0.5">We do not sell, rent, or trade your contact numbers, business details, or purchasing history to advertising aggregators.</p>
           </div>
           <div class="py-2.5">
-            <strong class="text-white">2. Blind Dropshipping Protection:</strong>
+            <strong class="text-stone-900">2. Blind Dropshipping Protection:</strong>
             <p class="mt-0.5">For verified resellers, shipments sent directly to their retail buyers carry white-label sender tags without mill branding or trade rates.</p>
           </div>
           <div class="py-2.5">
-            <strong class="text-white">3. Direct Rep Communication:</strong>
+            <strong class="text-stone-900">3. Direct Rep Communication:</strong>
             <p class="mt-0.5">Your inquiries route strictly to your authorized representative's secure mobile link.</p>
           </div>
         </div>
@@ -1446,7 +1475,7 @@ const INFO_PAGES = {
       <div class="space-y-4">
         <p class="leading-relaxed">All refund transactions are processed with complete commercial transparency by <strong>${firm.name}</strong> accounts desk.</p>
         
-        <div class="p-3.5 rounded-2xl bg-slate-950 border border-slate-800 space-y-2 text-slate-400">
+        <div class="p-3.5 rounded-2xl bg-amber-50/70 border border-amber-200/80 space-y-2 text-stone-600">
           <p>• <strong>Defect Settlements:</strong> If an approved returned saree cannot be replaced due to out-of-stock lots, refunds are processed via UPI or NEFT within <strong>3 business days</strong>.</p>
           <p>• <strong>Order Cancellations:</strong> Orders cancelled before courier pickup receive immediate 100% refund or ledger credit.</p>
           <p>• <strong>Ledger Adjustment:</strong> Regular B2B stockists and portal sellers may choose immediate credit adjustment against future catalog bookings.</p>
@@ -1465,17 +1494,17 @@ const INFO_PAGES = {
         <div class="space-y-3">
           <div class="p-3.5 rounded-2xl bg-emerald-950/40 border border-emerald-800/60">
             <h5 class="font-bold text-emerald-300 mb-1">🌿 Environmental (E):</h5>
-            <p class="text-slate-300 text-[11px]">100% Azo-free dyes. Zero direct liquid effluent discharge through closed-loop water treatment plants in Surat finishing mills. Solar-assisted power in modern weaving sheds.</p>
+            <p class="text-stone-700 text-[11px]">100% Azo-free dyes. Zero direct liquid effluent discharge through closed-loop water treatment plants in Surat finishing mills. Solar-assisted power in modern weaving sheds.</p>
           </div>
 
           <div class="p-3.5 rounded-2xl bg-sky-950/40 border border-sky-800/60">
             <h5 class="font-bold text-sky-300 mb-1">🤝 Social Responsibility (S):</h5>
-            <p class="text-slate-300 text-[11px]">Fair living wages paid to traditional handloom and jacquard artisans. Zero child labor. Clean, ergonomic, well-ventilated working facilities with medical coverage.</p>
+            <p class="text-stone-700 text-[11px]">Fair living wages paid to traditional handloom and jacquard artisans. Zero child labor. Clean, ergonomic, well-ventilated working facilities with medical coverage.</p>
           </div>
 
           <div class="p-3.5 rounded-2xl bg-purple-950/40 border border-purple-800/60">
             <h5 class="font-bold text-purple-300 mb-1">⚖️ Corporate Governance (G):</h5>
-            <p class="text-slate-300 text-[11px]">Full statutory GST compliance, anti-tamper smart link transparency, and authentic silk purity standards certified before commercial release.</p>
+            <p class="text-stone-700 text-[11px]">Full statutory GST compliance, anti-tamper smart link transparency, and authentic silk purity standards certified before commercial release.</p>
           </div>
         </div>
       </div>
@@ -1492,17 +1521,17 @@ const INFO_PAGES = {
         </p>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
-          <div class="p-4 rounded-2xl bg-slate-950 border border-slate-800">
+          <div class="p-4 rounded-2xl bg-amber-50/70 border border-amber-200/80">
             <h5 class="font-serif font-bold text-amber-300 text-sm mb-1">Saurashtra Sarees</h5>
-            <p class="text-[11px] text-slate-400">"MAKE OCCASION BETTER". Specialists in heritage South Kanjivarams, authentic Gadwal soft silks, Yeola Paithanis, and royal bridal Banarasi brocades.</p>
+            <p class="text-[11px] text-stone-600">"MAKE OCCASION BETTER". Specialists in heritage South Kanjivarams, authentic Gadwal soft silks, Yeola Paithanis, and royal bridal Banarasi brocades.</p>
           </div>
-          <div class="p-4 rounded-2xl bg-slate-950 border border-slate-800">
+          <div class="p-4 rounded-2xl bg-amber-50/70 border border-amber-200/80">
             <h5 class="font-serif font-bold text-sky-300 text-sm mb-1">Keya Fashion</h5>
-            <p class="text-[11px] text-slate-400">"Stop wishing. Start living....". Innovators in lightweight glass organza, fluid dola silks, and high-velocity digital portal catalog designs.</p>
+            <p class="text-[11px] text-stone-600">"Stop wishing. Start living....". Innovators in lightweight glass organza, fluid dola silks, and high-velocity digital portal catalog designs.</p>
           </div>
         </div>
 
-        <p class="text-slate-300 text-xs">
+        <p class="text-stone-700 text-xs">
           Supplying 2,500+ boutique retailers, super-stockists, and online portal sellers across India and worldwide with genuine mill pricing and zero middleman markup.
         </p>
       </div>
@@ -1516,28 +1545,28 @@ const INFO_PAGES = {
       <div class="space-y-4">
         <p class="leading-relaxed">Enter your 10-digit mobile number or Courier AWB / Order ID to check live dispatch and transit status from our Surat warehouse.</p>
         
-        <div class="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-3">
-          <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-wider">Order ID / Mobile Number / AWB</label>
+        <div class="p-4 rounded-2xl bg-amber-50/70 border border-amber-200/80 space-y-3">
+          <label class="block text-[11px] font-bold text-stone-600 uppercase tracking-wider">Order ID / Mobile Number / AWB</label>
           <div class="flex gap-2">
             <input 
               type="text" 
               id="trackInput" 
               placeholder="e.g. SURAT-89210 or 9879471039" 
-              class="flex-1 px-3.5 py-2.5 bg-slate-900 border border-slate-700 rounded-xl text-xs text-white focus:outline-none focus:border-amber-400 font-mono"
+              class="flex-1 px-3.5 py-2.5 bg-white border border-amber-200 shadow-xs rounded-xl text-xs text-white focus:outline-none focus:border-amber-400 font-mono"
             >
             <button onclick="simulateTrackOrder()" class="px-4 py-2.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-xl text-xs uppercase tracking-wider shrink-0 transition-all">
               Track Status
             </button>
           </div>
-          <div id="trackResultBox" class="hidden p-3.5 rounded-xl bg-slate-900 border border-slate-700 text-xs space-y-2 mt-2">
+          <div id="trackResultBox" class="hidden p-3.5 rounded-xl bg-white border border-amber-200 shadow-xs text-xs space-y-2 mt-2">
             <!-- Simulated Result Injected Here -->
           </div>
         </div>
 
-        <div class="p-3.5 rounded-2xl bg-slate-950 border border-slate-800 flex items-center justify-between gap-3">
+        <div class="p-3.5 rounded-2xl bg-amber-50/70 border border-amber-200/80 flex items-center justify-between gap-3">
           <div>
-            <p class="font-bold text-white text-xs">Need instant tracking docket copy?</p>
-            <p class="text-[11px] text-slate-400">Your assigned representative <strong>${user.name}</strong> will share the receipt on WhatsApp.</p>
+            <p class="font-bold text-stone-900 text-xs">Need instant tracking docket copy?</p>
+            <p class="text-[11px] text-stone-600">Your assigned representative <strong>${user.name}</strong> will share the receipt on WhatsApp.</p>
           </div>
           <button onclick="window.open('https://wa.me/${user.whatsapp}?text=' + encodeURIComponent('Hello ${user.name}, please share live tracking docket for my order.'), '_blank')" class="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-bold text-xs shrink-0 flex items-center gap-1.5 shadow-md">
             <i data-lucide="message-circle" class="w-3.5 h-3.5 fill-current"></i>
@@ -1555,14 +1584,14 @@ const INFO_PAGES = {
       <div class="space-y-4">
         <p class="leading-relaxed">We welcome registered trade partners, boutique owners, and portal sellers to inspect our full catalog collections in person at our central wholesale hub.</p>
         
-        <div class="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-3">
+        <div class="p-4 rounded-2xl bg-amber-50/70 border border-amber-200/80 space-y-3">
           <div class="flex items-start gap-3">
             <div class="p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-400 shrink-0 mt-0.5">
               <i data-lucide="building-2" class="w-5 h-5"></i>
             </div>
             <div>
-              <h5 class="font-bold text-white text-sm">${firm.name} Central Wholesale Showroom</h5>
-              <p class="text-slate-400 text-xs mt-0.5">Ring Road Textile Market, Near Sahara Darwaja, Surat, Gujarat 395002</p>
+              <h5 class="font-bold text-stone-900 text-sm">${firm.name} Central Wholesale Showroom</h5>
+              <p class="text-stone-600 text-xs mt-0.5">Ring Road Textile Market, Near Sahara Darwaja, Surat, Gujarat 395002</p>
               <div class="flex items-center gap-3 mt-2 text-xs text-amber-300 font-mono">
                 <span>🕒 09:00 AM–07:00 PM (Mon–Sat)</span>
                 <span>•</span>
@@ -1572,7 +1601,7 @@ const INFO_PAGES = {
           </div>
           
           <div class="pt-2 border-t border-slate-800/80 flex items-center gap-2">
-            <a href="https://maps.google.com/?q=Surat+Textile+Market+Ring+Road+Gujarat" target="_blank" class="flex-1 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-center font-bold text-xs flex items-center justify-center gap-1.5 transition-all">
+            <a href="https://maps.google.com/?q=Surat+Textile+Market+Ring+Road+Gujarat" target="_blank" class="flex-1 py-2 rounded-xl bg-amber-100 hover:bg-amber-200 text-stone-800 border border-amber-300 text-center font-bold text-xs flex items-center justify-center gap-1.5 transition-all">
               <i data-lucide="navigation" class="w-3.5 h-3.5 text-amber-400"></i>
               <span>Open in Google Maps ↗</span>
             </a>
@@ -1593,20 +1622,20 @@ const INFO_PAGES = {
       <div class="space-y-4">
         <p class="leading-relaxed">Looking for 50+, 100+, 250+, or 500+ saree lot packs for weddings, boutique stock, or overseas export? Submit your requirement for instant mill pricing.</p>
         
-        <div class="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-3.5">
+        <div class="p-4 rounded-2xl bg-amber-50/70 border border-amber-200/80 space-y-3.5">
           <div>
-            <label class="block text-[11px] font-bold text-slate-400 uppercase mb-1.5">1. Target Quantity</label>
+            <label class="block text-[11px] font-bold text-stone-600 uppercase mb-1.5">1. Target Quantity</label>
             <div class="grid grid-cols-4 gap-2 text-xs">
-              <button type="button" onclick="selectBulkQty(this, '50 Pcs')" class="bulk-qty-btn py-2 rounded-xl bg-slate-900 border border-slate-700 text-white font-bold hover:border-amber-400 text-center">50 Pcs</button>
-              <button type="button" onclick="selectBulkQty(this, '100 Pcs')" class="bulk-qty-btn py-2 rounded-xl bg-slate-900 border border-slate-700 text-white font-bold hover:border-amber-400 text-center">100 Pcs</button>
-              <button type="button" onclick="selectBulkQty(this, '250 Pcs')" class="bulk-qty-btn py-2 rounded-xl bg-slate-900 border border-slate-700 text-white font-bold hover:border-amber-400 text-center">250 Pcs</button>
+              <button type="button" onclick="selectBulkQty(this, '50 Pcs')" class="bulk-qty-btn py-2 rounded-xl bg-white border border-amber-200 shadow-xs text-white font-bold hover:border-amber-400 text-center">50 Pcs</button>
+              <button type="button" onclick="selectBulkQty(this, '100 Pcs')" class="bulk-qty-btn py-2 rounded-xl bg-white border border-amber-200 shadow-xs text-white font-bold hover:border-amber-400 text-center">100 Pcs</button>
+              <button type="button" onclick="selectBulkQty(this, '250 Pcs')" class="bulk-qty-btn py-2 rounded-xl bg-white border border-amber-200 shadow-xs text-white font-bold hover:border-amber-400 text-center">250 Pcs</button>
               <button type="button" onclick="selectBulkQty(this, '500+ Pcs')" class="bulk-qty-btn py-2 rounded-xl bg-amber-500 text-slate-950 font-bold border border-amber-400 text-center">500+ Pcs</button>
             </div>
           </div>
 
           <div>
-            <label class="block text-[11px] font-bold text-slate-400 uppercase mb-1.5">2. Preferred Collection</label>
-            <input type="text" id="bulkCatInput" placeholder="e.g. Aashvi Gadwal Silk, Paithani, Organza, All Mix" class="w-full px-3.5 py-2.5 bg-slate-900 border border-slate-700 rounded-xl text-xs text-white focus:outline-none focus:border-amber-400">
+            <label class="block text-[11px] font-bold text-stone-600 uppercase mb-1.5">2. Preferred Collection</label>
+            <input type="text" id="bulkCatInput" placeholder="e.g. Aashvi Gadwal Silk, Paithani, Organza, All Mix" class="w-full px-3.5 py-2.5 bg-white border border-amber-200 shadow-xs rounded-xl text-xs text-white focus:outline-none focus:border-amber-400">
           </div>
 
           <button onclick="sendBulkQueryWhatsApp()" class="w-full py-3.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/30 transition-all">
@@ -1631,12 +1660,12 @@ const INFO_PAGES = {
           { q: 'Can you dropship directly to my retail customer?', a: 'Yes! We offer blind dropshipping for verified portal sellers without any manufacturer branding or invoice inside the parcel.' },
           { q: 'What are your operational and support timings?', a: 'Our sales desk and dispatch hub operate from 09:00 AM to 07:00 PM, Monday through Saturday.' }
         ].map((item, idx) => `
-          <div class="p-3.5 rounded-2xl bg-slate-950 border border-slate-800 space-y-1.5">
-            <h5 class="font-bold text-white text-xs flex items-center gap-2">
-              <span class="w-5 h-5 rounded-full bg-slate-900 border border-slate-700 flex items-center justify-center text-[10px] text-amber-400 shrink-0 font-mono">${idx+1}</span>
+          <div class="p-3.5 rounded-2xl bg-amber-50/70 border border-amber-200/80 space-y-1.5">
+            <h5 class="font-bold text-stone-900 text-xs flex items-center gap-2">
+              <span class="w-5 h-5 rounded-full bg-white border border-amber-200 shadow-xs flex items-center justify-center text-[10px] text-amber-400 shrink-0 font-mono">${idx+1}</span>
               <span>${item.q}</span>
             </h5>
-            <p class="text-slate-400 text-[11px] leading-relaxed pl-7">${item.a}</p>
+            <p class="text-stone-600 text-[11px] leading-relaxed pl-7">${item.a}</p>
           </div>
         `).join('')}
       </div>
@@ -1649,7 +1678,7 @@ let selectedBulkQuantity = '500+ Pcs';
 function selectBulkQty(btn, qty) {
   selectedBulkQuantity = qty;
   document.querySelectorAll('.bulk-qty-btn').forEach(b => {
-    b.className = 'bulk-qty-btn py-2 rounded-xl bg-slate-900 border border-slate-700 text-white font-bold hover:border-amber-400 text-center';
+    b.className = 'bulk-qty-btn py-2 rounded-xl bg-white border border-amber-200 shadow-xs text-white font-bold hover:border-amber-400 text-center';
   });
   btn.className = 'bulk-qty-btn py-2 rounded-xl bg-amber-500 text-slate-950 font-bold border border-amber-400 text-center';
 }
@@ -1686,11 +1715,11 @@ function simulateTrackOrder() {
   box.innerHTML = `
     <div class="space-y-2">
       <div class="flex items-center justify-between border-b border-slate-800 pb-1.5">
-        <span class="font-bold text-white">Consignment: ${orderNum}</span>
+        <span class="font-bold text-stone-900">Consignment: ${orderNum}</span>
         <span class="text-[10px] bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded font-mono">In Transit</span>
       </div>
-      <p class="text-[11px] text-slate-300">Courier: <strong>Delhivery Express (Air Surface)</strong></p>
-      <div class="space-y-1 text-[11px] text-slate-400 pt-1">
+      <p class="text-[11px] text-stone-700">Courier: <strong>Delhivery Express (Air Surface)</strong></p>
+      <div class="space-y-1 text-[11px] text-stone-600 pt-1">
         <p class="text-emerald-400 font-medium">✓ Dispatched from Surat Central Hub</p>
         <p class="text-emerald-400 font-medium">✓ Sorted at Regional Logistics Centre</p>
         <p class="text-amber-400 font-bold">🚚 Out for Delivery to Destination Hub</p>
