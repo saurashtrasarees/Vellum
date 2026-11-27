@@ -206,6 +206,20 @@ const state = {
 // 3. INITIALIZATION & ROUTING
 // --------------------------------------------------------------------------
 document.addEventListener('DOMContentLoaded', async () => {
+  // Sync custom firm profiles if configured in admin or Supabase
+  if (window.vellumAdapter) {
+    const savedProfiles = window.vellumAdapter.loadFirmProfiles();
+    if (savedProfiles.keya) FIRMS.keya = { ...FIRMS.keya, ...savedProfiles.keya };
+    if (savedProfiles.saurashtra) FIRMS.saurashtra = { ...FIRMS.saurashtra, ...savedProfiles.saurashtra };
+
+    window.addEventListener('vellum:firm-updated', (e) => {
+      const updated = e.detail;
+      if (updated.keya) FIRMS.keya = { ...FIRMS.keya, ...updated.keya };
+      if (updated.saurashtra) FIRMS.saurashtra = { ...FIRMS.saurashtra, ...updated.saurashtra };
+      applyFirmTheme();
+    });
+  }
+
   resolveUrlContext();
   await loadCatalogData();
   renderCategoryPills();
@@ -1009,7 +1023,7 @@ function renderPdpScreen() {
   document.getElementById('pdpBlouse').textContent = cat.blouse;
   document.getElementById('pdpLength').textContent = cat.sareeLengthTotal || cat.length;
   document.getElementById('pdpWeight').textContent = cat.weightApprox || 'Approx. 650 - 750 grams';
-  document.getElementById('pdpOrigin').textContent = cat.origin || 'Surat, Gujarat (Direct Mill)';
+  document.getElementById('pdpOrigin').textContent = cat.origin || 'A-1001, Rajhans Fabrizo, Surat, Gujarat – 395010 (Direct Mill Dispatch)';
 
   // Styling Tab Content
   document.getElementById('pdpOccasionText').textContent = cat.idealOccasion || 'Weddings, Traditional Functions & Festivals';
@@ -1549,16 +1563,16 @@ const INFO_PAGES = {
     render: (firm) => `
       <div class="space-y-4">
         <p class="leading-relaxed">
-          Welcome to the world of <strong>${firm.name}</strong>. Operating from Surat, Gujarat—the textile capital of India—our production facilities integrate century-old weaving heritage with cutting-edge jacquard textile engineering.
+          Welcome to the world of <strong>${firm.name}</strong>. Operating from our central facility at <strong>A-1001, Rajhans Fabrizo, Near Polaris Textile City, BRTS Road, Magob, Surat, Gujarat – 395010</strong>, our operations integrate century-old weaving heritage with cutting-edge jacquard textile engineering.
         </p>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
           <div class="p-4 rounded-2xl bg-amber-50/70 border border-amber-200/80">
-            <h5 class="font-serif font-bold text-amber-300 text-sm mb-1">Saurashtra Sarees</h5>
+            <h5 class="font-serif font-bold text-amber-900 text-sm mb-1">Saurashtra Sarees</h5>
             <p class="text-[11px] text-stone-600">"MAKE OCCASION BETTER". Specialists in heritage South Kanjivarams, authentic Gadwal soft silks, Yeola Paithanis, and royal bridal Banarasi brocades.</p>
           </div>
           <div class="p-4 rounded-2xl bg-amber-50/70 border border-amber-200/80">
-            <h5 class="font-serif font-bold text-sky-300 text-sm mb-1">Keya Fashion</h5>
+            <h5 class="font-serif font-bold text-sky-900 text-sm mb-1">Keya Fashion</h5>
             <p class="text-[11px] text-stone-600">"Stop wishing. Start living....". Innovators in lightweight glass organza, fluid dola silks, and high-velocity digital portal catalog designs.</p>
           </div>
         </div>
@@ -1611,20 +1625,22 @@ const INFO_PAGES = {
 
   'store-locator': {
     title: 'Store & Warehouse Locator 📍',
-    subtitle: 'Visit Our Showrooms in Surat Textile Market',
+    subtitle: 'Visit Our Central Showroom in Magob, Surat',
     render: (firm, user) => `
       <div class="space-y-4">
-        <p class="leading-relaxed">We welcome registered trade partners, boutique owners, and portal sellers to inspect our full catalog collections in person at our central wholesale hub.</p>
+        <p class="leading-relaxed">We welcome registered trade partners, boutique owners, and portal sellers to inspect our full catalog collections in person at our central wholesale showroom and warehouse.</p>
         
-        <div class="p-4 rounded-2xl bg-amber-50/70 border border-amber-200/80 space-y-3">
-          <div class="flex items-start gap-3">
-            <div class="p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-400 shrink-0 mt-0.5">
-              <i data-lucide="building-2" class="w-5 h-5"></i>
+        <div class="p-5 rounded-2xl bg-amber-50/70 border border-amber-200/80 space-y-3.5 shadow-xs">
+          <div class="flex items-start gap-3.5">
+            <div class="p-3 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-600 shrink-0 mt-0.5">
+              <i data-lucide="building-2" class="w-6 h-6"></i>
             </div>
             <div>
               <h5 class="font-bold text-stone-900 text-sm">${firm.name} Central Wholesale Showroom</h5>
-              <p class="text-stone-600 text-xs mt-0.5">Ring Road Textile Market, Near Sahara Darwaja, Surat, Gujarat 395002</p>
-              <div class="flex items-center gap-3 mt-2 text-xs text-amber-300 font-mono">
+              <p class="text-stone-700 text-xs mt-1 font-medium leading-relaxed">
+                A-1001, Rajhans Fabrizo, Near Polaris Textile City, BRTS Road, Magob, Surat, Gujarat – 395010
+              </p>
+              <div class="flex flex-wrap items-center gap-3 mt-2 text-xs text-amber-900 font-mono font-bold">
                 <span>🕒 09:00 AM–07:00 PM (Mon–Sat)</span>
                 <span>•</span>
                 <span>📞 +91 ${user.phone}</span>
@@ -1632,13 +1648,13 @@ const INFO_PAGES = {
             </div>
           </div>
           
-          <div class="pt-2 border-t border-slate-800/80 flex items-center gap-2">
-            <a href="https://maps.google.com/?q=Surat+Textile+Market+Ring+Road+Gujarat" target="_blank" class="flex-1 py-2 rounded-xl bg-amber-100 hover:bg-amber-200 text-stone-800 border border-amber-300 text-center font-bold text-xs flex items-center justify-center gap-1.5 transition-all">
-              <i data-lucide="navigation" class="w-3.5 h-3.5 text-amber-400"></i>
+          <div class="pt-2 border-t border-amber-200/80 flex items-center gap-2">
+            <a href="https://maps.google.com/?q=Rajhans+Fabrizo+BRTS+Road+Magob+Surat+Gujarat+395010" target="_blank" class="flex-1 py-2.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white border border-amber-700 text-center font-bold text-xs flex items-center justify-center gap-1.5 transition-all shadow-xs">
+              <i data-lucide="navigation" class="w-3.5 h-3.5 text-white"></i>
               <span>Open in Google Maps ↗</span>
             </a>
-            <a href="tel:+91${user.phone}" class="py-2 px-4 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs flex items-center gap-1.5">
-              <i data-lucide="phone" class="w-3.5 h-3.5"></i>
+            <a href="tel:+91${user.phone}" class="py-2.5 px-4 rounded-xl bg-stone-900 hover:bg-black text-white font-bold text-xs flex items-center gap-1.5 shadow-xs">
+              <i data-lucide="phone" class="w-3.5 h-3.5 text-amber-400"></i>
               <span>Call Showroom</span>
             </a>
           </div>

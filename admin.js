@@ -138,6 +138,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   renderStaffHub();
   initDriveFoldersUI();
   initSupabaseUI();
+  initFirmProfilesUI();
   await loadAdminCatalogs();
   renderShootAssignments();
   renderStockManager();
@@ -153,6 +154,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   });
   window.addEventListener('vellum:shoot-updated', (e) => {
     renderShootAssignments();
+  });
+  window.addEventListener('vellum:firm-updated', (e) => {
+    initFirmProfilesUI();
   });
 
   if (window.lucide) lucide.createIcons();
@@ -619,7 +623,90 @@ async function testSupabaseConnection() {
 }
 
 // --------------------------------------------------------------------------
-// 7. DEEP-LINK GENERATOR & CLIPBOARD
+// 7. DUAL FIRM PROFILES & BRANDING EDITOR
+// --------------------------------------------------------------------------
+function initFirmProfilesUI() {
+  if (!window.vellumAdapter) return;
+  const profiles = window.vellumAdapter.loadFirmProfiles();
+
+  // Populate Keya Fashion Form
+  const keya = profiles.keya || {};
+  const inputKeyaName = document.getElementById('inputFirmKeyaName');
+  const inputKeyaTagline = document.getElementById('inputFirmKeyaTagline');
+  const inputKeyaPrimary = document.getElementById('inputFirmKeyaPrimaryPhone');
+  const inputKeyaOrder = document.getElementById('inputFirmKeyaOrderPhone');
+  const inputKeyaAddress = document.getElementById('inputFirmKeyaAddress');
+  const inputKeyaTimings = document.getElementById('inputFirmKeyaTimings');
+
+  if (inputKeyaName) inputKeyaName.value = keya.name || 'Keya Fashion';
+  if (inputKeyaTagline) inputKeyaTagline.value = keya.tagline || 'Stop wishing. Start living....';
+  if (inputKeyaPrimary) inputKeyaPrimary.value = keya.primaryPhone || '+91 98254 52528';
+  if (inputKeyaOrder) inputKeyaOrder.value = keya.orderPhone || '+91 99094 52528';
+  if (inputKeyaAddress) inputKeyaAddress.value = keya.address || 'A-1001, Rajhans Fabrizo, Near Polaris Textile City, BRTS Road, Magob, Surat, Gujarat – 395010';
+  if (inputKeyaTimings) inputKeyaTimings.value = keya.timings || '09:00 AM–07:00 PM (Monday–Saturday)';
+
+  // Populate Saurashtra Sarees Form
+  const saurashtra = profiles.saurashtra || {};
+  const inputSauName = document.getElementById('inputFirmSaurashtraName');
+  const inputSauTagline = document.getElementById('inputFirmSaurashtraTagline');
+  const inputSauDirector = document.getElementById('inputFirmSaurashtraDirectorPhone');
+  const inputSauPartner1 = document.getElementById('inputFirmSaurashtraPartner1Phone');
+  const inputSauPartner2 = document.getElementById('inputFirmSaurashtraPartner2Phone');
+  const inputSauAddress = document.getElementById('inputFirmSaurashtraAddress');
+  const inputSauTimings = document.getElementById('inputFirmSaurashtraTimings');
+
+  if (inputSauName) inputSauName.value = saurashtra.name || 'Saurashtra Sarees';
+  if (inputSauTagline) inputSauTagline.value = saurashtra.tagline || 'Make Occasion Better';
+  if (inputSauDirector) inputSauDirector.value = saurashtra.directorPhone || '+91 98249 82338';
+  if (inputSauPartner1) inputSauPartner1.value = saurashtra.partner1Phone || '+91 98794 71039';
+  if (inputSauPartner2) inputSauPartner2.value = saurashtra.partner2Phone || '+91 99136 43433';
+  if (inputSauAddress) inputSauAddress.value = saurashtra.address || 'A-1001, Rajhans Fabrizo, Near Polaris Textile City, BRTS Road, Magob, Surat, Gujarat – 395010';
+  if (inputSauTimings) inputSauTimings.value = saurashtra.timings || '09:00 AM–07:00 PM (Monday–Saturday)';
+}
+
+function saveFirmProfile(firmKey) {
+  if (!window.vellumAdapter) return;
+
+  if (firmKey === 'keya') {
+    const data = {
+      name: document.getElementById('inputFirmKeyaName')?.value.trim() || 'Keya Fashion',
+      tagline: document.getElementById('inputFirmKeyaTagline')?.value.trim() || 'Stop wishing. Start living....',
+      primaryPhone: document.getElementById('inputFirmKeyaPrimaryPhone')?.value.trim() || '+91 98254 52528',
+      orderPhone: document.getElementById('inputFirmKeyaOrderPhone')?.value.trim() || '+91 99094 52528',
+      address: document.getElementById('inputFirmKeyaAddress')?.value.trim() || 'A-1001, Rajhans Fabrizo, Near Polaris Textile City, BRTS Road, Magob, Surat, Gujarat – 395010',
+      timings: document.getElementById('inputFirmKeyaTimings')?.value.trim() || '09:00 AM–07:00 PM (Monday–Saturday)'
+    };
+    window.vellumAdapter.saveFirmProfile('keya', data);
+    
+    const badge = document.getElementById('keyaSaveBadge');
+    if (badge) {
+      badge.classList.remove('hidden');
+      setTimeout(() => badge.classList.add('hidden'), 3500);
+    }
+    showAdminToast('Keya Fashion brand profile saved & synced to Supabase!');
+  } else if (firmKey === 'saurashtra') {
+    const data = {
+      name: document.getElementById('inputFirmSaurashtraName')?.value.trim() || 'Saurashtra Sarees',
+      tagline: document.getElementById('inputFirmSaurashtraTagline')?.value.trim() || 'Make Occasion Better',
+      directorPhone: document.getElementById('inputFirmSaurashtraDirectorPhone')?.value.trim() || '+91 98249 82338',
+      partner1Phone: document.getElementById('inputFirmSaurashtraPartner1Phone')?.value.trim() || '+91 98794 71039',
+      partner2Phone: document.getElementById('inputFirmSaurashtraPartner2Phone')?.value.trim() || '+91 99136 43433',
+      address: document.getElementById('inputFirmSaurashtraAddress')?.value.trim() || 'A-1001, Rajhans Fabrizo, Near Polaris Textile City, BRTS Road, Magob, Surat, Gujarat – 395010',
+      timings: document.getElementById('inputFirmSaurashtraTimings')?.value.trim() || '09:00 AM–07:00 PM (Monday–Saturday)'
+    };
+    window.vellumAdapter.saveFirmProfile('saurashtra', data);
+
+    const badge = document.getElementById('saurashtraSaveBadge');
+    if (badge) {
+      badge.classList.remove('hidden');
+      setTimeout(() => badge.classList.add('hidden'), 3500);
+    }
+    showAdminToast('Saurashtra Sarees brand profile saved & synced to Supabase!');
+  }
+}
+
+// --------------------------------------------------------------------------
+// 8. DEEP-LINK GENERATOR & CLIPBOARD
 // --------------------------------------------------------------------------
 function generateCustomLink() {
   const staff = document.getElementById('genStaffSelect')?.value || 'KH28';

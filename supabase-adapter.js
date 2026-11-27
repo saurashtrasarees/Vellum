@@ -8,6 +8,7 @@ const STORAGE_KEYS = {
   DRIVE_FOLDERS: 'vellum_drive_folders',
   STOCK_OVERRIDES: 'vellum_stock_overrides',
   CUSTOM_RATES: 'vellum_custom_rates',
+  FIRM_PROFILES: 'vellum_firm_profiles',
 };
 
 // Default Cloud Drive Shoot Folders
@@ -19,10 +20,49 @@ const DEFAULT_DRIVE_CONFIG = {
   lastUpdated: new Date().toISOString()
 };
 
+// Default Supabase Credentials (Pre-wired & Enabled)
+const DEFAULT_SUPABASE_CONFIG = {
+  url: 'https://rdjnbuhmfragtdrfbarc.supabase.co',
+  anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJkam5idWhtZnJhZ3RkcmZiYXJjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTU3NTcyNzMsImV4cCI6MjExMTMzMzI3M30.91xoJnemrWCsXrNT-lDRPNP9E36nsA902Ac4Wg_8Bu0',
+  isEnabled: true
+};
+
+// Default Dual Firm Configuration with Verified Surat Address
+const DEFAULT_FIRM_PROFILES = {
+  keya: {
+    id: 'keya',
+    name: 'Keya Fashion',
+    tagline: 'Stop wishing. Start living....',
+    address: 'A-1001, Rajhans Fabrizo, Near Polaris Textile City, BRTS Road, Magob, Surat, Gujarat – 395010',
+    timings: '09:00 AM–07:00 PM (Monday–Saturday)',
+    primaryPhone: '+91 98254 52528',
+    orderPhone: '+91 99094 52528',
+    whatsapp: '919825452528',
+    themeClass: 'theme-keya',
+    accentColor: '#f59e0b',
+    lastUpdated: new Date().toISOString()
+  },
+  saurashtra: {
+    id: 'saurashtra',
+    name: 'Saurashtra Sarees',
+    tagline: 'Make Occasion Better',
+    address: 'A-1001, Rajhans Fabrizo, Near Polaris Textile City, BRTS Road, Magob, Surat, Gujarat – 395010',
+    timings: '09:00 AM–07:00 PM (Monday–Saturday)',
+    directorPhone: '+91 98249 82338',
+    partner1Phone: '+91 98794 71039',
+    partner2Phone: '+91 99136 43433',
+    whatsapp: '919879471039',
+    themeClass: 'theme-saurashtra',
+    accentColor: '#d4af37',
+    lastUpdated: new Date().toISOString()
+  }
+};
+
 class VellumDataAdapter {
   constructor() {
     this.driveConfig = this.loadDriveConfig();
     this.stockOverrides = this.loadStockOverrides();
+    this.firmProfiles = this.loadFirmProfiles();
     this.supabaseConfig = this.loadSupabaseConfig();
     this.supabaseClient = null;
     this.initSupabaseClient();
@@ -145,15 +185,59 @@ class VellumDataAdapter {
     return (this.stockOverrides.colors && this.stockOverrides.colors[key]) || defaultStatus;
   }
 
-  // 3. Supabase Credentials & Connection
+  // 3. Dual Firm Profiles Management (Keya Fashion & Saurashtra Sarees)
+  loadFirmProfiles() {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEYS.FIRM_PROFILES);
+      if (saved) return { ...DEFAULT_FIRM_PROFILES, ...JSON.parse(saved) };
+    } catch (e) {
+      console.warn('Failed to parse firm profiles from localStorage', e);
+    }
+    return { ...DEFAULT_FIRM_PROFILES };
+  }
+
+  saveFirmProfiles(profiles) {
+    this.firmProfiles = {
+      ...this.firmProfiles,
+      ...profiles,
+      lastUpdated: new Date().toISOString()
+    };
+    try {
+      localStorage.setItem(STORAGE_KEYS.FIRM_PROFILES, JSON.stringify(this.firmProfiles));
+      window.dispatchEvent(new CustomEvent('vellum:firm-updated', { detail: this.firmProfiles }));
+      this.syncToSupabaseIfConnected('firm_profiles', this.firmProfiles);
+      return true;
+    } catch (e) {
+      console.error('Error saving firm profiles:', e);
+      return false;
+    }
+  }
+
+  saveFirmProfile(firmId, data) {
+    const current = this.loadFirmProfiles();
+    current[firmId] = {
+      ...(current[firmId] || {}),
+      ...data,
+      id: firmId,
+      lastUpdated: new Date().toISOString()
+    };
+    return this.saveFirmProfiles(current);
+  }
+
+  getFirmProfile(firmId) {
+    const profiles = this.loadFirmProfiles();
+    return profiles[firmId] || DEFAULT_FIRM_PROFILES[firmId] || null;
+  }
+
+  // 4. Supabase Credentials & Connection
   loadSupabaseConfig() {
     try {
       const saved = localStorage.getItem(STORAGE_KEYS.SUPABASE_CONFIG);
-      if (saved) return JSON.parse(saved);
+      if (saved) return { ...DEFAULT_SUPABASE_CONFIG, ...JSON.parse(saved) };
     } catch (e) {
       console.warn('Failed to parse Supabase config', e);
     }
-    return { url: '', anonKey: '', isEnabled: false };
+    return { ...DEFAULT_SUPABASE_CONFIG };
   }
 
   saveSupabaseConfig(config) {
@@ -205,6 +289,15 @@ class VellumDataAdapter {
               this.stockOverrides = payload.new.value;
               localStorage.setItem(STORAGE_KEYS.STOCK_OVERRIDES, JSON.stringify(this.stockOverrides));
               window.dispatchEvent(new CustomEvent('vellum:stock-updated', { detail: this.stockOverrides }));
+            }
+            if (payload.new && payload.new.key === 'firm_profiles') {
+              this.firmProfiles = payload.new.value;
+              localStorage.setItem(STORAGE_KEYS.FIRM_PROFILES, JSON.stringify(this.firmProfiles));
+              window.dispatchEvent(new CustomEvent('vellum:firm-updated', { detail: this.firmProfiles }));
+            }
+            if (payload.new && payload.new.key === 'shoot_assignments') {
+              localStorage.setItem('vellum_shoot_assignments', JSON.stringify(payload.new.value));
+              window.dispatchEvent(new CustomEvent('vellum:shoot-updated', { detail: payload.new.value }));
             }
           }
         )

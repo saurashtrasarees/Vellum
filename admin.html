@@ -513,52 +513,148 @@
       </section>
 
       <!-- ==================================================================== -->
-      <!-- TAB 6: FIRMS & BRANDING                                              -->
+      <!-- TAB 6: FIRMS & BRANDING (Interactive Dual Firm Profile Editor)         -->
       <!-- ==================================================================== -->
       <section id="tabContent-firms" class="hidden space-y-6">
         
         <div class="border-b border-amber-200/80 pb-5">
           <h2 class="font-serif text-2xl font-bold text-stone-900 flex items-center gap-2">
-            <span>🏢 Dual Firm Profiles & Support Numbers</span>
+            <span>🏢 Dual Firm Profile & Contact Editor</span>
           </h2>
           <p class="text-xs text-stone-600 mt-1">
-            Verified brand assets and customer support contact details for Keya Fashion and Saurashtra Sarees.
+            Edit brand identity, registered showroom address, and dedicated contact desks for Keya Fashion and Saurashtra Sarees. Live changes synchronize instantly to Supabase and reflect across customer showrooms.
           </p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Dual-Firm Architecture Info Banner -->
+        <div class="p-4 bg-gradient-to-r from-amber-50 via-orange-50/70 to-amber-50 rounded-2xl border border-amber-300/90 flex items-center gap-3.5 shadow-xs">
+          <span class="text-2xl shrink-0">🏛️</span>
+          <div class="text-xs text-stone-700 leading-relaxed">
+            <strong class="text-stone-900 font-bold block mb-0.5">Dual-Firm Catalog Architecture:</strong>
+            All 26 catalogs exist equally across both firms with identical names, SKUs, and design codes. Each firm maintains its own distinct branding, official address, and dedicated staff phone numbers without catalog duplication.
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
           
-          <!-- Keya Fashion Profile -->
-          <div class="bg-white border-2 border-sky-200 rounded-2xl p-6 space-y-4 shadow-sm">
-            <div class="flex items-center gap-3 pb-3 border-b border-sky-100">
-              <img src="assets/keya-fashion-logo.jpg" alt="Keya Logo" class="h-12 w-auto object-contain bg-white p-1 rounded-xl border border-sky-200">
-              <div>
-                <h4 class="font-bold text-stone-900 text-sm">Keya Fashion</h4>
-                <p class="text-[11px] text-sky-700 font-semibold">"Stop wishing. Start living...."</p>
+          <!-- Keya Fashion Profile Editor Form -->
+          <div class="bg-white border-2 border-sky-200 rounded-3xl p-6 space-y-5 shadow-sm">
+            <div class="flex items-center justify-between pb-4 border-b border-sky-100">
+              <div class="flex items-center gap-3">
+                <img src="assets/keya-fashion-logo.jpg" alt="Keya Logo" class="h-12 w-auto object-contain bg-white p-1 rounded-xl border border-sky-200 shadow-xs">
+                <div>
+                  <h4 class="font-bold text-stone-900 text-sm">Keya Fashion</h4>
+                  <span class="text-[10px] font-bold uppercase tracking-wider text-sky-700 bg-sky-50 px-2 py-0.5 rounded-md border border-sky-200">
+                    Retail Rate Focus
+                  </span>
+                </div>
               </div>
+              <span id="keyaSaveBadge" class="hidden text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-300">
+                ✓ Saved & Synced
+              </span>
             </div>
-            <div class="text-xs space-y-2 text-stone-600">
-              <p>• <strong>Theme Palette:</strong> Festive Cyan Blue, Sunny Gold & Emerald</p>
-              <p>• <strong>Primary Support:</strong> +91 98254 52528 (Khushi)</p>
-              <p>• <strong>Order Desk:</strong> +91 99094 52528 (Palak)</p>
-              <p>• <strong>Default Rate Tier:</strong> All Retail MRP</p>
+
+            <div class="space-y-4 text-xs">
+              <div>
+                <label class="block text-[11px] font-bold text-stone-700 uppercase mb-1">Firm Display Name</label>
+                <input type="text" id="inputFirmKeyaName" class="w-full px-3.5 py-2.5 bg-stone-50 border border-stone-300 rounded-xl font-bold text-stone-800 focus:outline-none focus:border-sky-500">
+              </div>
+
+              <div>
+                <label class="block text-[11px] font-bold text-stone-700 uppercase mb-1">Official Tagline / Slogan</label>
+                <input type="text" id="inputFirmKeyaTagline" class="w-full px-3.5 py-2.5 bg-stone-50 border border-stone-300 rounded-xl text-stone-800 focus:outline-none focus:border-sky-500">
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label class="block text-[11px] font-bold text-stone-700 uppercase mb-1">Primary Support Phone</label>
+                  <input type="text" id="inputFirmKeyaPrimaryPhone" class="w-full px-3.5 py-2.5 bg-stone-50 border border-stone-300 rounded-xl font-mono text-stone-800 focus:outline-none focus:border-sky-500">
+                </div>
+                <div>
+                  <label class="block text-[11px] font-bold text-stone-700 uppercase mb-1">Order Desk Phone</label>
+                  <input type="text" id="inputFirmKeyaOrderPhone" class="w-full px-3.5 py-2.5 bg-stone-50 border border-stone-300 rounded-xl font-mono text-stone-800 focus:outline-none focus:border-sky-500">
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-[11px] font-bold text-stone-700 uppercase mb-1">Full Registered Address</label>
+                <textarea id="inputFirmKeyaAddress" rows="2" class="w-full px-3.5 py-2.5 bg-stone-50 border border-stone-300 rounded-xl text-stone-800 leading-relaxed focus:outline-none focus:border-sky-500"></textarea>
+              </div>
+
+              <div>
+                <label class="block text-[11px] font-bold text-stone-700 uppercase mb-1">Showroom & Support Timings</label>
+                <input type="text" id="inputFirmKeyaTimings" class="w-full px-3.5 py-2.5 bg-stone-50 border border-stone-300 rounded-xl text-stone-800 focus:outline-none focus:border-sky-500">
+              </div>
+
+              <div class="pt-2">
+                <button onclick="saveFirmProfile('keya')" class="w-full py-3 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-xs">
+                  <i data-lucide="save" class="w-4 h-4"></i>
+                  <span>Save Keya Fashion Profile</span>
+                </button>
+              </div>
             </div>
           </div>
 
-          <!-- Saurashtra Sarees Profile -->
-          <div class="bg-white border-2 border-rose-200 rounded-2xl p-6 space-y-4 shadow-sm">
-            <div class="flex items-center gap-3 pb-3 border-b border-rose-100">
-              <img src="assets/saurashtra-sarees-logo.jpg" alt="Saurashtra Logo" class="h-12 w-auto object-contain bg-white p-1 rounded-xl border border-rose-200">
-              <div>
-                <h4 class="font-bold text-stone-900 text-sm">Saurashtra Sarees</h4>
-                <p class="text-[11px] text-rose-800 font-semibold">"Make Occasion Better"</p>
+          <!-- Saurashtra Sarees Profile Editor Form -->
+          <div class="bg-white border-2 border-rose-200 rounded-3xl p-6 space-y-5 shadow-sm">
+            <div class="flex items-center justify-between pb-4 border-b border-rose-100">
+              <div class="flex items-center gap-3">
+                <img src="assets/saurashtra-sarees-logo.jpg" alt="Saurashtra Logo" class="h-12 w-auto object-contain bg-white p-1 rounded-xl border border-rose-200 shadow-xs">
+                <div>
+                  <h4 class="font-bold text-stone-900 text-sm">Saurashtra Sarees</h4>
+                  <span class="text-[10px] font-bold uppercase tracking-wider text-rose-800 bg-rose-50 px-2 py-0.5 rounded-md border border-rose-200">
+                    Retail & Master All Rates
+                  </span>
+                </div>
               </div>
+              <span id="saurashtraSaveBadge" class="hidden text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-300">
+                ✓ Saved & Synced
+              </span>
             </div>
-            <div class="text-xs space-y-2 text-stone-600">
-              <p>• <strong>Theme Palette:</strong> Royal Crimson Maroon & Antique Gold</p>
-              <p>• <strong>Senior Director:</strong> +91 98249 82338 (Arvind Sir)</p>
-              <p>• <strong>Managing Partners:</strong> +91 98794 71039 & +91 99136 43433</p>
-              <p>• <strong>Default Rate Tier:</strong> Retail & Master All Rates</p>
+
+            <div class="space-y-4 text-xs">
+              <div>
+                <label class="block text-[11px] font-bold text-stone-700 uppercase mb-1">Firm Display Name</label>
+                <input type="text" id="inputFirmSaurashtraName" class="w-full px-3.5 py-2.5 bg-stone-50 border border-stone-300 rounded-xl font-bold text-stone-800 focus:outline-none focus:border-rose-500">
+              </div>
+
+              <div>
+                <label class="block text-[11px] font-bold text-stone-700 uppercase mb-1">Official Tagline / Slogan</label>
+                <input type="text" id="inputFirmSaurashtraTagline" class="w-full px-3.5 py-2.5 bg-stone-50 border border-stone-300 rounded-xl text-stone-800 focus:outline-none focus:border-rose-500">
+              </div>
+
+              <div>
+                <label class="block text-[11px] font-bold text-stone-700 uppercase mb-1">Senior Director Phone (Arvind Sir)</label>
+                <input type="text" id="inputFirmSaurashtraDirectorPhone" class="w-full px-3.5 py-2.5 bg-stone-50 border border-stone-300 rounded-xl font-mono text-stone-800 focus:outline-none focus:border-rose-500">
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label class="block text-[11px] font-bold text-stone-700 uppercase mb-1">Managing Partner (Nayan Sir)</label>
+                  <input type="text" id="inputFirmSaurashtraPartner1Phone" class="w-full px-3.5 py-2.5 bg-stone-50 border border-stone-300 rounded-xl font-mono text-stone-800 focus:outline-none focus:border-rose-500">
+                </div>
+                <div>
+                  <label class="block text-[11px] font-bold text-stone-700 uppercase mb-1">Managing Partner (Chetan Sir)</label>
+                  <input type="text" id="inputFirmSaurashtraPartner2Phone" class="w-full px-3.5 py-2.5 bg-stone-50 border border-stone-300 rounded-xl font-mono text-stone-800 focus:outline-none focus:border-rose-500">
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-[11px] font-bold text-stone-700 uppercase mb-1">Full Registered Address</label>
+                <textarea id="inputFirmSaurashtraAddress" rows="2" class="w-full px-3.5 py-2.5 bg-stone-50 border border-stone-300 rounded-xl text-stone-800 leading-relaxed focus:outline-none focus:border-rose-500"></textarea>
+              </div>
+
+              <div>
+                <label class="block text-[11px] font-bold text-stone-700 uppercase mb-1">Showroom & Support Timings</label>
+                <input type="text" id="inputFirmSaurashtraTimings" class="w-full px-3.5 py-2.5 bg-stone-50 border border-stone-300 rounded-xl text-stone-800 focus:outline-none focus:border-rose-500">
+              </div>
+
+              <div class="pt-2">
+                <button onclick="saveFirmProfile('saurashtra')" class="w-full py-3 rounded-xl bg-rose-700 hover:bg-rose-800 text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-xs">
+                  <i data-lucide="save" class="w-4 h-4"></i>
+                  <span>Save Saurashtra Sarees Profile</span>
+                </button>
+              </div>
             </div>
           </div>
 

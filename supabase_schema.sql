@@ -25,13 +25,22 @@ VALUES
       "name": "Saurashtra Sarees",
       "tagline": "Make Occasion Better",
       "theme": "royal-crimson",
-      "phones": ["+91 98794 71039", "+91 99136 43433"]
+      "address": "A-1001, Rajhans Fabrizo, Near Polaris Textile City, BRTS Road, Magob, Surat, Gujarat – 395010",
+      "timings": "09:00 AM–07:00 PM (Monday–Saturday)",
+      "directorPhone": "+91 98249 82338",
+      "partner1Phone": "+91 98794 71039",
+      "partner2Phone": "+91 99136 43433",
+      "phones": ["+91 98249 82338", "+91 98794 71039", "+91 99136 43433"]
     },
     "keya": {
       "name": "Keya Fashion",
       "tagline": "Stop wishing. Start living....",
       "theme": "festive-cyan",
-      "phones": ["+91 98254 52528", "+91 99136 43433"]
+      "address": "A-1001, Rajhans Fabrizo, Near Polaris Textile City, BRTS Road, Magob, Surat, Gujarat – 395010",
+      "timings": "09:00 AM–07:00 PM (Monday–Saturday)",
+      "primaryPhone": "+91 98254 52528",
+      "orderPhone": "+91 99094 52528",
+      "phones": ["+91 98254 52528", "+91 99094 52528"]
     }
   }'::jsonb, 'Firm branding and communication configuration')
 ON CONFLICT (key) DO UPDATE 
