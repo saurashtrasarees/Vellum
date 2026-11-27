@@ -387,6 +387,13 @@ function applyFirmTheme() {
   const footerDirectPhone = document.getElementById('footerDirectPhone');
   if (footerDirectPhone) footerDirectPhone.textContent = firm.primaryPhone || '+91 98794 71039';
 
+  const footerEmailEl = document.getElementById('footerFirmEmail');
+  if (footerEmailEl) {
+    const email = firm.email || (firm.id === 'keya' ? 'keyafashion5517@gmail.com' : 'saurashtrasarees@gmail.com');
+    footerEmailEl.textContent = email;
+    footerEmailEl.href = `mailto:${email}`;
+  }
+
   // Footer Dynamic Copyright & Disclaimer
   const copyrightEl = document.getElementById('footerCopyright');
   if (copyrightEl) copyrightEl.textContent = `${firm.name} 2026. All rights reserved.`;
@@ -1170,12 +1177,7 @@ function renderCatalogGrid() {
             ${stockBadgeHtml}
           </div>
 
-          <!-- 000 Cover Badge Pill (Cover represents No Color) -->
-          ${cat.has000Cover ? `
-            <div class="absolute top-10 sm:top-12 left-2 sm:left-3 bg-amber-900/90 backdrop-blur-xs text-amber-100 text-[9px] font-black px-2 py-0.5 rounded-md flex items-center gap-1 border border-amber-400/40 shadow-xs">
-              <span>🖼️ 000 Cover</span>
-            </div>
-          ` : ''}
+
 
           <!-- Video Play Icon Pill -->
           ${(cat.hasVideo || firstDesign.video) ? `
@@ -1228,7 +1230,7 @@ function renderCatalogGrid() {
               </div>
 
               <span id="card-design-${cat.id}" class="hidden sm:inline text-[10px] font-semibold text-slate-500 truncate max-w-[100px]">
-                ${coverHero.hasZeroCover ? '000 Cover' : `Design ${firstDesign.code || '101'}`}
+                ${coverHero.hasZeroCover ? 'Overview' : `Design ${firstDesign.code || '101'}`}
               </span>
             </div>
           </div>
@@ -1620,17 +1622,7 @@ function renderPdpColorSwatches() {
   const colorways = getColorwayDesigns(cat);
   const catStock = window.vellumAdapter ? window.vellumAdapter.getCatalogStock(cat.id) : 'in_stock';
 
-  const coverButtonHtml = cat.has000Cover ? `
-    <div class="w-full pb-2">
-      <button 
-        type="button" 
-        onclick="showPdpZeroCover()" 
-        class="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-amber-50 hover:bg-amber-100 border border-amber-300 text-amber-950 font-bold text-xs shadow-2xs transition-all"
-      >
-        <span>🖼️ View 000 Catalog Poster (All Shades Presentation)</span>
-      </button>
-    </div>
-  ` : '';
+  const coverButtonHtml = '';
 
   const swatchesHtml = colorways.map((d, idx) => {
     const isSelected = idx === state.activePdpDesignIndex;

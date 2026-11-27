@@ -116,11 +116,6 @@
           <i data-lucide="message-square" class="w-3.5 h-3.5 text-amber-300"></i>
           <span>Wholesale Inquiry</span>
         </a>
-
-        <a href="admin.html" title="Super-Admin Access" class="p-2 sm:p-2.5 rounded-xl border border-stone-200 hover:border-amber-300 hover:bg-amber-50 text-stone-600 transition-all flex items-center gap-1.5 text-xs font-semibold">
-          <i data-lucide="shield-check" class="w-4 h-4 text-amber-700"></i>
-          <span class="hidden xl:inline text-stone-700">Staff Portal</span>
-        </a>
       </div>
 
     </div>
@@ -643,50 +638,85 @@
 
   </main>
 
-  <!-- MASTER IMPERIAL FOOTER -->
-  <footer class="bg-stone-950 text-white border-t-2 border-amber-500/40 pt-12 pb-8 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-7xl mx-auto space-y-8">
+    <!-- MASTER IMPERIAL FOOTER -->
+  <footer class="bg-stone-950 text-white border-t-2 border-amber-500/40 pt-14 pb-10 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-7xl mx-auto space-y-10">
       
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-10">
         
-        <!-- Col 1: Brand Info -->
-        <div class="space-y-3 md:col-span-2">
+        <!-- Col 1: Brand Heritage -->
+        <div class="space-y-3.5">
           <div class="flex items-center gap-3">
-            <img src="assets/saurashtra-sarees-logo.jpg" alt="Saurashtra Sarees" class="h-10 w-auto object-contain bg-white rounded-lg p-1">
+            <img src="assets/saurashtra-sarees-logo.jpg" alt="Saurashtra Sarees" class="h-11 w-auto object-contain bg-white rounded-xl p-1 shadow-sm">
             <div>
-              <h4 class="font-serif text-lg font-bold text-white">Saurashtra Sarees</h4>
-              <p class="text-[10px] text-amber-400 font-semibold tracking-wider uppercase">Make Occasion Better • Est. 1998</p>
+              <h4 class="font-serif text-lg font-bold text-white tracking-tight">Saurashtra Sarees</h4>
+              <p class="text-[10px] text-amber-400 font-bold tracking-widest uppercase mt-0.5">Make Occasion Better • Est. 1998</p>
             </div>
           </div>
-          <p class="text-xs text-stone-400 max-w-md leading-relaxed">
-            Direct mill manufacturing and super-stockist distribution hub situated in Magob, Surat. Dedicated to providing premium Indian handloom and powerloom weaves to wholesale stockists, boutique owners, and portal resellers worldwide.
+          <p class="text-xs text-stone-400 leading-relaxed">
+            Direct factory manufacturing and super-stockist distribution hub situated in Magob, Surat. Dedicated to providing premium Indian handloom and powerloom weaves to boutique owners, wholesale stockists, and portal sellers worldwide.
           </p>
         </div>
 
-        <!-- Col 2: Inquiries & Desks -->
-        <div class="space-y-2 text-xs text-stone-300">
-          <h5 class="font-bold text-amber-400 uppercase tracking-wider text-[11px]">Direct Mill Desks</h5>
-          <p>Nayan Sir: <a href="tel:+919879471039" class="text-white hover:underline font-bold">+91 98794 71039</a></p>
-          <p>Chetan Sir: <a href="tel:+919913643433" class="text-white hover:underline font-bold">+91 99136 43433</a></p>
-          <p class="text-stone-400 pt-1 text-[11px]">Timings: 10:00 AM – 07:00 PM (Mon–Sat)</p>
-        </div>
-
-        <!-- Col 3: Registered Atelier Address -->
-        <div class="space-y-2 text-xs text-stone-300">
-          <h5 class="font-bold text-amber-400 uppercase tracking-wider text-[11px]">Registered Mill Address</h5>
-          <p class="leading-relaxed">
+        <!-- Col 2: Registered Atelier Coordinates -->
+        <div class="space-y-3 text-xs text-stone-300">
+          <h5 class="font-bold text-amber-400 uppercase tracking-wider text-[11px] flex items-center gap-1.5">
+            <i data-lucide="map-pin" class="w-3.5 h-3.5"></i> Registered Mill Address
+          </h5>
+          <p class="leading-relaxed text-stone-300">
             A-1001, Rajhans Fabrizo, Near Polaris Textile City, BRTS Road, Magob, Surat, Gujarat – 395010
           </p>
-          <a href="https://maps.app.goo.gl/zUFKsVaYb4rvTaiD6" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 text-amber-400 hover:underline pt-1 font-semibold">
-            <i data-lucide="map-pin" class="w-3.5 h-3.5"></i> Google Maps Location ↗
+          <p class="text-stone-400 text-[11px]">
+            Operating Hours: <strong class="text-stone-200">10:00 AM – 07:00 PM</strong> (Monday–Saturday)
+          </p>
+          <a href="https://maps.app.goo.gl/zUFKsVaYb4rvTaiD6" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 text-amber-400 hover:text-amber-300 font-semibold text-xs pt-1 transition-colors">
+            <i data-lucide="navigation" class="w-3.5 h-3.5"></i> Open in Google Maps ↗
           </a>
+        </div>
+
+        <!-- Col 3: Direct Management Desks & Email -->
+        <div class="space-y-3 text-xs text-stone-300">
+          <h5 class="font-bold text-amber-400 uppercase tracking-wider text-[11px] flex items-center gap-1.5">
+            <i data-lucide="phone-call" class="w-3.5 h-3.5"></i> Direct Management Desks
+          </h5>
+          <div class="space-y-1.5">
+            <p>Nayan Sir: <a href="tel:+919879471039" class="text-white hover:text-amber-300 font-bold ml-1 transition-colors">+91 98794 71039</a></p>
+            <p>Chetan Sir: <a href="tel:+919913643433" class="text-white hover:text-amber-300 font-bold ml-1 transition-colors">+91 99136 43433</a></p>
+          </div>
+          <div class="pt-2 border-t border-stone-800">
+            <p class="text-stone-400 text-[11px]">Official Email:</p>
+            <a href="mailto:saurashtrasarees@gmail.com" class="text-white hover:text-amber-300 font-semibold transition-colors">
+              saurashtrasarees@gmail.com
+            </a>
+          </div>
+        </div>
+
+        <!-- Col 4: Dispatch & Mill Assurance -->
+        <div class="space-y-3 text-xs text-stone-300">
+          <h5 class="font-bold text-amber-400 uppercase tracking-wider text-[11px] flex items-center gap-1.5">
+            <i data-lucide="shield-check" class="w-3.5 h-3.5"></i> Mill Direct Assurance
+          </h5>
+          <div class="space-y-2 text-stone-400 text-xs">
+            <p class="flex items-center gap-2">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+              <span>100% Verified Handloom Lots</span>
+            </p>
+            <p class="flex items-center gap-2">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+              <span>Direct Loom-to-Store Rates</span>
+            </p>
+            <p class="flex items-center gap-2">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+              <span>24–48h Express Logistics Dispatch</span>
+            </p>
+          </div>
         </div>
 
       </div>
 
       <!-- Copyright Bar with Standard BinduGrid Studio [ØG] Attribution -->
       <div class="border-t border-stone-800 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-stone-400">
-        <p id="footerCopyright" class="font-bold text-stone-300">© 1998–2026 Saurashtra Sarees. All Rights Reserved. Surat, Gujarat, India.</p>
+        <p id="footerCopyright" class="font-bold text-stone-300">© 1998–2026 Saurashtra Sarees. All rights reserved.</p>
         
         <div class="flex flex-wrap items-center gap-2.5 text-xs">
           <span class="text-stone-400">Vellum Architecture by</span>
@@ -704,10 +734,6 @@
           <a href="https://x.com/bindugrid" target="_blank" rel="noopener noreferrer" class="hover:text-sky-400 transition-colors" title="X: @bindugrid">X</a>
           <span class="text-stone-600">•</span>
           <a href="https://instagram.com/bindugrid" target="_blank" rel="noopener noreferrer" class="hover:text-pink-400 transition-colors" title="Instagram: @bindugrid">Instagram</a>
-          <span class="text-stone-600">•</span>
-          <a href="admin.html" class="text-stone-400 hover:text-amber-300 transition-colors flex items-center gap-1 font-semibold">
-            <i data-lucide="shield" class="w-3 h-3"></i> Super-Admin
-          </a>
         </div>
       </div>
 
