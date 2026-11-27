@@ -1232,15 +1232,15 @@ function renderCatalogGrid() {
               <div class="bg-slate-50 rounded-xl sm:rounded-2xl p-2 sm:p-2.5 border border-slate-200/80 space-y-1">
                 <div class="flex items-center justify-between text-[10px] sm:text-[11px]">
                   <span class="text-amber-900 font-bold">1. Prime Rate:</span>
-                  <span class="font-serif font-bold text-amber-900">₹${primeRate}</span>
+                  <span class="font-price font-bold text-amber-900">₹${primeRate}</span>
                 </div>
                 <div class="flex items-center justify-between text-[10px] sm:text-[11px]">
                   <span class="text-emerald-700 font-bold">2. Wholesale Rate:</span>
-                  <span class="font-serif font-bold text-emerald-700">₹${wholesaleRate}</span>
+                  <span class="font-price font-bold text-emerald-700">₹${wholesaleRate}</span>
                 </div>
                 <div class="flex items-center justify-between text-[10px] sm:text-[11px] pt-0.5 border-t border-slate-200">
                   <span class="text-purple-900 font-bold">3. Retail / MRP:</span>
-                  <span class="font-serif font-extrabold text-slate-900">₹${retailRate}</span>
+                  <span class="font-price font-extrabold text-stone-900">₹${retailRate}</span>
                 </div>
               </div>
             ` : `
@@ -1250,7 +1250,7 @@ function renderCatalogGrid() {
                   <span class="text-[9px] sm:text-[10px] text-stone-600 uppercase font-semibold">
                     ${state.currentRole === 'prime' ? 'Prime Wholesale' : (state.currentRole === 'wholesale' ? 'Wholesale Price' : 'Catalog MRP')}
                   </span>
-                  <p class="font-serif text-base sm:text-xl font-extrabold text-slate-900 leading-tight">
+                  <p class="font-price text-base sm:text-xl font-black text-stone-900 leading-tight">
                     ₹${getActiveRate(cat)}
                   </p>
                 </div>
@@ -1785,7 +1785,7 @@ function renderRelatedCatalogs() {
           <span class="text-[9px] font-bold text-stone-600 uppercase tracking-wider">${item.category}</span>
           <h4 class="font-serif text-sm font-bold text-slate-900 group-hover:text-brand-maroon transition-colors line-clamp-1">${item.name}</h4>
           <div class="flex items-baseline justify-between mt-1">
-            <span class="font-serif text-base font-extrabold text-slate-900">
+            <span class="font-price text-base font-black text-stone-900">
               ₹${isAllRatesUser ? item.wholesaleRate : item.retailRate}
             </span>
             <span class="text-[10px] text-emerald-600 font-bold">${item.status}</span>

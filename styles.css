@@ -10,6 +10,18 @@
   color: #451a03 !important;
 }
 
+/* ==============================================================================
+   HIGH-LEGIBILITY COMMERCIAL PRICE & AMOUNT TYPOGRAPHY (Crystal Clear Rupee & Digits)
+   ============================================================================== */
+.font-price,
+.price-tag,
+.amount-text {
+  font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+  font-feature-settings: "tnum" 1, "lnum" 1 !important;
+  font-variant-numeric: tabular-nums lining-nums !important;
+  letter-spacing: -0.025em !important;
+}
+
 :root {
   /* Default Saurashtra Sarees Luxury Theme (Royal Heritage Maroon & Antique Gold) */
   --theme-primary: #8b1d40;
