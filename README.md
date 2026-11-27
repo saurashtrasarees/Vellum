@@ -1,113 +1,93 @@
 # Vellum 🥻
 > **Imperial Haute Couture Digital Textile Showroom & B2B Wholesale Engine**  
-> *Developed for **Saurashtra Sarees** & **Keya Fashion** — Direct Surat Mill Manufacturers & Wholesale Stockists.*  
-> *Engineered by **BinduGrid Studio [ØG]**.*
+> *Developed for **Saurashtra Sarees** & **Keya Fashion** — Direct Surat Mill Manufacturers & Wholesale Super-Stockists.*  
+> *Engineered by **BinduGrid Studio [ØG]** (<bindugrid@gmail.com>).*
 
+[![Live Domain](https://img.shields.io/badge/Live%20Domain-saurashtrasarees.com-8b1d40?style=for-the-badge&logo=googlechrome&logoColor=white)](https://saurashtrasarees.com)
 [![Live GitHub Repository](https://img.shields.io/badge/GitHub-saurashtrasarees%2FVellum-181717?style=for-the-badge&logo=github)](https://github.com/saurashtrasarees/Vellum)
 [![Google Sheet Database](https://img.shields.io/badge/Google%20Sheet-Live%20Database-34A853?style=for-the-badge&logo=googlesheets&logoColor=white)](https://docs.google.com/spreadsheets/d/1YcrvrrgwikEFkST8VEPf-XRjj8vWd0F750kauK1PU1o/edit)
-[![Curated Inventory](https://img.shields.io/badge/Curated%20Volumes-132%20Total%20(45%20Model%20•%2087%20Table)-d4af37?style=for-the-badge)](https://github.com/saurashtrasarees/Vellum)
-[![Surat Mill Direct](https://img.shields.io/badge/Origin-Surat%2C%20Gujarat-8b1d40?style=for-the-badge)](https://github.com/saurashtrasarees/Vellum)
+[![Curated Inventory](https://img.shields.io/badge/Curated%20Volumes-132%20Total%20(45%20Model%20•%2087%20Table)-d4af37?style=for-the-badge)](https://saurashtrasarees.com/catalog.html)
+[![Surat Mill Direct](https://img.shields.io/badge/Origin-Surat%2C%20Gujarat-8b1d40?style=for-the-badge)](https://saurashtrasarees.com)
 
 ---
 
 ## 🏛️ Brand Architecture & Mill Atelier
 
-Vellum powers two flagship ethnic wear brands operating from Surat's premier textile hub:
+Vellum powers two flagship ethnic wear brands operating from Surat's premier textile corridor:
 
-| Firm | Brand Slogan | Accent Palette | Primary Focus | Direct Desk |
+| Firm | Brand Slogan | Accent Palette | Primary Focus | Direct Desk Contacts |
 | :--- | :--- | :--- | :--- | :--- |
-| **Saurashtra Sarees** | *Make Occasion Better* | `#8b1d40` (Royal Maroon) & `#d4af37` (Gold) | Direct Mill Wholesale & Super Stockist Distribution | `+91 98249 82338` / `+91 98794 71039` |
-| **Keya Fashion** | *Stop wishing. Start living....* | `#0284c7` (Atelier Sky) & `#f59e0b` (Amber) | Curated Catalogues & Retail Showroom Collections | `+91 98254 52528` / `+91 99094 52528` |
+| **Saurashtra Sarees** | *Make Occasion Better* | `#8b1d40` (Royal Maroon) & `#d4af37` (Gold) | Direct Mill Wholesale & Super Stockist Distribution | **Nayan Patel [Founder & CEO]**: `+91 98794 71039`<br>**Chetan Patel [Co-Founder & COO]**: `+91 99136 43433` |
+| **Keya Fashion** | *Stop wishing. Start living....* | `#0284c7` (Atelier Sky) & `#f59e0b` (Amber) | Curated Catalogues & Retail Showroom Collections | **Nayan Patel [Founder & CEO]**: `+91 98794 71039`<br>**Chetan Patel [Co-Founder & COO]**: `+91 99136 43433` |
 
 * **Atelier & Registered Mill Address:**  
-  `A-1001, Rajhans Fabrizo, Near Polaris Textile City, BRTS Road, Magob, Surat, Gujarat – 395010`
-* **Operating Hours:** 09:00 AM – 07:00 PM (Monday–Saturday)
+  `A-1001, Rajhans Fabrizo, Near Polaris Textile City, Magob, Surat, Gujarat – 395010`
+* **Operating Hours:** 10:00 AM – 07:00 PM (Monday–Saturday)
+* **Location Pin:** [Google Maps Directions](https://maps.app.goo.gl/zUFKsVaYb4rvTaiD6)
+* **Manufacturing Provenance:**  
+  * **10+ Years** Continuous Manufacturing  
+  * **5,000+** Boutiques & Stockists Served  
 
 ---
 
-## ⚡ Architecture: Google Sheet Database + GitHub Frontend
+## ⚡ Architecture: Direct Google Drive Mapping + Google Sheet Master + GitHub Frontend
 
-Vellum uses **Google Sheets as its master database and background engine**, paired with a lightweight **GitHub-hosted frontend** for instant global loading speeds:
+Vellum uses **Google Drive & Google Sheets as its master database and content engine**, paired with a lightweight **GitHub-hosted frontend** mapped to custom domain `saurashtrasarees.com`:
 
-* **Master Google Sheet ID:** [`1YcrvrrgwikEFkST8VEPf-XRjj8vWd0F750kauK1PU1o`](https://docs.google.com/spreadsheets/d/1YcrvrrgwikEFkST8VEPf-XRjj8vWd0F750kauK1PU1o/edit)
-* **Frontend Repository:** [github.com/saurashtrasarees/Vellum](https://github.com/saurashtrasarees/Vellum)
-* **Live Pricing Sync:** Pricing matrices and stock levels edit directly in Google Sheets and stream live to active showroom shoppers via GViz CSV endpoints.
-* **Zero Dark Mode Guarantee:** 100% Light Luxury aesthetic (warm ivory, champagne gold, textured cloud motifs, pure white, and Surat gold accents).
+* **Direct Google Drive Image Mapping:** Images stream globally directly from authenticated Google Drive view links (`https://lh3.googleusercontent.com/d/{fileId}`). No heavy media files are stored in git or third-party servers.
+* **Master Google Sheet Database:** [`1YcrvrrgwikEFkST8VEPf-XRjj8vWd0F750kauK1PU1o`](https://docs.google.com/spreadsheets/d/1YcrvrrgwikEFkST8VEPf-XRjj8vWd0F750kauK1PU1o/edit)
+* **Live Dynamic Pricing:** Commercial rate tiers (Prime, Wholesale, Retail) stream in real time from Google Sheets to active showroom buyers.
+* **SOP (Standard Operating Procedure):**
+  1. Add/modify catalogue images or reels in Google Drive folder.
+  2. In Admin Panel, click **`🔄 Synchronise from Google Drive & Update Frontend`** or **`Fetch Live Google Sheet Rates`**.
+  3. Changes reflect instantly across all frontend client smart links.
 
 ---
 
 ## 📦 132 Curated Volumes (Real Mill Data)
 
-Unlike generic e-commerce templates with dummy placeholder data, Vellum is populated directly from authentic Google Drive catalog folders:
-
-* **👗 45 Model Shoot Volumes:** High-fashion lifestyle runway draping, model lookbook captures, and full 4K HD video reels.
-* **🪑 87 Table Shoot Volumes:** Authentic flat-lay captures highlighting warp/weft detail, metallic zari sheen, contrast borders, and true-to-life color fidelity.
-* **Direct `.txt` Parsing:** Every volume's technical specifications, design story, dispatch availability, and Retail MRP are parsed directly from its respective `.txt` catalog document.
+* **👗 45 Model Shoot Volumes:** High-fashion runway lookbooks and video reels.
+* **🪑 87 Table Shoot Volumes:** Authentic flat-lay captures highlighting warp/weft detail, zari sheen, and true-to-life color fidelity.
+* **Direct Specifications:** Saree lengths, blouse fabrics, approximate weights, and retail MRP parsed directly from `.txt` catalog sheets.
 
 ---
 
 ## 🖼️ Surat Textile `000` Cover Convention
 
-In Surat textile catalog distribution, `000.jpeg` / `000.jpg` serves as the master catalog poster / all-colorway collage:
-
-* **Represents NO Color:** `000` is strictly excluded from colorway swatches so it is never counted as an individual saree shade.
-* **Master Poster Display:** Catalogs with `000` automatically feature it as the main showroom card hero image, designated with an elegant `🖼️ 000 Cover` badge.
-* **Product Detail Page (PDP):** Shoppers can inspect the full `000 Master Catalog Poster` via a dedicated button without polluting color dot selections.
+* **Represents NO Color:** `000` cover image is strictly excluded from color swatches.
+* **Master Volume Poster:** Automatically features as the main showroom card hero image.
 
 ---
 
 ## 💰 Commercial Pricing Hierarchy
 
-Pricing strictly follows wholesale manufacturing economics:
-
-$$\text{1. Prime Rate (Lowest)} \quad < \quad \text{2. Wholesale Rate} \quad < \quad \text{3. Retail / Catalog MRP (Highest)}$$
+$$\text{1. Prime Rate (P)} \quad < \quad \text{2. Wholesale Rate (W)} \quad < \quad \text{3. Retail / MRP}$$
 
 1. **Prime Rate (Tier 1):** Exclusive rate for VIP volume buyers and institutional partners.
 2. **Wholesale Rate (Tier 2):** Super stockist B2B direct mill wholesale rate.
-3. **Retail Rate (Tier 3):** Standard catalog MRP fetched directly from the catalog's `.txt` file for general retail buyers.
+3. **Retail Rate (Tier 3):** Standard catalog MRP for boutique end-buyers.
+
+> 🔒 **Single-Rate PDP Rule:** On the public Product Detail Page (PDP), buyers only see the single price tier authorized by their specific link. Wholesale rates are strictly hidden from retail buyers.
 
 ---
 
-## 🔗 Staff Smart Links (Tamper-Proof Link Architecture)
-
-Sales representatives share targeted links that dynamically configure the pricing tier on-screen with zero buyer login friction:
+## 🔗 Staff Smart Links
 
 | Tier | Link Parameter | Example Link | Rate Displayed |
 | :--- | :--- | :--- | :--- |
-| **Retail MRP (Default)** | `?u=<StaffCode>` | `https://saurashtrasarees.github.io/Vellum/?u=AR38` | **Retail / Catalog MRP** |
-| **Wholesale B2B** | `?u=<StaffCode>W` | `https://saurashtrasarees.github.io/Vellum/?u=AR38W` | **Wholesale Price** |
-| **Prime Exclusive** | `?u=<StaffCode>P` | `https://saurashtrasarees.github.io/Vellum/?u=AR38P` | **Prime Rate** |
-
-> 🔒 **Tamper-Proof Fail-Safe:** If a retail customer alters the URL query (e.g. typing random letters or removing the code), Vellum automatically defaults to **Retail MRP**.
-
----
-
-## 🔍 Advanced Multi-Filter & Search Bar
-
-The showroom features an organized, mobile-first multi-filter control grid:
-
-* **Real-Time Search:** Live query matching across catalog names, codes, fabric categories, and weave types with `✕` clear button.
-* **Shoot Selector:** Switch instantaneously between `All (132)`, `👗 Model Shoot (45)`, and `🪑 Table Shoot (87)`.
-* **Price Range Brackets:**
-  * $\le \text{₹}499$ *(Budget Collections)*
-  * $\text{₹}500 - \text{₹}999$ *(Fast Moving Lots)*
-  * $\text{₹}1,000 - \text{₹}1,499$ *(Festive Silk)*
-  * $\text{₹}1,500 - \text{₹}1,999$ *(Pure Silk Artistry)*
-  * $\ge \text{₹}2,000$ *(Bridal Haute Couture)*
-* **Fabric Weave Dropdown:** Filter by authentic weaves (`Banarasi Silk`, `Paithani Silk`, `Chanderi`, `Tussar Silk`, `Kanjivaram Silk`, `Tissue Silk`, `Cotton Silk`) with dynamic item counts.
-* **Active Filter Chips & Reset:** Visual tag bar displaying applied filters with 1-click removal and a **Reset All Filters** button.
+| **Retail MRP (Default)** | `?staff=NA39` | `https://saurashtrasarees.com/catalog.html?staff=NA39` | **Retail / Catalog MRP** |
+| **Wholesale B2B** | `?staff=NA39W` | `https://saurashtrasarees.com/catalog.html?staff=NA39W` | **Wholesale Price** |
+| **Prime Exclusive** | `?staff=NA39P` | `https://saurashtrasarees.com/catalog.html?staff=NA39P` | **Prime Rate** |
 
 ---
 
 ## 🛠️ Super Admin Control Hub (`admin.html`)
 
-Access via the Super-Admin portal button or `?admin=7401`:
-
-1. **Staff Directory & Smart Link Hub:** Full CRUD (Add, Edit, Delete) for sales representatives, with 1-click generation or revocation of Wholesale (`?u=...W`) and Prime (`?u=...P`) links.
-2. **Google Drive Shoot Synchronizer:** Configure central Drive folder URLs (`1JregR_hN7mL3fynLcGOq4ZYaTRHAj91e`), with a 1-click **`🔄 Synchronise from Google Drive & Update Frontend`** button that live-updates the catalog database.
-3. **High-Efficiency Stock Control:** 1-click status updates for whole catalogues (🟢 Ready Lot, 🟡 Re-Weaving 3–5 Days, 🔴 Sold Out) plus individual shade drawers.
-4. **Google Sheet Live Pricing Hub:** Live sync with Google Sheet `1YcrvrrgwikEFkST8VEPf-XRjj8vWd0F750kauK1PU1o`.
-5. **Universal Firm Manager:** Real-time branding and contact configuration for Saurashtra Sarees, Keya Fashion, or newly provisioned brand entities.
+1. **Staff Directory & Smart Link Hub:** Manage staff profiles, create campaign deep links.
+2. **Google Drive Synchronizer:** Scans Google Drive and maps high-resolution direct links.
+3. **High-Efficiency Stock Control:** 1-click status updates (🟢 Ready Lot, 🟡 Re-Weaving 3–5 Days, 🔴 Sold Out).
+4. **Google Sheet Database:** Real-time bi-directional sync with Sheet `1YcrvrrgwikEFkST8VEPf-XRjj8vWd0F750kauK1PU1o`.
+5. **Universal Firm Manager:** Real-time branding and contact management for Saurashtra Sarees and Keya Fashion.
 
 ---
 
@@ -125,25 +105,31 @@ python -m http.server 8080
 
 # Open in browser:
 # http://localhost:8080/
+# http://localhost:8080/catalog.html
 # http://localhost:8080/admin.html
 ```
 
-### Deploy to GitHub Pages:
-1. Go to **Repository Settings** > **Pages**.
-2. Select **Branch:** `main` and **Folder:** `/(root)`.
-3. Click **Save**. Your showroom will be live at `https://saurashtrasarees.github.io/Vellum/`.
+### Custom Domain Configuration (Hostinger -> GitHub Pages):
+* **Custom Domain:** `saurashtrasarees.com` (CNAME file in repo root)
+* **DNS Settings in Hostinger:**
+  * `A` records pointing to GitHub Pages IPs:
+    * `185.199.108.153`
+    * `185.199.109.153`
+    * `185.199.110.153`
+    * `185.199.111.153`
+  * `CNAME` record: `www` pointing to `saurashtrasarees.github.io`
+* **GitHub Settings > Pages:**
+  * Source: **Deploy from a branch**
+  * Branch: `main` / `/(root)`
+  * Custom domain: `saurashtrasarees.com` (Enforce HTTPS enabled)
 
 ---
 
-## 🎨 Design & Engineering Credits
+## 🎨 Executive Leadership & Inquiries
 
-* **Architecture & UI/UX Systems:** **BinduGrid Studio [ØG]**
-* **Inquiries & Manufacturing:**
-  * Arvind Sir (`AR38`): `+91 98249 82338`
-  * Nayan Sir (`NA39`): `+91 98794 71039`
-  * Chetan Sir (`CH33`): `+91 99136 43433`
-  * Khushi (`KH28`): `+91 98254 52528`
-  * Palak (`PA28`): `+91 99094 52528`
+* **Nayan Patel [Founder & CEO]**: `+91 98794 71039` | `saurashtrasarees@gmail.com`
+* **Chetan Patel [Co-Founder & COO]**: `+91 99136 43433` | `keyafashion5517@gmail.com`
+* **Architecture & Engineering Systems:** **BinduGrid Studio [ØG]** (<bindugrid@gmail.com>)
 
 ---
-*© 2026 Saurashtra Sarees & Keya Fashion. All rights reserved. Powered by Vellum.*
+*© 2014–2026 Saurashtra Sarees. All rights reserved. Powered by Vellum.*

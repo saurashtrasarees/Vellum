@@ -526,13 +526,14 @@ p, span, li, label {
    MOBILE RESPONSIVENESS & EXECUTIVE SMARTPHONE POLISH (@media <= 640px)
    ============================================================================== */
 @media (max-width: 640px) {
-  /* 1. Header & Brand Title */
+  /* 1. Header & Brand Title - Adaptive Height to Prevent Any Overlap */
   header {
-    height: 4.25rem !important;
+    min-height: 4.25rem !important;
+    height: auto !important;
   }
   
   header img {
-    height: 2.5rem !important;
+    height: 2.35rem !important;
   }
 
   header h1 {

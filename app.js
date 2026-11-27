@@ -126,26 +126,28 @@ const USER_PROFILES = {
   'NA39': {
     code: 'NA39',
     slug: 'nayan',
-    name: 'Nayan Sir',
-    initials: 'NA',
-    title: 'Head of Sales & Distribution',
+    name: 'Nayan Patel [Founder & CEO]',
+    shortName: 'Nayan Patel',
+    initials: 'NP',
+    title: 'Founder & CEO',
     phone: '9879471039',
     whatsapp: '919879471039',
     displayPhone: '+91 98794 71039',
     firm: 'saurashtra',
-    rateAccess: 'retail' // Retail only
+    rateAccess: 'retail'
   },
   'CH33': {
     code: 'CH33',
     slug: 'chetan',
-    name: 'Chetan Sir',
-    initials: 'CH',
-    title: 'Managing Director & Sales Head',
+    name: 'Chetan Patel [Co-Founder & COO]',
+    shortName: 'Chetan Patel',
+    initials: 'CP',
+    title: 'Co-Founder & COO',
     phone: '9913643433',
     whatsapp: '919913643433',
     displayPhone: '+91 99136 43433',
     firm: 'saurashtra',
-    rateAccess: 'retail' // Retail only
+    rateAccess: 'retail'
   }
 };
 

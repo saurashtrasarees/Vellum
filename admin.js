@@ -844,19 +844,61 @@ function saveSheetSettings() {
 async function syncRatesFromSheet() {
   const sheetId = localStorage.getItem('vellum_sheet_id') || '1YcrvrrgwikEFkST8VEPf-XRjj8vWd0F750kauK1PU1o';
   const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv`;
-  showAdminToast('Fetching live rates from Google Sheet...');
+  showAdminToast('Fetching live rates from Google Sheet (ID: ' + sheetId + ')...');
 
   try {
     const res = await fetch(url);
     if (res.ok) {
       const csvText = await res.text();
-      showAdminToast('✓ Google Sheet rates synced successfully!');
+      const lines = csvText.split('\n');
+      let updatedCount = 0;
+
+      if (lines.length > 1) {
+        const header = lines[0].toLowerCase().split(',').map(s => s.replace(/["\r]/g, '').trim());
+        let primeCol = header.findIndex(h => h.includes('prime'));
+        let wsCol = header.findIndex(h => h.includes('wholesale'));
+        let retCol = header.findIndex(h => h.includes('retail') || h.includes('mrp'));
+        let statusCol = header.findIndex(h => h.includes('status'));
+
+        const sheetData = {};
+        for (let i = 1; i < lines.length; i++) {
+          const row = lines[i].split(',').map(s => s.replace(/["\r]/g, '').trim());
+          const code = (row[0] || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+          if (!code) continue;
+          sheetData[code] = {
+            prime: primeCol !== -1 && row[primeCol] ? parseInt(row[primeCol].replace(/\D/g, ''), 10) : null,
+            wholesale: wsCol !== -1 && row[wsCol] ? parseInt(row[wsCol].replace(/\D/g, ''), 10) : null,
+            retail: retCol !== -1 && row[retCol] ? parseInt(row[retCol].replace(/\D/g, ''), 10) : null,
+            status: statusCol !== -1 ? row[statusCol] : null
+          };
+        }
+
+        adminCatalogs.forEach(cat => {
+          const cleanCode = (cat.code || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+          const match = sheetData[cleanCode];
+          if (match) {
+            if (match.prime) cat.resellerRate = match.prime;
+            if (match.wholesale) cat.wholesaleRate = match.wholesale;
+            if (match.retail) cat.retailRate = match.retail;
+            if (match.status) cat.status = match.status;
+            updatedCount++;
+          }
+        });
+
+        localStorage.setItem('vellum_custom_catalogs', JSON.stringify(adminCatalogs));
+        renderRatesTable();
+        renderStockManager();
+        renderSheetDatabaseTable();
+      }
+
+      showAdminToast(`✓ Synchronized ${updatedCount} catalog rates from Google Sheet!`);
       window.dispatchEvent(new CustomEvent('vellum:sheet-synced', { detail: csvText }));
     } else {
-      showAdminToast('Google Sheet fetched. Verify sheet public sharing settings.');
+      showAdminToast('Google Sheet connection received response code ' + res.status);
     }
   } catch (err) {
-    showAdminToast('Google Sheet connection attempted.');
+    console.error('Sheet sync error:', err);
+    showAdminToast('Could not fetch Google Sheet. Verify internet connection.');
   }
 }
 
