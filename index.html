@@ -633,6 +633,42 @@
 
   </div>
 
+  <!-- Info & Policy Modal for Showroom Pages -->
+  <div id="infoModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md overflow-y-auto">
+    <div class="relative w-full max-w-2xl bg-slate-900 border border-slate-800 rounded-3xl overflow-hidden shadow-2xl my-8 text-slate-200">
+      
+      <!-- Modal Header -->
+      <div class="p-6 border-b border-slate-800 flex items-center justify-between bg-slate-950/70">
+        <div>
+          <h3 id="infoModalTitle" class="font-serif text-xl font-bold text-white flex items-center gap-2">
+            Page Title
+          </h3>
+          <p id="infoModalSubtitle" class="text-xs text-amber-400 mt-0.5">Showroom Guidelines</p>
+        </div>
+        <button onclick="closeInfoModal()" class="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 flex items-center justify-center text-slate-300 hover:text-white transition-all">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <!-- Modal Content Body -->
+      <div id="infoModalContent" class="p-6 sm:p-7 max-h-[70vh] overflow-y-auto space-y-4 text-xs text-slate-300 leading-relaxed">
+        <!-- Rendered dynamically by JS -->
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="p-4 bg-slate-950 border-t border-slate-800 flex items-center justify-between gap-3 text-xs">
+        <div class="flex items-center gap-2 text-slate-400 text-[11px]">
+          <i data-lucide="clock" class="w-3.5 h-3.5 text-amber-400"></i>
+          <span>Support: 09:00 AM–07:00 PM (Mon–Sat)</span>
+        </div>
+        <button onclick="closeInfoModal()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs transition-all">
+          Close Window
+        </button>
+      </div>
+
+    </div>
+  </div>
+
   <!-- Video Reel Modal -->
   <div id="videoModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md">
     <div class="relative w-full max-w-sm bg-black rounded-3xl overflow-hidden shadow-2xl border border-white/10 flex flex-col items-center">
@@ -663,12 +699,12 @@
     <span id="toastMsg">Link copied to clipboard!</span>
   </div>
 
-  <!-- Luxury Developer & Technology Footer -->
+  <!-- Comprehensive Multi-Firm & Customer Care Footer -->
   <footer class="bg-slate-950 text-slate-400 text-xs py-14 px-4 sm:px-6 lg:px-8 mt-24 border-t border-slate-800">
-    <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-10 pb-10 border-b border-slate-800/90">
+    <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-10 pb-12 border-b border-slate-800/90">
       
-      <!-- Firm Brand & Direct Contacts (4 cols) -->
-      <div class="md:col-span-4 space-y-3.5">
+      <!-- Col 1: Firm Brand & Contact Support (md:col-span-4) -->
+      <div class="md:col-span-4 space-y-4">
         <div class="flex items-center gap-3">
           <img id="footerFirmLogo" src="assets/saurashtra-sarees-logo.jpg" alt="Firm Logo" class="h-10 w-auto object-contain bg-white p-1 rounded-xl">
           <div>
@@ -676,28 +712,119 @@
             <p id="footerFirmTagline" class="text-[11px] text-amber-400 font-medium">Make Occasion Better</p>
           </div>
         </div>
+
         <p class="text-slate-400 text-xs leading-relaxed">
-          Premier Indian textile manufacturer and bulk showroom in Surat, Gujarat. Serving wholesale dealers, portal sellers, and independent boutiques nationwide.
+          Premier Indian saree manufacturer and bulk textile supply house in Surat, Gujarat. Serving wholesale stockists, portal sellers, and independent boutiques nationwide.
         </p>
-        <div class="space-y-1.5 pt-1 text-slate-300">
-          <p class="flex items-center gap-2"><i data-lucide="phone" class="w-3.5 h-3.5 text-amber-400"></i> +91 98794 71039 (Saurashtra Sarees)</p>
-          <p class="flex items-center gap-2"><i data-lucide="phone" class="w-3.5 h-3.5 text-sky-400"></i> +91 99136 43433 (Keya Fashion)</p>
+
+        <!-- Contact Support & Timings Box -->
+        <div class="p-4 rounded-2xl bg-slate-900/90 border border-slate-800 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-[10px] font-extrabold uppercase tracking-wider text-amber-400 flex items-center gap-1.5">
+              <i data-lucide="headphones" class="w-3.5 h-3.5"></i> Contact Support
+            </span>
+            <span class="text-[9px] bg-emerald-950 text-emerald-400 px-2 py-0.5 rounded font-mono font-bold border border-emerald-800">
+              Live Desk
+            </span>
+          </div>
+
+          <div class="text-[11px] text-slate-300 space-y-1 pt-1">
+            <p class="flex items-center gap-1.5 text-white font-medium">
+              <i data-lucide="clock" class="w-3.5 h-3.5 text-amber-400 shrink-0"></i>
+              <span>09:00 AM–07:00 PM (Monday–Saturday)</span>
+            </p>
+            <p class="flex items-center gap-1.5 pt-1">
+              <i data-lucide="phone" class="w-3.5 h-3.5 text-slate-400 shrink-0"></i>
+              <span>Direct: <strong class="text-white">+91 98794 71039</strong> / <strong class="text-white">+91 99136 43433</strong></span>
+            </p>
+            <p class="flex items-center gap-1.5">
+              <i data-lucide="map-pin" class="w-3.5 h-3.5 text-slate-400 shrink-0"></i>
+              <span>Ring Road Textile Market, Surat, Gujarat 395002</span>
+            </p>
+          </div>
         </div>
       </div>
 
-      <!-- Quick Showroom Links (2 cols) -->
-      <div class="md:col-span-2 space-y-2.5">
-        <h5 class="text-xs font-bold text-white uppercase tracking-wider">Showroom</h5>
-        <ul class="space-y-2 text-slate-400">
-          <li><a href="#" onclick="navigateToHome(); return false;" class="hover:text-white transition-colors">🌟 All Collections</a></li>
-          <li><a href="#" onclick="setShootType('model'); return false;" class="hover:text-white transition-colors">👗 Model Shoots</a></li>
-          <li><a href="#" onclick="setShootType('table'); return false;" class="hover:text-white transition-colors">🪑 Table Shoots</a></li>
-          <li><a href="admin.html" class="hover:text-amber-400 transition-colors font-semibold flex items-center gap-1"><span>Super-Admin</span> ↗</a></li>
+      <!-- Col 2: Policies & Compliance (md:col-span-2) -->
+      <div class="md:col-span-2 space-y-3">
+        <h5 class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
+          <span>Policies & Trust</span>
+        </h5>
+        <ul class="space-y-2 text-slate-400 text-xs">
+          <li>
+            <button onclick="openInfoPage('terms')" class="hover:text-amber-300 transition-colors flex items-center gap-1.5 text-left">
+              <span>📜</span> <span>Terms & Conditions</span>
+            </button>
+          </li>
+          <li>
+            <button onclick="openInfoPage('shipping')" class="hover:text-amber-300 transition-colors flex items-center gap-1.5 text-left">
+              <span>🚚</span> <span>Shipping Policy</span>
+            </button>
+          </li>
+          <li>
+            <button onclick="openInfoPage('return')" class="hover:text-amber-300 transition-colors flex items-center gap-1.5 text-left">
+              <span>🔄</span> <span>Return Policy</span>
+            </button>
+          </li>
+          <li>
+            <button onclick="openInfoPage('privacy')" class="hover:text-amber-300 transition-colors flex items-center gap-1.5 text-left">
+              <span>🔒</span> <span>Privacy Policy</span>
+            </button>
+          </li>
+          <li>
+            <button onclick="openInfoPage('refund')" class="hover:text-amber-300 transition-colors flex items-center gap-1.5 text-left">
+              <span>💳</span> <span>Refund Policy</span>
+            </button>
+          </li>
+          <li>
+            <button onclick="openInfoPage('esg')" class="hover:text-amber-300 transition-colors flex items-center gap-1.5 text-left">
+              <span>🌿</span> <span>ESG Policy</span>
+            </button>
+          </li>
         </ul>
       </div>
 
-      <!-- Official BinduGrid Studio [ØG] Section (6 cols) -->
-      <div class="md:col-span-6 bg-slate-900/60 border border-slate-800 rounded-3xl p-6 space-y-4">
+      <!-- Col 3: Customer Care & Showroom Services (md:col-span-2) -->
+      <div class="md:col-span-2 space-y-3">
+        <h5 class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
+          <span>Customer Care</span>
+        </h5>
+        <ul class="space-y-2 text-slate-400 text-xs">
+          <li>
+            <button onclick="openInfoPage('about-us')" class="hover:text-amber-300 transition-colors flex items-center gap-1.5 text-left">
+              <span>🏛️</span> <span>About Us</span>
+            </button>
+          </li>
+          <li>
+            <button onclick="openInfoPage('track-order')" class="hover:text-amber-300 transition-colors flex items-center gap-1.5 text-left">
+              <span>📦</span> <span>Track Order</span>
+            </button>
+          </li>
+          <li>
+            <button onclick="openInfoPage('store-locator')" class="hover:text-amber-300 transition-colors flex items-center gap-1.5 text-left">
+              <span>📍</span> <span>Store Locator</span>
+            </button>
+          </li>
+          <li>
+            <button onclick="openInfoPage('bulk-order')" class="hover:text-amber-300 transition-colors flex items-center gap-1.5 text-left">
+              <span>💼</span> <span>Bulk Order Query</span>
+            </button>
+          </li>
+          <li>
+            <button onclick="openInfoPage('faqs')" class="hover:text-amber-300 transition-colors flex items-center gap-1.5 text-left">
+              <span>❓</span> <span>FAQ's</span>
+            </button>
+          </li>
+          <li class="pt-1">
+            <a href="admin.html" class="text-amber-400 hover:underline flex items-center gap-1 text-left font-semibold">
+              <i data-lucide="settings" class="w-3.5 h-3.5"></i> <span>Super-Admin</span> ↗
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Col 4: Official BinduGrid Studio [ØG] Tech Section (md:col-span-4) -->
+      <div class="md:col-span-4 bg-slate-900/60 border border-slate-800 rounded-3xl p-5 space-y-3.5">
         
         <div class="flex items-center justify-between border-b border-slate-800 pb-3">
           <div class="flex items-center gap-3">
@@ -708,48 +835,44 @@
             <div>
               <div class="flex items-center gap-2">
                 <h4 class="font-serif text-sm font-bold text-white tracking-wide">BinduGrid Studio</h4>
-                <span class="text-[10px] bg-cyan-950/80 text-cyan-300 border border-cyan-800/80 px-2 py-0.5 rounded-full font-mono font-bold">ØG</span>
+                <span class="text-[9px] bg-cyan-950/80 text-cyan-300 border border-cyan-800/80 px-2 py-0.5 rounded-full font-mono font-bold">ØG</span>
               </div>
-              <p class="text-[10px] tracking-widest uppercase font-extrabold text-cyan-400">FROM THE ORIGIN TO THE GRID</p>
+              <p class="text-[9px] tracking-widest uppercase font-extrabold text-cyan-400">FROM THE ORIGIN TO THE GRID</p>
             </div>
           </div>
           
-          <a href="mailto:bindugrid@gmail.com" class="hidden sm:flex items-center gap-1.5 text-xs text-slate-300 hover:text-cyan-400 bg-slate-800/80 px-3 py-1.5 rounded-xl border border-slate-700/80 transition-all font-mono">
-            <i data-lucide="mail" class="w-3.5 h-3.5 text-cyan-400"></i>
-            <span>bindugrid@gmail.com</span>
+          <a href="mailto:bindugrid@gmail.com" title="Email Studio" class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-cyan-400 border border-slate-700 transition-all">
+            <i data-lucide="mail" class="w-4 h-4"></i>
           </a>
         </div>
 
-        <p class="text-slate-300 text-xs leading-relaxed">
-          Digital product studio & creative engineering hub bridging low-level computation, scalable architecture, and foundational algorithms (the <em>Bindu</em> / Origin) with high-precision UI/UX craft, design systems, and frontend performance (the <em>Grid</em>).
+        <p class="text-slate-300 text-[11px] leading-relaxed">
+          Digital product studio & creative engineering hub bridging foundational computation (the <em>Bindu</em> / Origin) with high-precision UI/UX craft & frontend performance (the <em>Grid</em>).
         </p>
 
         <!-- Core Focus Pills -->
-        <div class="flex flex-wrap gap-1.5 text-[10px] font-semibold text-slate-400">
-          <span class="px-2.5 py-1 rounded-lg bg-slate-950 border border-slate-800 text-slate-300">⚡ Digital Product Dev</span>
-          <span class="px-2.5 py-1 rounded-lg bg-slate-950 border border-slate-800 text-slate-300">🛠️ Creative Web Engineering</span>
-          <span class="px-2.5 py-1 rounded-lg bg-slate-950 border border-slate-800 text-slate-300">🎨 UI/UX Design Systems</span>
+        <div class="flex flex-wrap gap-1.5 text-[9px] font-semibold text-slate-300">
+          <span class="px-2 py-0.5 rounded-lg bg-slate-950 border border-slate-800">⚡ Digital Product Dev</span>
+          <span class="px-2 py-0.5 rounded-lg bg-slate-950 border border-slate-800">🛠️ Creative Web Engineering</span>
+          <span class="px-2 py-0.5 rounded-lg bg-slate-950 border border-slate-800">🎨 UI/UX Systems</span>
         </div>
 
         <!-- Official Social Directory Handles -->
-        <div class="pt-2 flex flex-wrap items-center justify-between gap-3 text-xs border-t border-slate-800/80">
-          <div class="flex items-center gap-2">
-            <span class="text-[11px] text-slate-400 font-semibold">Universal:</span>
-            <span class="text-[11px] font-mono text-cyan-400 font-bold">@bindugrid</span>
+        <div class="pt-2 flex items-center justify-between text-xs border-t border-slate-800/80">
+          <div class="flex items-center gap-1.5 font-mono text-[11px]">
+            <span class="text-slate-400">Handle:</span>
+            <span class="text-cyan-400 font-bold">@bindugrid</span>
           </div>
 
-          <div class="flex items-center gap-2.5 text-slate-400">
-            <a href="https://youtube.com/@bindugrid" target="_blank" title="YouTube: @bindugrid" class="p-2 rounded-xl bg-slate-950 hover:bg-slate-800 hover:text-rose-400 border border-slate-800 transition-all">
-              <i data-lucide="youtube" class="w-4 h-4"></i>
+          <div class="flex items-center gap-2 text-slate-400">
+            <a href="https://youtube.com/@bindugrid" target="_blank" title="YouTube: @bindugrid" class="p-1.5 rounded-xl bg-slate-950 hover:bg-slate-800 hover:text-rose-400 border border-slate-800 transition-all">
+              <i data-lucide="youtube" class="w-3.5 h-3.5"></i>
             </a>
-            <a href="https://x.com/bindugrid" target="_blank" title="X (Twitter): @bindugrid" class="p-2 rounded-xl bg-slate-950 hover:bg-slate-800 hover:text-sky-400 border border-slate-800 transition-all">
-              <i data-lucide="twitter" class="w-4 h-4"></i>
+            <a href="https://x.com/bindugrid" target="_blank" title="X (Twitter): @bindugrid" class="p-1.5 rounded-xl bg-slate-950 hover:bg-slate-800 hover:text-sky-400 border border-slate-800 transition-all">
+              <i data-lucide="twitter" class="w-3.5 h-3.5"></i>
             </a>
-            <a href="https://instagram.com/bindugrid" target="_blank" title="Instagram: @bindugrid" class="p-2 rounded-xl bg-slate-950 hover:bg-slate-800 hover:text-pink-400 border border-slate-800 transition-all">
-              <i data-lucide="instagram" class="w-4 h-4"></i>
-            </a>
-            <a href="mailto:bindugrid@gmail.com" title="Email: bindugrid@gmail.com" class="p-2 rounded-xl bg-slate-950 hover:bg-slate-800 hover:text-cyan-400 border border-slate-800 transition-all sm:hidden">
-              <i data-lucide="mail" class="w-4 h-4"></i>
+            <a href="https://instagram.com/bindugrid" target="_blank" title="Instagram: @bindugrid" class="p-1.5 rounded-xl bg-slate-950 hover:bg-slate-800 hover:text-pink-400 border border-slate-800 transition-all">
+              <i data-lucide="instagram" class="w-3.5 h-3.5"></i>
             </a>
           </div>
         </div>
@@ -758,13 +881,23 @@
 
     </div>
 
-    <!-- Copyright -->
-    <div class="max-w-7xl mx-auto pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px] text-slate-500">
-      <p>© 2026 Saurashtra Sarees & Keya Fashion. All rights reserved.</p>
-      <p class="flex items-center gap-1.5 font-mono">
-        <span>Engineered by</span>
-        <strong class="text-slate-300">BinduGrid Studio [ØG]</strong>
-      </p>
+    <!-- Bottom Disclaimer & Dynamic Copyright Bar -->
+    <div class="max-w-7xl mx-auto pt-8 space-y-4">
+      
+      <!-- Disclaimer -->
+      <div class="p-4 rounded-2xl bg-slate-900/60 border border-slate-800/80 text-[11px] text-slate-400 leading-relaxed">
+        <strong class="text-slate-300">Disclaimer:</strong> All catalog saree designs, high-resolution model/table photographs, textile colorways, fabric specifications, and trade brandings displayed across this digital showroom are proprietary to <strong id="footerDisclaimerFirm" class="text-white">Saurashtra Sarees</strong>. Authorized wholesale dealers, portal sellers, and catalog distributors are granted permission to share digital assets strictly for customer presentation and bulk order fulfillment. Unauthorized reproduction or trademark infringement is prohibited.
+      </div>
+
+      <!-- Copyright Bar -->
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px] text-slate-500 pt-2 border-t border-slate-800/60">
+        <p id="footerCopyright">Saurashtra Sarees 2026. All rights reserved.</p>
+        <p class="flex items-center gap-1.5 font-mono">
+          <span>Engineered by</span>
+          <strong class="text-slate-300 font-semibold">BinduGrid Studio [ØG]</strong>
+        </p>
+      </div>
+
     </div>
   </footer>
 

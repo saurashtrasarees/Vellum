@@ -306,6 +306,13 @@ function applyFirmTheme() {
   
   const pillLabel = document.getElementById('currentFirmPillLabel');
   if (pillLabel) pillLabel.textContent = `Firm: ${firm.name.split(' ')[0]}`;
+
+  // Footer Dynamic Copyright & Disclaimer
+  const copyrightEl = document.getElementById('footerCopyright');
+  if (copyrightEl) copyrightEl.textContent = `${firm.name} 2026. All rights reserved.`;
+
+  const disclaimerFirmEl = document.getElementById('footerDisclaimerFirm');
+  if (disclaimerFirmEl) disclaimerFirmEl.textContent = firm.name;
 }
 
 // Enforces strict lockdown rules for No. 1, 2, 3
@@ -896,6 +903,12 @@ function handleHashRoute() {
   const screenHome = document.getElementById('screenHome');
   const screenProduct = document.getElementById('screenProduct');
 
+  if (hash.startsWith('#page/')) {
+    const pageKey = hash.replace('#page/', '').trim().toLowerCase();
+    openInfoPage(pageKey);
+    return;
+  }
+
   if (hash.startsWith('#catalog/')) {
     const code = hash.replace('#catalog/', '').trim().toLowerCase();
     const cat = state.catalogs.find(c => c.code.toLowerCase() === code || c.id.toLowerCase() === code);
@@ -1308,3 +1321,405 @@ function showToast(msg) {
     setTimeout(() => toast.classList.add('hidden'), 3000);
   }
 }
+
+// --------------------------------------------------------------------------
+// 11. SHOWROOM INFORMATIONAL PAGES & POLICIES (Footer Links)
+// --------------------------------------------------------------------------
+const INFO_PAGES = {
+  'terms': {
+    title: 'Terms & Conditions 📜',
+    subtitle: 'Showroom Guidelines & Commercial Trade Agreement',
+    render: (firm, user) => `
+      <div class="space-y-4">
+        <p class="leading-relaxed">Welcome to the digital showroom of <strong>${firm.name}</strong>. By browsing, sharing smart links, or booking saree catalogs through this platform, trade buyers and retail clients agree to the terms outlined below.</p>
+        
+        <div class="space-y-3 pt-2">
+          <div class="p-3.5 rounded-2xl bg-slate-950 border border-slate-800">
+            <h5 class="font-bold text-white mb-1">1. Authenticity & Direct Manufacturing</h5>
+            <p class="text-slate-400">All catalogs displayed represent direct production lots woven in our Surat manufacturing units. Fabrics, borders, and blouse cuts comply with verified industrial handloom specifications.</p>
+          </div>
+
+          <div class="p-3.5 rounded-2xl bg-slate-950 border border-slate-800">
+            <h5 class="font-bold text-white mb-1">2. Smart Link Pricing & Roles</h5>
+            <p class="text-slate-400">Customer pricing is tied to the authorized URL tier. Wholesale and reseller rates are trade confidential. Altering parameters to circumvent assigned pricing tiers is strictly monitored and voided.</p>
+          </div>
+
+          <div class="p-3.5 rounded-2xl bg-slate-950 border border-slate-800">
+            <h5 class="font-bold text-white mb-1">3. Color Accuracy Disclaimer</h5>
+            <p class="text-slate-400">While all sarees are shot in professional studio conditions (Model and Table shoots), minor natural shade variations of 5–10% may occur due to diverse display color calibrations.</p>
+          </div>
+
+          <div class="p-3.5 rounded-2xl bg-slate-950 border border-slate-800">
+            <h5 class="font-bold text-white mb-1">4. Order Placement & GST Compliance</h5>
+            <p class="text-slate-400">Orders are booked via your dedicated sales executive <strong>${user.name}</strong>. All dispatches carry formal GST invoices under the standard 5% textile tax classification.</p>
+          </div>
+        </div>
+      </div>
+    `
+  },
+
+  'shipping': {
+    title: 'Shipping Policy 🚚',
+    subtitle: 'Nationwide Insured Dispatch within 24–48 Hours',
+    render: (firm, user) => `
+      <div class="space-y-4">
+        <p class="leading-relaxed"><strong>${firm.name}</strong> operates a centralized automated dispatch hub in Surat, Gujarat, ensuring safe, expedited delivery across all Indian pin codes and export ports.</p>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+          <div class="p-3.5 rounded-2xl bg-slate-950 border border-slate-800">
+            <p class="font-bold text-emerald-400 text-xs mb-1">⚡ Dispatch Speed</p>
+            <p class="text-slate-400">Confirmed orders are packaged and handed to express couriers within 24–48 hours from our Surat warehouse.</p>
+          </div>
+          <div class="p-3.5 rounded-2xl bg-slate-950 border border-slate-800">
+            <p class="font-bold text-sky-400 text-xs mb-1">🛡️ 100% Transit Insured</p>
+            <p class="text-slate-400">Every single consignment and bulk parcel bale is fully insured against theft, loss, or transit damage.</p>
+          </div>
+        </div>
+
+        <div class="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-2">
+          <h5 class="font-bold text-white">Estimated Delivery Timelines:</h5>
+          <ul class="space-y-1.5 text-slate-400">
+            <li>• <strong>Gujarat & Western Zone:</strong> 1 to 2 business days</li>
+            <li>• <strong>Metro Cities (Delhi, Mumbai, Bengaluru, Hyderabad, Chennai, Kolkata):</strong> 2 to 4 business days</li>
+            <li>• <strong>Rest of India (Tier 2/3 Cities & North-East):</strong> 4 to 6 business days</li>
+            <li>• <strong>Bulk Cargo Transport:</strong> V-Trans, TCI Freight, Surat Transport (3 to 7 days depending on destination)</li>
+          </ul>
+        </div>
+      </div>
+    `
+  },
+
+  'return': {
+    title: 'Return Policy 🔄',
+    subtitle: '7-Day Manufacturing Defect Replacement Guarantee',
+    render: (firm) => `
+      <div class="space-y-4">
+        <p class="leading-relaxed">At <strong>${firm.name}</strong>, quality is paramount. Every saree passes a multi-stage inspection for weaving flaws, zari continuity, and blouse length before sealing.</p>
+        
+        <div class="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-200">
+          <h5 class="font-bold mb-1 flex items-center gap-1.5">
+            <i data-lucide="video" class="w-4 h-4"></i> Parcel Opening Video Mandatory
+          </h5>
+          <p class="text-[11px] leading-relaxed">
+            To prevent transit theft and false claims, a continuous 360-degree unboxing video recorded from the sealed box/polybag stage is strictly required for any damage or shortage claim.
+          </p>
+        </div>
+
+        <div class="space-y-2 text-slate-400">
+          <p>• <strong>Eligibility Window:</strong> Return requests for genuine manufacturing defects must be reported within <strong>7 days</strong> of delivery.</p>
+          <p>• <strong>Condition:</strong> Saree must be in unworn, unwashed condition with original brand tags and folded with its unstitched blouse piece intact.</p>
+          <p>• <strong>Non-Returnable:</strong> Minor loose weave threads (inherent to jacquard weaving) or items altered/tailored cannot be returned.</p>
+        </div>
+      </div>
+    `
+  },
+
+  'privacy': {
+    title: 'Privacy Policy 🔒',
+    subtitle: 'Data Protection & Trade Confidentiality Commitment',
+    render: (firm) => `
+      <div class="space-y-4">
+        <p class="leading-relaxed"><strong>${firm.name}</strong> is committed to preserving the trade privacy of our boutique partners, resellers, and direct patrons.</p>
+        
+        <div class="divide-y divide-slate-800 text-slate-400">
+          <div class="py-2.5">
+            <strong class="text-white">1. Zero Third-Party Data Monetization:</strong>
+            <p class="mt-0.5">We do not sell, rent, or trade your contact numbers, business details, or purchasing history to advertising aggregators.</p>
+          </div>
+          <div class="py-2.5">
+            <strong class="text-white">2. Blind Dropshipping Protection:</strong>
+            <p class="mt-0.5">For verified resellers, shipments sent directly to their retail buyers carry white-label sender tags without mill branding or trade rates.</p>
+          </div>
+          <div class="py-2.5">
+            <strong class="text-white">3. Direct Rep Communication:</strong>
+            <p class="mt-0.5">Your inquiries route strictly to your authorized representative's secure mobile link.</p>
+          </div>
+        </div>
+      </div>
+    `
+  },
+
+  'refund': {
+    title: 'Refund Policy 💳',
+    subtitle: 'Transparent Claims & Instant Adjustment Guarantee',
+    render: (firm) => `
+      <div class="space-y-4">
+        <p class="leading-relaxed">All refund transactions are processed with complete commercial transparency by <strong>${firm.name}</strong> accounts desk.</p>
+        
+        <div class="p-3.5 rounded-2xl bg-slate-950 border border-slate-800 space-y-2 text-slate-400">
+          <p>• <strong>Defect Settlements:</strong> If an approved returned saree cannot be replaced due to out-of-stock lots, refunds are processed via UPI or NEFT within <strong>3 business days</strong>.</p>
+          <p>• <strong>Order Cancellations:</strong> Orders cancelled before courier pickup receive immediate 100% refund or ledger credit.</p>
+          <p>• <strong>Ledger Adjustment:</strong> Regular B2B stockists and portal sellers may choose immediate credit adjustment against future catalog bookings.</p>
+        </div>
+      </div>
+    `
+  },
+
+  'esg': {
+    title: 'ESG Policy (Sustainability & Ethics) 🌿',
+    subtitle: 'Environmental, Social & Corporate Governance in Textile Production',
+    render: (firm) => `
+      <div class="space-y-4">
+        <p class="leading-relaxed"><strong>${firm.name}</strong> is dedicated to responsible, sustainable manufacturing across all textile supply chains in Surat, Gujarat.</p>
+        
+        <div class="space-y-3">
+          <div class="p-3.5 rounded-2xl bg-emerald-950/40 border border-emerald-800/60">
+            <h5 class="font-bold text-emerald-300 mb-1">🌿 Environmental (E):</h5>
+            <p class="text-slate-300 text-[11px]">100% Azo-free dyes. Zero direct liquid effluent discharge through closed-loop water treatment plants in Surat finishing mills. Solar-assisted power in modern weaving sheds.</p>
+          </div>
+
+          <div class="p-3.5 rounded-2xl bg-sky-950/40 border border-sky-800/60">
+            <h5 class="font-bold text-sky-300 mb-1">🤝 Social Responsibility (S):</h5>
+            <p class="text-slate-300 text-[11px]">Fair living wages paid to traditional handloom and jacquard artisans. Zero child labor. Clean, ergonomic, well-ventilated working facilities with medical coverage.</p>
+          </div>
+
+          <div class="p-3.5 rounded-2xl bg-purple-950/40 border border-purple-800/60">
+            <h5 class="font-bold text-purple-300 mb-1">⚖️ Corporate Governance (G):</h5>
+            <p class="text-slate-300 text-[11px]">Full statutory GST compliance, anti-tamper smart link transparency, and authentic silk purity standards certified before commercial release.</p>
+          </div>
+        </div>
+      </div>
+    `
+  },
+
+  'about-us': {
+    title: 'About Us 🏛️',
+    subtitle: 'From Surat Weaving Looms to Nationwide Showrooms',
+    render: (firm) => `
+      <div class="space-y-4">
+        <p class="leading-relaxed">
+          Welcome to the world of <strong>${firm.name}</strong>. Operating from Surat, Gujarat—the textile capital of India—our production facilities integrate century-old weaving heritage with cutting-edge jacquard textile engineering.
+        </p>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+          <div class="p-4 rounded-2xl bg-slate-950 border border-slate-800">
+            <h5 class="font-serif font-bold text-amber-300 text-sm mb-1">Saurashtra Sarees</h5>
+            <p class="text-[11px] text-slate-400">"MAKE OCCASION BETTER". Specialists in heritage South Kanjivarams, authentic Gadwal soft silks, Yeola Paithanis, and royal bridal Banarasi brocades.</p>
+          </div>
+          <div class="p-4 rounded-2xl bg-slate-950 border border-slate-800">
+            <h5 class="font-serif font-bold text-sky-300 text-sm mb-1">Keya Fashion</h5>
+            <p class="text-[11px] text-slate-400">"Stop wishing. Start living....". Innovators in lightweight glass organza, fluid dola silks, and high-velocity digital portal catalog designs.</p>
+          </div>
+        </div>
+
+        <p class="text-slate-300 text-xs">
+          Supplying 2,500+ boutique retailers, super-stockists, and online portal sellers across India and worldwide with genuine mill pricing and zero middleman markup.
+        </p>
+      </div>
+    `
+  },
+
+  'track-order': {
+    title: 'Track Consignment 📦',
+    subtitle: 'Live Dispatch Status & Docket Tracking',
+    render: (firm, user) => `
+      <div class="space-y-4">
+        <p class="leading-relaxed">Enter your 10-digit mobile number or Courier AWB / Order ID to check live dispatch and transit status from our Surat warehouse.</p>
+        
+        <div class="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-3">
+          <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-wider">Order ID / Mobile Number / AWB</label>
+          <div class="flex gap-2">
+            <input 
+              type="text" 
+              id="trackInput" 
+              placeholder="e.g. SURAT-89210 or 9879471039" 
+              class="flex-1 px-3.5 py-2.5 bg-slate-900 border border-slate-700 rounded-xl text-xs text-white focus:outline-none focus:border-amber-400 font-mono"
+            >
+            <button onclick="simulateTrackOrder()" class="px-4 py-2.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-xl text-xs uppercase tracking-wider shrink-0 transition-all">
+              Track Status
+            </button>
+          </div>
+          <div id="trackResultBox" class="hidden p-3.5 rounded-xl bg-slate-900 border border-slate-700 text-xs space-y-2 mt-2">
+            <!-- Simulated Result Injected Here -->
+          </div>
+        </div>
+
+        <div class="p-3.5 rounded-2xl bg-slate-950 border border-slate-800 flex items-center justify-between gap-3">
+          <div>
+            <p class="font-bold text-white text-xs">Need instant tracking docket copy?</p>
+            <p class="text-[11px] text-slate-400">Your assigned representative <strong>${user.name}</strong> will share the receipt on WhatsApp.</p>
+          </div>
+          <button onclick="window.open('https://wa.me/${user.whatsapp}?text=' + encodeURIComponent('Hello ${user.name}, please share live tracking docket for my order.'), '_blank')" class="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-bold text-xs shrink-0 flex items-center gap-1.5 shadow-md">
+            <i data-lucide="message-circle" class="w-3.5 h-3.5 fill-current"></i>
+            <span>Ask ${user.name}</span>
+          </button>
+        </div>
+      </div>
+    `
+  },
+
+  'store-locator': {
+    title: 'Store & Warehouse Locator 📍',
+    subtitle: 'Visit Our Showrooms in Surat Textile Market',
+    render: (firm, user) => `
+      <div class="space-y-4">
+        <p class="leading-relaxed">We welcome registered trade partners, boutique owners, and portal sellers to inspect our full catalog collections in person at our central wholesale hub.</p>
+        
+        <div class="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-3">
+          <div class="flex items-start gap-3">
+            <div class="p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-400 shrink-0 mt-0.5">
+              <i data-lucide="building-2" class="w-5 h-5"></i>
+            </div>
+            <div>
+              <h5 class="font-bold text-white text-sm">${firm.name} Central Wholesale Showroom</h5>
+              <p class="text-slate-400 text-xs mt-0.5">Ring Road Textile Market, Near Sahara Darwaja, Surat, Gujarat 395002</p>
+              <div class="flex items-center gap-3 mt-2 text-xs text-amber-300 font-mono">
+                <span>🕒 09:00 AM–07:00 PM (Mon–Sat)</span>
+                <span>•</span>
+                <span>📞 +91 ${user.phone}</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="pt-2 border-t border-slate-800/80 flex items-center gap-2">
+            <a href="https://maps.google.com/?q=Surat+Textile+Market+Ring+Road+Gujarat" target="_blank" class="flex-1 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-center font-bold text-xs flex items-center justify-center gap-1.5 transition-all">
+              <i data-lucide="navigation" class="w-3.5 h-3.5 text-amber-400"></i>
+              <span>Open in Google Maps ↗</span>
+            </a>
+            <a href="tel:+91${user.phone}" class="py-2 px-4 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs flex items-center gap-1.5">
+              <i data-lucide="phone" class="w-3.5 h-3.5"></i>
+              <span>Call Showroom</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    `
+  },
+
+  'bulk-order': {
+    title: 'Bulk Order & Trade Query 💼',
+    subtitle: 'Wholesale Bales, Super-Stockist Packs & Export Orders',
+    render: (firm, user) => `
+      <div class="space-y-4">
+        <p class="leading-relaxed">Looking for 50+, 100+, 250+, or 500+ saree lot packs for weddings, boutique stock, or overseas export? Submit your requirement for instant mill pricing.</p>
+        
+        <div class="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-3.5">
+          <div>
+            <label class="block text-[11px] font-bold text-slate-400 uppercase mb-1.5">1. Target Quantity</label>
+            <div class="grid grid-cols-4 gap-2 text-xs">
+              <button type="button" onclick="selectBulkQty(this, '50 Pcs')" class="bulk-qty-btn py-2 rounded-xl bg-slate-900 border border-slate-700 text-white font-bold hover:border-amber-400 text-center">50 Pcs</button>
+              <button type="button" onclick="selectBulkQty(this, '100 Pcs')" class="bulk-qty-btn py-2 rounded-xl bg-slate-900 border border-slate-700 text-white font-bold hover:border-amber-400 text-center">100 Pcs</button>
+              <button type="button" onclick="selectBulkQty(this, '250 Pcs')" class="bulk-qty-btn py-2 rounded-xl bg-slate-900 border border-slate-700 text-white font-bold hover:border-amber-400 text-center">250 Pcs</button>
+              <button type="button" onclick="selectBulkQty(this, '500+ Pcs')" class="bulk-qty-btn py-2 rounded-xl bg-amber-500 text-slate-950 font-bold border border-amber-400 text-center">500+ Pcs</button>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-[11px] font-bold text-slate-400 uppercase mb-1.5">2. Preferred Collection</label>
+            <input type="text" id="bulkCatInput" placeholder="e.g. Aashvi Gadwal Silk, Paithani, Organza, All Mix" class="w-full px-3.5 py-2.5 bg-slate-900 border border-slate-700 rounded-xl text-xs text-white focus:outline-none focus:border-amber-400">
+          </div>
+
+          <button onclick="sendBulkQueryWhatsApp()" class="w-full py-3.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/30 transition-all">
+            <i data-lucide="message-circle" class="w-4 h-4 fill-current"></i>
+            <span>Submit Bulk Query to ${user.name}</span>
+          </button>
+        </div>
+      </div>
+    `
+  },
+
+  'faqs': {
+    title: 'Frequently Asked Questions (FAQ\'s) ❓',
+    subtitle: 'Everything You Need to Know About Ordering, Dispatch & Fabrics',
+    render: () => `
+      <div class="space-y-3">
+        ${[
+          { q: 'What is the Minimum Order Quantity (MOQ)?', a: 'For wholesale trade rates, our standard MOQ is 1 complete catalog pack (typically 4 to 8 color variants). Single pieces are welcomed at standard retail MRP rate.' },
+          { q: 'How do I place and confirm an order?', a: 'Browse the collection, click "Inquire via WhatsApp", and your assigned sales representative will send you the formal proforma invoice with bank transfer/UPI details.' },
+          { q: 'Do you provide high-definition photos and drape reels for resellers?', a: 'Yes! Every collection has complete 1080p model/table photos and video reels accessible with 1-click Google Drive links.' },
+          { q: 'Do all shipments carry GST tax invoices?', a: 'Yes. 100% of shipments carry formal GST invoices under the standard 5% textile tax classification.' },
+          { q: 'Can you dropship directly to my retail customer?', a: 'Yes! We offer blind dropshipping for verified portal sellers without any manufacturer branding or invoice inside the parcel.' },
+          { q: 'What are your operational and support timings?', a: 'Our sales desk and dispatch hub operate from 09:00 AM to 07:00 PM, Monday through Saturday.' }
+        ].map((item, idx) => `
+          <div class="p-3.5 rounded-2xl bg-slate-950 border border-slate-800 space-y-1.5">
+            <h5 class="font-bold text-white text-xs flex items-center gap-2">
+              <span class="w-5 h-5 rounded-full bg-slate-900 border border-slate-700 flex items-center justify-center text-[10px] text-amber-400 shrink-0 font-mono">${idx+1}</span>
+              <span>${item.q}</span>
+            </h5>
+            <p class="text-slate-400 text-[11px] leading-relaxed pl-7">${item.a}</p>
+          </div>
+        `).join('')}
+      </div>
+    `
+  }
+};
+
+let selectedBulkQuantity = '500+ Pcs';
+
+function selectBulkQty(btn, qty) {
+  selectedBulkQuantity = qty;
+  document.querySelectorAll('.bulk-qty-btn').forEach(b => {
+    b.className = 'bulk-qty-btn py-2 rounded-xl bg-slate-900 border border-slate-700 text-white font-bold hover:border-amber-400 text-center';
+  });
+  btn.className = 'bulk-qty-btn py-2 rounded-xl bg-amber-500 text-slate-950 font-bold border border-amber-400 text-center';
+}
+
+function sendBulkQueryWhatsApp() {
+  const firm = FIRMS[state.activeFirm] || FIRMS.saurashtra;
+  const user = state.activeUser || USER_PROFILES['AR38'];
+  const catPref = document.getElementById('bulkCatInput')?.value || 'Full Catalog Assorted Lot';
+
+  const msg = encodeURIComponent(
+    `Hello ${user.name} (${firm.name}),\n` +
+    `I want a Bulk Wholesale Quote:\n\n` +
+    `📦 Quantity Required: ${selectedBulkQuantity}\n` +
+    `🥻 Preferred Collections: ${catPref}\n` +
+    `🏢 Business Name: \n` +
+    `📍 Delivery City / State: \n\n` +
+    `Please share best factory pricing and dispatch schedule.`
+  );
+  window.open(`https://wa.me/${user.whatsapp}?text=${msg}`, '_blank');
+}
+
+function simulateTrackOrder() {
+  const input = document.getElementById('trackInput')?.value.trim();
+  const box = document.getElementById('trackResultBox');
+  if (!box) return;
+
+  if (!input) {
+    box.innerHTML = `<p class="text-rose-400 font-semibold">Please enter an Order ID or 10-digit mobile number.</p>`;
+    box.classList.remove('hidden');
+    return;
+  }
+
+  const orderNum = input.toUpperCase();
+  box.innerHTML = `
+    <div class="space-y-2">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-1.5">
+        <span class="font-bold text-white">Consignment: ${orderNum}</span>
+        <span class="text-[10px] bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded font-mono">In Transit</span>
+      </div>
+      <p class="text-[11px] text-slate-300">Courier: <strong>Delhivery Express (Air Surface)</strong></p>
+      <div class="space-y-1 text-[11px] text-slate-400 pt-1">
+        <p class="text-emerald-400 font-medium">✓ Dispatched from Surat Central Hub</p>
+        <p class="text-emerald-400 font-medium">✓ Sorted at Regional Logistics Centre</p>
+        <p class="text-amber-400 font-bold">🚚 Out for Delivery to Destination Hub</p>
+      </div>
+      <p class="text-[10px] text-slate-500 pt-1">Estimated Delivery: Within 24-48 Hours</p>
+    </div>
+  `;
+  box.classList.remove('hidden');
+}
+
+function openInfoPage(pageKey) {
+  const page = INFO_PAGES[pageKey];
+  if (!page) return;
+
+  const firm = FIRMS[state.activeFirm] || FIRMS.saurashtra;
+  const user = state.activeUser || USER_PROFILES['AR38'];
+
+  document.getElementById('infoModalTitle').textContent = page.title;
+  document.getElementById('infoModalSubtitle').textContent = `${firm.name} • ${page.subtitle}`;
+  document.getElementById('infoModalContent').innerHTML = page.render(firm, user);
+
+  const modal = document.getElementById('infoModal');
+  if (modal) modal.classList.remove('hidden');
+
+  if (window.lucide) lucide.createIcons();
+}
+
+function closeInfoModal() {
+  const modal = document.getElementById('infoModal');
+  if (modal) modal.classList.add('hidden');
+}
+
