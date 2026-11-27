@@ -123,18 +123,6 @@ const USER_PROFILES = {
   // ------------------------------------------------------------------------
   // 2. Saurashtra Sarees [All Retail Rate]
   // ------------------------------------------------------------------------
-  'AR38': {
-    code: 'AR38',
-    slug: 'arvind',
-    name: 'Arvind Sir',
-    initials: 'AR',
-    title: 'Senior Sales Director',
-    phone: '9824982338',
-    whatsapp: '919824982338',
-    displayPhone: '+91 98249 82338',
-    firm: 'saurashtra',
-    rateAccess: 'retail' // Retail only
-  },
   'NA39': {
     code: 'NA39',
     slug: 'nayan',
@@ -326,7 +314,7 @@ function resolveUrlContext() {
       state.activeUser = USER_PROFILES['KH28'] || Object.values(USER_PROFILES).find(p => p.firm === 'keya');
     } else {
       state.activeFirm = 'saurashtra';
-      state.activeUser = USER_PROFILES['NA39'] || USER_PROFILES['AR38'];
+      state.activeUser = USER_PROFILES['NA39'] || USER_PROFILES['NA39'];
     }
     state.isLocked = false;
     state.currentRole = 'retail';
@@ -486,7 +474,7 @@ function switchFirm(firmId) {
   applyFirmTheme();
   
   // Re-assign default representative for the newly selected firm
-  state.activeUser = firmId === 'keya' ? USER_PROFILES['KH28'] : USER_PROFILES['AR38'];
+  state.activeUser = firmId === 'keya' ? USER_PROFILES['KH28'] : USER_PROFILES['NA39'];
   updateStaffUI();
 
   toggleFirmMenu();
@@ -1350,7 +1338,7 @@ function submitAccessCode() {
   const input = document.getElementById('brandAccessCodeInput');
   const code = (input?.value || '').trim();
   if (!code) {
-    alert('Please enter a valid Staff or Partner Access Code (e.g. NA39, CH33, AR38)');
+    alert('Please enter a valid Staff or Partner Access Code (e.g. NA39, CH33)');
     return;
   }
   unlockCatalogWithCode(code);
@@ -1473,7 +1461,7 @@ function renderPdpScreen() {
   if (!cat) return;
 
   const firm = FIRMS[state.activeFirm] || FIRMS.saurashtra;
-  const user = state.activeUser || USER_PROFILES['AR38'];
+  const user = state.activeUser || USER_PROFILES['NA39'];
   const isAllRatesUser = user.rateAccess === 'all' || state.currentRole === 'all';
 
   // Breadcrumbs
@@ -1811,7 +1799,7 @@ function renderRelatedCatalogs() {
 // --------------------------------------------------------------------------
 function sendStaffWhatsApp(catalogCode, color, rate) {
   const firm = FIRMS[state.activeFirm] || FIRMS.saurashtra;
-  const user = state.activeUser || USER_PROFILES['AR38'];
+  const user = state.activeUser || USER_PROFILES['NA39'];
 
   const msg = encodeURIComponent(
     `Hello ${user.name} (${firm.name}),\n` +
@@ -1839,7 +1827,7 @@ function copyPdpSpecs() {
   const cat = state.activePdpCatalog;
   if (!cat) return;
   const firm = FIRMS[state.activeFirm] || FIRMS.saurashtra;
-  const user = state.activeUser || USER_PROFILES['AR38'];
+  const user = state.activeUser || USER_PROFILES['NA39'];
   const isAllRatesUser = user.rateAccess === 'all' || state.currentRole === 'all';
 
   let priceText = `₹${cat.retailRate}/- (Catalog MRP)`;
@@ -2253,7 +2241,7 @@ function selectBulkQty(btn, qty) {
 
 function sendBulkQueryWhatsApp() {
   const firm = FIRMS[state.activeFirm] || FIRMS.saurashtra;
-  const user = state.activeUser || USER_PROFILES['AR38'];
+  const user = state.activeUser || USER_PROFILES['NA39'];
   const catPref = document.getElementById('bulkCatInput')?.value || 'Full Catalog Assorted Lot';
 
   const msg = encodeURIComponent(
@@ -2303,7 +2291,7 @@ function openInfoPage(pageKey) {
   if (!page) return;
 
   const firm = FIRMS[state.activeFirm] || FIRMS.saurashtra;
-  const user = state.activeUser || USER_PROFILES['AR38'];
+  const user = state.activeUser || USER_PROFILES['NA39'];
 
   document.getElementById('infoModalTitle').textContent = page.title;
   document.getElementById('infoModalSubtitle').textContent = `${firm.name} • ${page.subtitle}`;

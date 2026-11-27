@@ -8,16 +8,19 @@ let adminCatalogs = [];
 let currentStockStatusFilter = 'all';
 
 document.addEventListener('DOMContentLoaded', async () => {
-  renderStaffHub();
-  initDriveFoldersUI();
-  initSheetUI();
-  renderFirmProfilesUI();
-  initDeepLinkUI();
-  renderSavedLinks();
+  try { renderStaffHub(); } catch (e) { console.warn('renderStaffHub error:', e); }
+  try { initDriveFoldersUI(); } catch (e) { console.warn('initDriveFoldersUI error:', e); }
+  try { renderFirmProfilesUI(); } catch (e) { console.warn('renderFirmProfilesUI error:', e); }
+  try { initDeepLinkUI(); } catch (e) { console.warn('initDeepLinkUI error:', e); }
+  try { renderSavedLinks(); } catch (e) { console.warn('renderSavedLinks error:', e); }
+  try { initSheetUI(); } catch (e) { console.warn('initSheetUI error:', e); }
+
   await loadAdminCatalogs();
-  renderShootAssignments();
-  renderStockManager();
-  renderRatesTable();
+
+  try { renderShootAssignments(); } catch (e) { console.warn('renderShootAssignments error:', e); }
+  try { renderStockManager(); } catch (e) { console.warn('renderStockManager error:', e); }
+  try { renderRatesTable(); } catch (e) { console.warn('renderRatesTable error:', e); }
+  try { renderSheetDatabaseTable(); } catch (e) { console.warn('renderSheetDatabaseTable error:', e); }
 
   // Listen for realtime updates from VellumDataAdapter
   window.addEventListener('vellum:drive-updated', () => {
@@ -43,7 +46,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     renderSavedLinks();
   });
 
-  if (window.lucide) lucide.createIcons();
+  if (window.lucide && typeof window.lucide.createIcons === 'function') window.lucide.createIcons();
 });
 
 // --------------------------------------------------------------------------
@@ -61,9 +64,14 @@ function switchTab(tabId) {
       if (btn) {
         btn.className = 'w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-bold bg-amber-100 text-amber-950 border-l-4 border-amber-600 transition-all text-left shadow-xs';
       }
-      if (tabId === 'sheet') {
-        renderSheetDatabaseTable();
-      }
+      // Explicitly trigger active tab render function so data is always fresh and never blank
+      if (tabId === 'hub') renderStaffHub();
+      else if (tabId === 'drive') { initDriveFoldersUI(); renderShootAssignments(); }
+      else if (tabId === 'stock') renderStockManager();
+      else if (tabId === 'rates') renderRatesTable();
+      else if (tabId === 'sheet') renderSheetDatabaseTable();
+      else if (tabId === 'firms') renderFirmProfilesUI();
+      else if (tabId === 'generator') { initDeepLinkUI(); renderSavedLinks(); }
     } else {
       if (content) content.classList.add('hidden');
       if (btn) {
@@ -72,7 +80,7 @@ function switchTab(tabId) {
     }
   });
 
-  if (window.lucide) lucide.createIcons();
+  if (window.lucide && typeof window.lucide.createIcons === 'function') window.lucide.createIcons();
 }
 
 // --------------------------------------------------------------------------
@@ -423,6 +431,10 @@ async function loadAdminCatalogs() {
     const res = await fetch('data/catalogs.json');
     if (res.ok) {
       adminCatalogs = await res.json();
+      try { renderShootAssignments(); } catch (e) {}
+      try { renderStockManager(); } catch (e) {}
+      try { renderRatesTable(); } catch (e) {}
+      try { renderSheetDatabaseTable(); } catch (e) {}
     }
   } catch (err) {
     console.warn('Could not load catalogs for admin:', err);
@@ -888,9 +900,12 @@ function renderFirmProfilesUI() {
   const firmKeys = Object.keys(profiles);
 
   container.innerHTML = firmKeys.map(fId => {
-    const f = profiles[fId];
-    const isKeya = fId === 'keya';
-    const isSaurashtra = fId === 'saurashtra';
+    const f = profiles[fId] || {};
+    const safeId = f.id || fId || 'firm';
+    const isKeya = fId === 'keya' || safeId === 'keya';
+    const isSaurashtra = fId === 'saurashtra' || safeId === 'saurashtra';
+    const safeName = f.name || (isKeya ? 'Keya Fashion' : 'Saurashtra Sarees');
+    const safeEmail = f.email || (isKeya ? 'keyafashion5517@gmail.com' : 'saurashtrasarees@gmail.com');
     const isCore = isKeya || isSaurashtra;
     const borderClass = isKeya ? 'border-sky-300' : isSaurashtra ? 'border-rose-300' : 'border-amber-300';
     const tagBg = isKeya ? 'bg-sky-50 text-sky-800 border-sky-200' : isSaurashtra ? 'bg-rose-50 text-rose-800 border-rose-200' : 'bg-amber-50 text-amber-800 border-amber-200';
@@ -902,11 +917,11 @@ function renderFirmProfilesUI() {
         <!-- Header -->
         <div class="flex items-center justify-between pb-4 border-b border-stone-100">
           <div class="flex items-center gap-3">
-            <img src="${f.logo || 'assets/saurashtra-sarees-logo.jpg'}" alt="${f.name} Logo" class="h-12 w-auto object-contain bg-white p-1 rounded-xl border border-stone-200 shadow-xs">
+            <img src="${f.logo || 'assets/saurashtra-sarees-logo.jpg'}" alt="${safeName} Logo" class="h-12 w-auto object-contain bg-white p-1 rounded-xl border border-stone-200 shadow-xs" onerror="this.onerror=null; this.src='assets/saurashtra-sarees-logo.jpg';">
             <div>
-              <h4 class="font-bold text-stone-900 text-sm">${f.name}</h4>
+              <h4 class="font-bold text-stone-900 text-sm">${safeName}</h4>
               <span class="text-[10px] font-bold uppercase tracking-wider ${tagBg} px-2 py-0.5 rounded-md border">
-                ${f.id.toUpperCase()} FIRM
+                ${safeId.toUpperCase()} FIRM
               </span>
             </div>
           </div>
@@ -931,7 +946,7 @@ function renderFirmProfilesUI() {
         <div class="space-y-3.5 text-xs">
           <div>
             <label class="block text-[11px] font-bold text-stone-700 uppercase mb-1">Firm Display Name</label>
-            <input type="text" id="firmInputName-${fId}" value="${f.name || ''}" class="w-full px-3.5 py-2.5 bg-stone-50 border border-stone-300 rounded-xl font-bold text-stone-800 focus:outline-none focus:border-amber-600">
+            <input type="text" id="firmInputName-${fId}" value="${safeName}" class="w-full px-3.5 py-2.5 bg-stone-50 border border-stone-300 rounded-xl font-bold text-stone-800 focus:outline-none focus:border-amber-600">
           </div>
 
           <div>
@@ -939,14 +954,19 @@ function renderFirmProfilesUI() {
             <input type="text" id="firmInputTagline-${fId}" value="${f.tagline || ''}" class="w-full px-3.5 py-2.5 bg-stone-50 border border-stone-300 rounded-xl text-stone-800 focus:outline-none focus:border-amber-600">
           </div>
 
+          <div>
+            <label class="block text-[11px] font-bold text-stone-700 uppercase mb-1">Official Email Address</label>
+            <input type="email" id="firmInputEmail-${fId}" value="${safeEmail}" class="w-full px-3.5 py-2.5 bg-stone-50 border border-stone-300 rounded-xl font-mono text-stone-800 focus:outline-none focus:border-amber-600">
+          </div>
+
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label class="block text-[11px] font-bold text-stone-700 uppercase mb-1">Primary Support Phone</label>
-              <input type="text" id="firmInputPrimary-${fId}" value="${f.primaryPhone || f.directorPhone || ''}" class="w-full px-3.5 py-2.5 bg-stone-50 border border-stone-300 rounded-xl font-mono text-stone-800 focus:outline-none focus:border-amber-600">
+              <input type="text" id="firmInputPrimary-${fId}" value="${f.primaryPhone || f.directorPhone || '+91 98794 71039'}" class="w-full px-3.5 py-2.5 bg-stone-50 border border-stone-300 rounded-xl font-mono text-stone-800 focus:outline-none focus:border-amber-600">
             </div>
             <div>
               <label class="block text-[11px] font-bold text-stone-700 uppercase mb-1">Order Desk / Secondary Phone</label>
-              <input type="text" id="firmInputOrder-${fId}" value="${f.orderPhone || f.partner1Phone || ''}" class="w-full px-3.5 py-2.5 bg-stone-50 border border-stone-300 rounded-xl font-mono text-stone-800 focus:outline-none focus:border-amber-600">
+              <input type="text" id="firmInputOrder-${fId}" value="${f.orderPhone || f.partner1Phone || '+91 99136 43433'}" class="w-full px-3.5 py-2.5 bg-stone-50 border border-stone-300 rounded-xl font-mono text-stone-800 focus:outline-none focus:border-amber-600">
             </div>
           </div>
 
@@ -957,13 +977,13 @@ function renderFirmProfilesUI() {
 
           <div>
             <label class="block text-[11px] font-bold text-stone-700 uppercase mb-1">Showroom & Support Timings</label>
-            <input type="text" id="firmInputTimings-${fId}" value="${f.timings || '09:00 AM–07:00 PM (Monday–Saturday)'}" class="w-full px-3.5 py-2.5 bg-stone-50 border border-stone-300 rounded-xl text-stone-800 focus:outline-none focus:border-amber-600">
+            <input type="text" id="firmInputTimings-${fId}" value="${f.timings || '10:00 AM – 07:00 PM (Monday–Saturday)'}" class="w-full px-3.5 py-2.5 bg-stone-50 border border-stone-300 rounded-xl text-stone-800 focus:outline-none focus:border-amber-600">
           </div>
 
           <div class="pt-2">
             <button onclick="saveUniversalFirmProfile('${fId}')" class="w-full py-3 rounded-xl ${btnColor} text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-xs">
               <i data-lucide="save" class="w-4 h-4"></i>
-              <span>Save ${f.name} Profile</span>
+              <span>Save ${safeName} Profile</span>
             </button>
           </div>
         </div>
@@ -972,7 +992,7 @@ function renderFirmProfilesUI() {
     `;
   }).join('');
 
-  if (window.lucide) lucide.createIcons();
+  if (window.lucide && typeof window.lucide.createIcons === 'function') window.lucide.createIcons();
 }
 
 function saveUniversalFirmProfile(firmId) {
@@ -980,6 +1000,7 @@ function saveUniversalFirmProfile(firmId) {
 
   const name = document.getElementById(`firmInputName-${firmId}`)?.value.trim();
   const tagline = document.getElementById(`firmInputTagline-${firmId}`)?.value.trim();
+  const email = document.getElementById(`firmInputEmail-${firmId}`)?.value.trim();
   const primaryPhone = document.getElementById(`firmInputPrimary-${firmId}`)?.value.trim();
   const orderPhone = document.getElementById(`firmInputOrder-${firmId}`)?.value.trim();
   const address = document.getElementById(`firmInputAddress-${firmId}`)?.value.trim();
@@ -988,6 +1009,7 @@ function saveUniversalFirmProfile(firmId) {
   const data = {
     name: name || firmId,
     tagline: tagline || '',
+    email: email || '',
     primaryPhone: primaryPhone || '',
     orderPhone: orderPhone || '',
     directorPhone: primaryPhone || '',
@@ -1093,7 +1115,7 @@ function initDeepLinkUI() {
 }
 
 function generateAndSaveLink() {
-  const staff = document.getElementById('genStaffSelect')?.value || 'AR38';
+  const staff = document.getElementById('genStaffSelect')?.value || 'NA39';
   const rateTier = document.getElementById('genRateSelect')?.value || 'retail';
   const shoot = document.getElementById('genShootSelect')?.value || 'all';
   const title = document.getElementById('genCampaignTitle')?.value.trim() || `${staff} Campaign`;
@@ -1102,9 +1124,9 @@ function generateAndSaveLink() {
   const basePath = window.location.pathname.replace('admin.html', '').replace('admin', '');
   
   // Rate suffix logic:
-  // retail -> ?u=AR38
-  // wholesale -> ?u=AR38W
-  // prime -> ?u=AR38P
+  // retail -> ?u=NA39
+  // wholesale -> ?u=NA39W
+  // prime -> ?u=NA39P
   let userParam = staff;
   if (rateTier === 'wholesale') userParam = `${staff}W`;
   else if (rateTier === 'prime') userParam = `${staff}P`;

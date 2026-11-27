@@ -95,19 +95,6 @@ const DEFAULT_STAFF_PROFILES = [
     hasWholesaleLink: true,
     hasPrimeLink: true
   },
-  {
-    code: 'AR38',
-    name: 'Arvind Sir',
-    letter: 'F',
-    phone: '9824982338',
-    displayPhone: '+91 98249 82338',
-    whatsapp: '919824982338',
-    firm: 'saurashtra',
-    firmName: 'Saurashtra Sarees',
-    title: 'Senior Sales Director',
-    hasWholesaleLink: true,
-    hasPrimeLink: true
-  },
 
   // 2. Keya Fashion Representatives
   {
@@ -339,20 +326,30 @@ class VellumDataAdapter {
 
   // 5. Universal Firm Profiles (Keya Fashion, Saurashtra Sarees, and custom firms)
   loadFirmProfiles() {
+    const result = {
+      keya: { ...DEFAULT_FIRM_PROFILES.keya, id: 'keya' },
+      saurashtra: { ...DEFAULT_FIRM_PROFILES.saurashtra, id: 'saurashtra' }
+    };
     try {
       const saved = localStorage.getItem(STORAGE_KEYS.FIRM_PROFILES);
       if (saved) {
         const parsed = JSON.parse(saved);
-        return {
-          keya: { ...DEFAULT_FIRM_PROFILES.keya, ...(parsed.keya || {}) },
-          saurashtra: { ...DEFAULT_FIRM_PROFILES.saurashtra, ...(parsed.saurashtra || {}) },
-          ...parsed
-        };
+        if (parsed && typeof parsed === 'object') {
+          Object.keys(parsed).forEach(k => {
+            if (parsed[k] && typeof parsed[k] === 'object') {
+              result[k] = {
+                ...(result[k] || {}),
+                ...parsed[k],
+                id: k
+              };
+            }
+          });
+        }
       }
     } catch (e) {
       console.warn('Failed to parse firm profiles', e);
     }
-    return { ...DEFAULT_FIRM_PROFILES };
+    return result;
   }
 
   saveFirmProfiles(profiles) {
@@ -367,14 +364,29 @@ class VellumDataAdapter {
     }
   }
 
+  saveFirmProfile(firmId, data) {
+    return this.updateFirm(firmId, data);
+  }
+
   updateFirm(firmId, data) {
     const current = this.loadFirmProfiles();
     current[firmId] = {
       ...(current[firmId] || { id: firmId }),
       ...data,
+      id: firmId,
       lastUpdated: new Date().toISOString()
     };
     return this.saveFirmProfiles(current);
+  }
+
+  deleteFirmProfile(firmId) {
+    if (firmId === 'keya' || firmId === 'saurashtra') return false;
+    const current = this.loadFirmProfiles();
+    if (current[firmId]) {
+      delete current[firmId];
+      return this.saveFirmProfiles(current);
+    }
+    return false;
   }
 
   // 6. Sales Staff Profiles (Full CRUD)
