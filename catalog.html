@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="referrer" content="no-referrer">
+  <title id="pageTitle">Saurashtra Sarees | Curated Wholesale Lookbook</title>
+  
+  <!-- Google Fonts: Playfair Display, Cormorant Garamond & Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Playfair+Display:ital,wght@0,500;0,700;0,900;1,500;1,700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <!-- Vellum Data Engine (Master Profiles) -->
+  <script src="data-adapter.js"></script>
+  
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="styles.css">
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            serif: ['"Playfair Display"', 'Cormorant Garamond', 'Georgia', 'serif'],
+            display: ['"Cormorant Garamond"', 'Georgia', 'serif'],
+            sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif']
+          },
+          colors: {
+            brand: {
+              maroon: '#8b1d40',
+              maroondark: '#5e0f28',
+              maroonlight: '#fbf0f3',
+              gold: '#d4af37',
+              golddark: '#b38e22',
+              goldlight: '#fcf8e8',
+              sky: '#0284c7',
+              skydark: '#0369a1',
+              skylight: '#f0f9ff',
+              dark: '#1c1917'
+            }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body id="appBody" class="theme-saurashtra min-h-screen flex flex-col font-sans bg-[#fdfbf7] text-stone-800 antialiased selection:bg-amber-200 selection:text-amber-950">
+
+  <!-- Top Announcement & Staff Attribution Bar -->
+  <div id="topAnnouncementBar" class="bg-gradient-to-r from-stone-950 via-[#5e0f28] to-stone-950 text-white text-xs font-medium py-2.5 px-4 transition-colors duration-300 border-b border-amber-400/30">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2 text-center sm:text-left">
+      <div class="flex items-center gap-2">
+        <span class="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+        <span id="announcementFirmText" class="font-bold tracking-wide text-amber-200">Saurashtra Sarees</span>
+        <span class="text-stone-400">•</span>
+        <span id="announcementTagline" class="text-stone-200 italic font-serif">Make Occasion Better</span>
+        <span class="hidden md:inline text-stone-400">•</span>
+        <span class="hidden md:inline text-stone-300">Surat Mill Direct Wholesale</span>
+      </div>
+
+      <!-- Dedicated Staff Representative Info -->
+      <div id="staffAttributionBox" class="flex items-center gap-2 text-[11px] bg-white/10 px-3.5 py-1 rounded-full backdrop-blur-xs border border-white/15">
+        <i data-lucide="user-check" class="w-3.5 h-3.5 text-amber-300"></i>
+        <span>Representative: <strong id="staffNameDisplay" class="text-white">Direct Sales Desk</strong></span>
+        <span class="text-stone-400">|</span>
+        <a id="staffCallLink" href="tel:+919879471039" class="hover:underline flex items-center gap-1 font-semibold text-amber-300">
+          <i data-lucide="phone" class="w-3 h-3"></i> <span id="staffPhoneDisplay">+91 98794 71039</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Navigation Bar -->
+  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md shadow-xs border-b border-amber-200/80 transition-all duration-300">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
+      
+      <!-- Brand Logo & Firm Selector -->
+      <div class="flex items-center gap-3.5 cursor-pointer" onclick="navigateToHome()">
+        <img id="firmLogoImg" src="assets/saurashtra-sarees-logo.jpg" alt="Firm Logo" class="h-12 w-auto object-contain max-w-[140px] sm:max-w-[180px] transition-transform hover:scale-102">
+        <div class="hidden md:block border-l border-amber-300/80 pl-3">
+          <h1 id="headerFirmName" class="font-serif text-lg font-extrabold tracking-tight text-stone-900 leading-tight">Saurashtra Sarees</h1>
+          <p id="headerFirmTagline" class="text-[10px] uppercase tracking-widest text-amber-800 font-bold -mt-0.5">Wholesale Showroom</p>
+        </div>
+      </div>
+
+      <!-- Center: Shoot Switcher (All by default, Model, Table) -->
+      <div class="hidden lg:flex items-center bg-stone-100 p-1 rounded-2xl border border-stone-200/90 shadow-inner">
+        <button id="btnShootAll" onclick="setShootType('all')" class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all shadow-xs bg-white text-stone-900">
+          <span>🌟</span>
+          <span>All (132 Collections)</span>
+        </button>
+        <button id="btnShootModel" onclick="setShootType('model')" class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-medium text-stone-600 hover:text-stone-900 transition-all">
+          <span>👗</span>
+          <span>Model Shoot (45 Volumes)</span>
+        </button>
+        <button id="btnShootTable" onclick="setShootType('table')" class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-medium text-stone-600 hover:text-stone-900 transition-all">
+          <span>🪑</span>
+          <span>Table Shoot (87 Volumes)</span>
+        </button>
+      </div>
+
+      <!-- Right: Role Pricing Tier, Firm Switcher & Admin Link -->
+      <div class="flex items-center gap-2 sm:gap-3">
+        
+        <!-- Firm Quick Switcher Dropdown (Conditionally hidden for locked staff links) -->
+        <div id="firmSwitcherContainer" class="relative">
+          <button onclick="toggleFirmMenu()" class="flex items-center gap-1.5 px-2.5 py-2 bg-stone-100 hover:bg-stone-200/80 rounded-xl text-xs font-semibold text-stone-700 transition-all border border-stone-200">
+            <i data-lucide="building-2" class="w-3.5 h-3.5 text-stone-500"></i>
+            <span id="currentFirmPillLabel" class="hidden sm:inline">Firm: Saurashtra</span>
+            <i data-lucide="chevron-down" class="w-3 h-3 text-stone-500"></i>
+          </button>
+          <div id="firmMenu" class="hidden absolute right-0 mt-2 w-52 bg-white rounded-2xl shadow-2xl border border-stone-200 py-2 z-50 animate-fadeIn">
+            <div class="px-3.5 py-1.5 border-b border-stone-100 text-[10px] font-bold text-stone-400 uppercase tracking-wider">Switch Brand Theme</div>
+            <button onclick="switchFirm('saurashtra')" class="w-full text-left px-3.5 py-2 text-xs hover:bg-stone-50 flex items-center justify-between font-semibold text-stone-800">
+              <span>Saurashtra Sarees</span>
+              <span class="w-2.5 h-2.5 rounded-full bg-[#8b1d40]"></span>
+            </button>
+            <button onclick="switchFirm('keya')" class="w-full text-left px-3.5 py-2 text-xs hover:bg-stone-50 flex items-center justify-between font-semibold text-stone-800">
+              <span>Keya Fashion</span>
+              <span class="w-2.5 h-2.5 rounded-full bg-brand-sky"></span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Role Pricing Dropdown (Conditionally hidden for locked retail users) -->
+        <div id="roleDropdownContainer" class="relative">
+          <button id="btnRoleDropdown" onclick="toggleRoleMenu()" class="flex items-center gap-1.5 px-3 py-2 bg-amber-50/90 hover:bg-amber-100 border border-amber-300/80 rounded-xl text-xs font-bold text-amber-900 transition-all shadow-xs">
+            <i data-lucide="shield-check" class="w-3.5 h-3.5 text-amber-700"></i>
+            <span id="currentRoleLabel">Catalog MRP</span>
+            <i data-lucide="chevron-down" class="w-3 h-3 text-amber-800"></i>
+          </button>
+
+          <div id="roleMenu" class="hidden absolute right-0 mt-2 w-64 bg-white rounded-2xl shadow-2xl border border-stone-200 py-2 z-50 animate-fadeIn">
+            <div class="px-4 py-2 border-b border-stone-100">
+              <p class="text-[10px] font-bold text-stone-400 uppercase tracking-wider">Pricing Tier Active</p>
+              <p class="text-[11px] text-stone-600 mt-0.5">Rates dynamically adjust on-screen</p>
+            </div>
+            <button onclick="setRole('prime')" class="w-full text-left px-4 py-2.5 text-xs hover:bg-stone-50 flex items-center justify-between font-semibold text-stone-800">
+              <div class="flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+                <span>Prime Rate</span>
+              </div>
+              <span class="text-[10px] bg-amber-50 text-amber-800 px-1.5 py-0.5 rounded font-bold border border-amber-300">Tier 1 (P)</span>
+            </button>
+            <button onclick="setRole('wholesale')" class="w-full text-left px-4 py-2.5 text-xs hover:bg-stone-50 flex items-center justify-between font-semibold text-stone-800">
+              <div class="flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                <span>Wholesale / Stockist</span>
+              </div>
+              <span class="text-[10px] bg-emerald-50 text-emerald-700 px-1.5 py-0.5 rounded font-bold border border-emerald-300">Tier 2 (W)</span>
+            </button>
+            <button onclick="setRole('retail')" class="w-full text-left px-4 py-2.5 text-xs hover:bg-stone-50 flex items-center justify-between font-semibold text-stone-800">
+              <div class="flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-purple-500"></span>
+                <span>Retail / MRP</span>
+              </div>
+              <span class="text-[10px] bg-purple-50 text-purple-700 px-1.5 py-0.5 rounded font-bold border border-purple-300">Tier 3 (Default)</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Super-Admin Portal Link -->
+        <a id="adminHeaderBtn" href="admin.html" title="Open Super-Admin Portal" class="p-2.5 rounded-xl border border-stone-200 hover:bg-stone-100 text-stone-600 transition-all flex items-center gap-1.5 text-xs font-semibold">
+          <i data-lucide="settings" class="w-4 h-4"></i>
+          <span class="hidden xl:inline">Super-Admin</span>
+        </a>
+
+      </div>
+
+    </div>
+
+    <!-- Mobile Shoot Switcher -->
+    <div class="lg:hidden px-4 py-2 bg-stone-100/90 border-t border-stone-200 flex items-center justify-center gap-1.5">
+      <button onclick="setShootType('all')" id="mobileBtnAll" class="flex-1 py-1.5 rounded-lg text-xs font-bold bg-white text-stone-900 shadow-xs text-center">
+        🌟 All (132)
+      </button>
+      <button onclick="setShootType('model')" id="mobileBtnModel" class="flex-1 py-1.5 rounded-lg text-xs font-medium text-stone-600 hover:text-stone-900 text-center">
+        👗 Model (45)
+      </button>
+      <button onclick="setShootType('table')" id="mobileBtnTable" class="flex-1 py-1.5 rounded-lg text-xs font-medium text-stone-600 hover:text-stone-900 text-center">
+        🪑 Table (87)
+      </button>
+    </div>
+  </header>
+
+  <!-- ====================================================================== -->
+  <!-- SCREEN 1: B2B CATALOG SHOWROOM                                         -->
+  <!-- ====================================================================== -->
+  <div id="screenCatalogShowroom" class="view-screen flex-1 flex flex-col">
+    
+    <!-- Imperial Haute Couture Ethnic Wear Header -->
+    <section class="cloud-hero-wrap py-8 sm:py-12 px-4 sm:px-6 lg:px-8 border-b-2 border-amber-300/80 shadow-xs">
+      
+      <!-- Floating Colorful Atmospheric Cloud Orbs -->
+      <div class="cloud-orb cloud-orb-peach"></div>
+      <div class="cloud-orb cloud-orb-cyan"></div>
+      <div class="cloud-orb cloud-orb-rose"></div>
+      <div class="cloud-orb cloud-orb-gold"></div>
+
+      <div class="relative max-w-4xl mx-auto text-center space-y-4 z-10">
+        
+        <!-- Imperial Crest / Atelier Badge -->
+        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/95 backdrop-blur-md border border-amber-300 shadow-xs text-stone-800 text-xs font-black">
+          <span class="text-amber-600 text-sm">👑</span>
+          <span id="heroFirmTag" class="text-amber-950 font-black tracking-wide uppercase text-[11px]">Saurashtra Sarees Atelier</span>
+          <span class="text-amber-300">•</span>
+          <span class="text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-300 font-bold text-[10px] flex items-center gap-1">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping"></span>
+            Direct Surat Mill
+          </span>
+        </div>
+
+        <!-- Imperial Main Title & Craft Subtitle -->
+        <div class="space-y-1.5">
+          <h1 class="font-serif text-2xl sm:text-4xl lg:text-5xl font-black text-stone-900 tracking-tight leading-tight">
+            Curated Imperial Saree Collections
+          </h1>
+          <p class="text-xs sm:text-sm text-stone-700 max-w-2xl mx-auto leading-relaxed font-medium">
+            Surat mill direct wholesale lookbook. Featuring haute couture model runway drapes and authentic flat-lay table weaves for boutiques, stockists, and global connoisseurs.
+          </p>
+        </div>
+
+        <!-- Trust & Mill Direct Assurances -->
+        <div class="pt-2 flex flex-wrap items-center justify-center gap-2 text-[11px] font-semibold text-stone-700">
+          <span class="px-3 py-1 rounded-full bg-white/90 border border-stone-200 shadow-xs">🏛️ Magob, Surat Direct Mill</span>
+          <span class="px-3 py-1 rounded-full bg-white/90 border border-stone-200 shadow-xs">📦 100% Verified Handloom Lots</span>
+          <span class="px-3 py-1 rounded-full bg-white/90 border border-stone-200 shadow-xs">📷 Model & Table Shoot HD Visuals</span>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Advanced Multi-Filter & Search Bar (With Multi-Select Fabric Dropdown) -->
+    <section class="sticky top-20 z-30 bg-white/95 backdrop-blur-md border-b border-amber-200/90 py-3 px-4 sm:px-6 lg:px-8 shadow-xs">
+      <div class="max-w-7xl mx-auto space-y-2.5">
+        
+        <!-- Controls Grid: Search, Shoot, Price, Multi-Select Fabric, Sort -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-2.5 items-center text-xs">
+          
+          <!-- Search Input (lg:col-span-3) -->
+          <div class="relative lg:col-span-3">
+            <i data-lucide="search" class="w-4 h-4 text-stone-400 absolute left-3 top-1/2 -translate-y-1/2"></i>
+            <input 
+              type="text" 
+              id="searchInput" 
+              oninput="handleSearch(this.value)" 
+              placeholder="Search catalog, color, design code..." 
+              class="w-full pl-9 pr-8 py-2 text-xs bg-stone-50 border border-stone-300 rounded-xl focus:outline-none focus:border-amber-600 transition-all font-medium text-stone-800"
+            >
+            <button id="btnClearSearch" onclick="clearSearch()" class="hidden absolute right-2.5 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-700">
+              <i data-lucide="x" class="w-3.5 h-3.5"></i>
+            </button>
+          </div>
+
+          <!-- Shoot Type Filter (lg:col-span-2) -->
+          <div class="relative lg:col-span-2">
+            <select id="shootSelectFilter" onchange="setShootType(this.value)" class="w-full bg-stone-50 border border-stone-300 rounded-xl px-2.5 py-2 text-xs font-bold text-stone-800 focus:outline-none focus:border-amber-600">
+              <option value="all">🌟 All Shoots (132)</option>
+              <option value="model">👗 Model Shoot (45)</option>
+              <option value="table">🪑 Table Shoot (87)</option>
+            </select>
+          </div>
+
+          <!-- Price Range Filter: =<499, 500-999, 1000-1499, 1500-1999, 2000=< (lg:col-span-2) -->
+          <div class="relative lg:col-span-2">
+            <select id="priceRangeFilter" onchange="setPriceRange(this.value)" class="w-full bg-stone-50 border border-stone-300 rounded-xl px-2.5 py-2 text-xs font-bold text-amber-900 focus:outline-none focus:border-amber-600">
+              <option value="all">💰 All Price Ranges</option>
+              <option value="under500">≤ ₹499 (Budget)</option>
+              <option value="500-999">₹500 – ₹999 (Fast Moving)</option>
+              <option value="1000-1499">₹1,000 – ₹1,499 (Festive)</option>
+              <option value="1500-1999">₹1,500 – ₹1,999 (Pure Silk)</option>
+              <option value="above2000">≥ ₹2,000 (Bridal Haute)</option>
+            </select>
+          </div>
+
+          <!-- MULTI-SELECT FABRIC CATEGORY DROPDOWN (lg:col-span-3) -->
+          <div id="fabricDropdownContainer" class="relative lg:col-span-3">
+            <button 
+              id="fabricDropdownBtn" 
+              type="button" 
+              onclick="toggleFabricDropdown(event)" 
+              class="w-full flex items-center justify-between bg-stone-50 hover:bg-stone-100 border border-stone-300 rounded-xl px-3 py-2 text-xs font-bold text-stone-800 transition-all focus:outline-none focus:border-amber-600 shadow-xs"
+            >
+              <div class="flex items-center gap-1.5 truncate">
+                <span>🧵</span>
+                <span id="fabricDropdownBtnLabel">All Fabrics (132)</span>
+              </div>
+              <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-stone-500 shrink-0"></i>
+            </button>
+
+            <!-- Floating Multi-Select Menu -->
+            <div 
+              id="fabricDropdownMenu" 
+              class="hidden absolute left-0 sm:left-auto right-0 top-full mt-1.5 w-72 sm:w-80 bg-white rounded-2xl shadow-2xl border border-amber-300/90 p-3.5 z-50 multiselect-dropdown-menu animate-fadeIn max-h-96 overflow-y-auto"
+            >
+              <!-- Popover Header -->
+              <div class="flex items-center justify-between pb-2 mb-2 border-b border-stone-100">
+                <span class="text-[11px] font-black uppercase text-amber-950 tracking-wider">Select Fabrics / Weaves</span>
+                <div class="flex items-center gap-2">
+                  <button type="button" onclick="selectAllFabrics()" class="text-[10px] font-bold text-amber-800 hover:text-amber-950 hover:underline">Select All</button>
+                  <span class="text-stone-300">|</span>
+                  <button type="button" onclick="clearAllFabrics()" class="text-[10px] font-bold text-rose-700 hover:text-rose-900 hover:underline">Clear</button>
+                </div>
+              </div>
+
+              <!-- Filter Search Inside Dropdown -->
+              <div class="relative mb-2">
+                <i data-lucide="search" class="w-3.5 h-3.5 text-stone-400 absolute left-2.5 top-1/2 -translate-y-1/2"></i>
+                <input 
+                  type="text" 
+                  id="fabricSearchSubinput" 
+                  oninput="filterFabricOptions(this.value)" 
+                  placeholder="Quick search fabrics..." 
+                  class="w-full pl-8 pr-2 py-1 text-[11px] bg-stone-50 border border-stone-200 rounded-lg focus:outline-none focus:border-amber-600"
+                >
+              </div>
+
+              <!-- Checkbox List -->
+              <div id="fabricCheckboxList" class="space-y-1 max-h-56 overflow-y-auto pr-1">
+                <!-- Rendered dynamically by app.js -->
+              </div>
+
+              <!-- Footer summary & apply -->
+              <div class="pt-2 mt-2 border-t border-stone-100 flex items-center justify-between">
+                <span id="fabricSelectionSummary" class="text-[10px] font-bold text-stone-500">All Fabrics Selected</span>
+                <button type="button" onclick="closeFabricDropdown()" class="px-3 py-1 bg-[#8b1d40] text-white text-[11px] font-bold rounded-lg hover:bg-[#721533] transition-colors">
+                  Apply Filter
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sort Select (lg:col-span-2) -->
+          <div class="relative lg:col-span-2">
+            <select id="sortSelect" onchange="handleSort(this.value)" class="w-full bg-stone-50 border border-stone-300 rounded-xl px-2.5 py-2 text-xs font-bold text-stone-700 focus:outline-none focus:border-amber-600">
+              <option value="newest">Featured / Newest</option>
+              <option value="price-asc">Price: Low to High</option>
+              <option value="price-desc">Price: High to Low</option>
+              <option value="name-asc">Name: A to Z</option>
+            </select>
+          </div>
+
+        </div>
+
+        <!-- Active Filters Bar & Live Count Status -->
+        <div class="flex flex-wrap items-center justify-between gap-2 pt-1 border-t border-stone-100 text-xs">
+          <div class="flex items-center gap-2">
+            <span id="catalogCountLabel" class="font-extrabold text-stone-800">Showing 132 Collections (45 Model • 87 Table)</span>
+            <div id="activeFilterTagsContainer" class="flex flex-wrap items-center gap-1.5">
+              <!-- Rendered dynamically by app.js -->
+            </div>
+          </div>
+
+          <button id="btnResetFilters" onclick="resetFilters()" class="hidden text-[11px] font-bold text-rose-700 hover:text-rose-900 bg-rose-50 hover:bg-rose-100 px-2.5 py-1 rounded-lg border border-rose-200 transition-all flex items-center gap-1">
+            <i data-lucide="rotate-ccw" class="w-3 h-3"></i>
+            <span>Reset All Filters</span>
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Catalog Showcase Grid -->
+    <main class="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+      
+      <!-- Empty State -->
+      <div id="emptyState" class="hidden text-center py-20">
+        <div class="w-16 h-16 mx-auto rounded-full bg-stone-100 flex items-center justify-center text-stone-400 mb-4">
+          <i data-lucide="search-x" class="w-8 h-8"></i>
+        </div>
+        <h3 class="font-serif text-xl font-bold text-stone-800">No Matching Sarees Found</h3>
+        <p class="text-xs text-stone-500 mt-1 max-w-sm mx-auto">Try clearing your search query, selecting multiple fabrics, or switching between Model and Table shoot filters.</p>
+        <button onclick="resetFilters()" class="mt-4 px-4 py-2 bg-stone-900 text-white rounded-xl text-xs font-bold hover:bg-stone-800 transition-all">
+          Reset All Filters
+        </button>
+      </div>
+
+      <!-- Catalog Cards Grid (Strict 3:4 Aspect Ratio) -->
+      <div id="catalogGrid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+        <!-- Rendered dynamically by app.js -->
+      </div>
+
+    </main>
+
+  </div>
+
+  <!-- ====================================================================== -->
+  <!-- SCREEN 2: PRODUCT DETAIL VIEW (Shopify-Style PDP)                       -->
+  <!-- ====================================================================== -->
+  <div id="screenProduct" class="view-screen hidden flex-1 flex flex-col bg-white">
+    
+    <!-- Breadcrumb & Back Navigation -->
+    <div class="border-b border-stone-200/80 bg-stone-50/70 py-3.5 px-4 sm:px-6 lg:px-8">
+      <div class="max-w-7xl mx-auto flex items-center justify-between text-xs">
+        <button onclick="navigateToHome()" class="flex items-center gap-1.5 font-bold text-stone-800 hover:text-[#8b1d40] transition-colors py-1 px-2.5 rounded-lg hover:bg-white border border-transparent hover:border-stone-200">
+          <i data-lucide="arrow-left" class="w-4 h-4"></i>
+          <span>Back to All Catalogues</span>
+        </button>
+
+        <div class="hidden sm:flex items-center gap-2 text-stone-500">
+          <span onclick="navigateToHome()" class="hover:underline cursor-pointer">Catalogues</span>
+          <span>/</span>
+          <span id="pdpBreadcrumbCategory" class="hover:underline cursor-pointer">Saree</span>
+          <span>/</span>
+          <span id="pdpBreadcrumbTitle" class="font-bold text-stone-800">Collection</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Product Layout (Shopify 2-Column Grid) -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
+        
+        <!-- Left: Media Showcase (7 Columns) -->
+        <div class="lg:col-span-7 space-y-4">
+          
+          <!-- Shoot View Selector Pill & Direct Specific Catalog Google Drive Routing -->
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div class="flex items-center flex-1 bg-amber-50/70 p-1 rounded-2xl border border-amber-200/90 shadow-xs">
+              <button id="pdpBtnShootAll" onclick="setPdpShoot('all')" class="flex-1 py-1.5 rounded-xl text-xs font-bold transition-all shadow-xs bg-white text-stone-900">
+                🌟 All Visuals
+              </button>
+              <button id="pdpBtnShootModel" onclick="setPdpShoot('model')" class="flex-1 py-1.5 rounded-xl text-xs font-medium text-stone-600 hover:text-stone-900 transition-all">
+                👗 Model Shoot
+              </button>
+              <button id="pdpBtnShootTable" onclick="setPdpShoot('table')" class="flex-1 py-1.5 rounded-xl text-xs font-medium text-stone-600 hover:text-stone-900 transition-all">
+                🪑 Table Shoot
+              </button>
+            </div>
+
+            <!-- Dedicated Specific Catalog Google Drive Folder Link -->
+            <a 
+              id="pdpShootDriveLink" 
+              href="#" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              class="px-3.5 py-1.5 rounded-xl bg-white border border-amber-300 text-amber-900 text-[11px] font-bold hover:bg-amber-50 flex items-center justify-center gap-1.5 shadow-xs transition-all shrink-0"
+            >
+              <i data-lucide="folder-open" class="w-3.5 h-3.5 text-amber-700"></i>
+              <span id="pdpShootDriveText">Open Catalog Drive Folder ↗</span>
+            </a>
+          </div>
+
+          <!-- Main Zoomable Hero Photo Container (Strict 3:4 Aspect Ratio) -->
+          <div class="relative aspect-[3/4] bg-stone-100 rounded-3xl overflow-hidden border border-amber-200/80 group flex items-center justify-center shadow-lg">
+            <img 
+              id="pdpHeroImage" 
+              src="" 
+              referrerpolicy="no-referrer" 
+              alt="Saree View" 
+              class="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-108"
+            >
+
+            <!-- Floating Video Reel Button -->
+            <button id="pdpVideoBtn" onclick="playCurrentVideo()" class="hidden absolute bottom-5 right-5 px-4 py-2.5 bg-stone-950/85 hover:bg-black backdrop-blur-md text-white rounded-2xl text-xs font-bold flex items-center gap-2 shadow-2xl transition-all border border-white/20">
+              <i data-lucide="play" class="w-4 h-4 fill-current text-amber-400"></i>
+              <span>Watch Saree Reel Video</span>
+            </button>
+
+            <!-- Image Index Badge -->
+            <div id="pdpImageIndexBadge" class="absolute top-4 left-4 px-3 py-1 bg-white/90 backdrop-blur-md rounded-full text-[10px] font-bold text-stone-800 shadow-sm border border-stone-200">
+              Photo 1 of 8
+            </div>
+
+            <!-- Shoot Type Badge -->
+            <div id="pdpShootBadge" class="absolute top-4 right-4 px-3 py-1 bg-stone-900/80 text-white backdrop-blur-md rounded-full text-[10px] font-bold shadow-sm">
+              Model Shoot
+            </div>
+          </div>
+
+          <!-- Horizontal Thumbnails Strip (Strict 3:4 Aspect Ratio) -->
+          <div class="space-y-1.5">
+            <div class="flex items-center justify-between text-[11px] text-stone-500 font-bold px-1">
+              <span>Colorway Variations & Angle Views</span>
+              <span id="pdpThumbCount">8 Angles</span>
+            </div>
+            <div id="pdpThumbnailsRow" class="flex gap-2.5 overflow-x-auto pb-2 scrollbar-thin">
+              <!-- Rendered dynamically by app.js -->
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Right: Commercial Specifications & Ordering Desk (5 Columns) -->
+        <div class="lg:col-span-5 space-y-6">
+          
+          <div class="space-y-2 border-b border-stone-100 pb-5">
+            <div class="flex items-center gap-2">
+              <span id="pdpCategoryBadge" class="px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-900 border border-amber-200 text-[10px] font-extrabold uppercase tracking-wide">
+                Gadwal Silk
+              </span>
+              <span id="pdpDesignCountBadge" class="text-xs text-stone-500 font-bold">
+                8 Colorway Designs
+              </span>
+            </div>
+            <h2 id="pdpTitle" class="font-serif text-3xl font-extrabold text-stone-900 tracking-tight leading-tight">
+              Aashvi Vol 1
+            </h2>
+            <p id="pdpSubtitle" class="text-xs text-stone-600 leading-relaxed">
+              Direct Surat mill manufacturing. Premium ethnic drape with contrast zari border and matching running blouse.
+            </p>
+          </div>
+
+          <!-- Commercial Pricing Section (Prime, Wholesale, Retail) -->
+          <div class="p-5 rounded-3xl bg-gradient-to-br from-amber-50/70 via-stone-50 to-orange-50/50 border border-amber-200/90 shadow-sm space-y-4">
+            <div class="flex items-baseline justify-between">
+              <div>
+                <p id="pdpActiveRoleLabel" class="text-[10px] uppercase font-black text-amber-800 tracking-wider">
+                  Active Price Rate
+                </p>
+                <div class="flex items-baseline gap-2 mt-0.5">
+                  <span id="pdpPriceDisplay" class="font-serif text-3xl font-black text-stone-900">₹725</span>
+                  <span class="text-xs text-stone-500 font-medium">/ saree (GST Extra)</span>
+                </div>
+              </div>
+              <span id="pdpRoleBadge" class="px-2.5 py-1 rounded-xl bg-amber-100 text-amber-950 font-bold text-xs border border-amber-300">
+                Tier Active
+              </span>
+            </div>
+
+            <!-- Full Tier Rate Breakdown Matrix (Prime, Wholesale, Retail) -->
+            <div id="pdpRateBreakdown" class="grid grid-cols-3 gap-2 pt-3 border-t border-amber-200/80 text-center">
+              <div class="bg-white/80 p-2 rounded-xl border border-amber-200">
+                <p class="text-[9px] uppercase font-bold text-stone-500">1. Prime (P)</p>
+                <p id="ratePrimeDisplay" class="font-bold text-xs text-amber-900">₹675</p>
+              </div>
+              <div class="bg-white/80 p-2 rounded-xl border border-amber-200">
+                <p class="text-[9px] uppercase font-bold text-stone-500">2. Wholesale (W)</p>
+                <p id="rateWholesaleDisplay" class="font-bold text-xs text-emerald-800">₹725</p>
+              </div>
+              <div class="bg-white/80 p-2 rounded-xl border border-amber-200">
+                <p class="text-[9px] uppercase font-bold text-stone-500">3. Retail / MRP</p>
+                <p id="rateRetailDisplay" class="font-bold text-xs text-purple-900">₹1,150</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Colorway Swatches with Design Codes -->
+          <div class="space-y-3">
+            <div class="flex items-center justify-between">
+              <label class="text-xs font-bold text-stone-900 uppercase tracking-wide">
+                Available Colorways & Design Codes
+              </label>
+              <span id="pdpActiveColorwayName" class="text-xs font-bold text-[#8b1d40]">
+                Design #1
+              </span>
+            </div>
+            <div id="pdpColorSwatchesContainer" class="flex flex-wrap gap-2.5">
+              <!-- Rendered dynamically by app.js -->
+            </div>
+          </div>
+
+          <!-- Order Actions -->
+          <div class="space-y-2.5 pt-2">
+            <!-- WhatsApp Order Inquiry Button -->
+            <button 
+              id="pdpWhatsAppBtn" 
+              onclick="inquireCatalogWhatsApp()" 
+              class="w-full py-3.5 px-4 rounded-2xl bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-2.5 shadow-md hover:shadow-lg transition-all"
+            >
+              <i data-lucide="message-circle" class="w-4 h-4"></i>
+              <span id="pdpWhatsAppBtnText">Order Inquiry on WhatsApp</span>
+            </button>
+
+            <!-- Direct Call Representative Button -->
+            <a 
+              id="pdpCallBtn" 
+              href="tel:+919879471039" 
+              class="w-full py-3 px-4 rounded-2xl bg-white hover:bg-stone-50 border-2 border-stone-200 text-stone-800 font-bold text-xs flex items-center justify-center gap-2 transition-all shadow-xs"
+            >
+              <i data-lucide="phone" class="w-3.5 h-3.5 text-stone-600"></i>
+              <span id="pdpCallBtnText">Call Sales Representative (+91 98794 71039)</span>
+            </a>
+          </div>
+
+          <!-- Verified Catalog Specifications (From .txt file) -->
+          <div class="space-y-3 pt-4 border-t border-stone-100 text-xs">
+            <h4 class="font-bold text-stone-900 uppercase tracking-wider text-[11px]">
+              Technical Weave Specifications
+            </h4>
+            <div class="grid grid-cols-2 gap-2.5 bg-stone-50 p-4 rounded-2xl border border-stone-200">
+              <div>
+                <span class="text-stone-500 block text-[10px] uppercase font-bold">Fabric Base</span>
+                <span id="specFabric" class="font-bold text-stone-800">Soft Gadwal Silk</span>
+              </div>
+              <div>
+                <span class="text-stone-500 block text-[10px] uppercase font-bold">Zari & Border</span>
+                <span id="specWork" class="font-bold text-stone-800">Contrast Weaving Zari</span>
+              </div>
+              <div>
+                <span class="text-stone-500 block text-[10px] uppercase font-bold">Cut Length</span>
+                <span id="specCut" class="font-bold text-stone-800">6.30 Meters (With Blouse)</span>
+              </div>
+              <div>
+                <span class="text-stone-500 block text-[10px] uppercase font-bold">Dispatch Location</span>
+                <span class="font-bold text-stone-800">Magob, Surat Central Hub</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </main>
+
+  </div>
+
+  <!-- VIDEO MODAL DIALOG -->
+  <div id="videoModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fadeIn">
+    <div class="relative w-full max-w-3xl bg-stone-950 rounded-3xl overflow-hidden border border-white/20 shadow-2xl space-y-3 p-4">
+      <div class="flex items-center justify-between text-white px-2">
+        <h4 id="videoModalTitle" class="font-serif font-bold text-sm">Saree Reel Video</h4>
+        <button onclick="closeVideoModal()" class="p-1 rounded-full bg-white/10 hover:bg-white/20 text-white">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+      <div class="aspect-video bg-black rounded-2xl overflow-hidden flex items-center justify-center">
+        <iframe id="videoIframe" src="" class="w-full h-full" allow="autoplay" allowfullscreen></iframe>
+      </div>
+      <div class="flex items-center justify-between text-xs text-stone-400 px-2">
+        <span>Recorded directly at Surat studio</span>
+        <a id="videoDriveLink" href="#" target="_blank" class="text-amber-400 hover:underline flex items-center gap-1 font-bold">
+          <span>Open Video in Drive ↗</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- DYNAMIC REPRESENTATIVE & MASTER FOOTER -->
+  <footer id="dynamicMasterFooter" class="bg-stone-950 text-white border-t-2 border-amber-500/40 pt-12 pb-8 px-4 sm:px-6 lg:px-8 mt-auto">
+    <div class="max-w-7xl mx-auto space-y-8">
+      
+      <!-- Representative & Support Live Desk Card -->
+      <div class="bg-gradient-to-r from-stone-900 to-[#4a0b1f] p-6 sm:p-8 rounded-3xl border border-amber-400/40 shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div class="space-y-2">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-xs font-bold">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span>Live Sales & Support Desk</span>
+          </div>
+          <h3 id="footerRepHeading" class="font-serif text-xl sm:text-2xl font-bold text-white">
+            Assigned Sales Representative
+          </h3>
+          <p id="footerRepDetails" class="text-xs text-stone-300 max-w-xl leading-relaxed">
+            All dispatches carry formal GST invoices under Surat mill manufacturing terms. Contact your dedicated representative for bulk bookings, custom packing, and priority logistics.
+          </p>
+        </div>
+
+        <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 shrink-0">
+          <a id="footerCallRepBtn" href="tel:+919879471039" class="px-5 py-3 rounded-xl bg-amber-50 hover:bg-white text-stone-900 font-bold text-xs flex items-center justify-center gap-2 shadow-md transition-all">
+            <i data-lucide="phone-call" class="w-4 h-4 text-[#8b1d40]"></i>
+            <span id="footerCallRepText">Call Sales Desk</span>
+          </a>
+          <a id="footerWhatsAppRepBtn" href="https://api.whatsapp.com/send?phone=919879471039" target="_blank" rel="noopener noreferrer" class="px-5 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-md transition-all">
+            <i data-lucide="message-circle" class="w-4 h-4"></i>
+            <span>WhatsApp Desk</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Mill Address & Coordinates -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-xs text-stone-300 border-t border-stone-800 pt-6">
+        <div>
+          <h5 id="footerFirmName" class="font-serif font-bold text-sm text-white">Saurashtra Sarees</h5>
+          <p id="footerFirmTagline" class="text-amber-400 text-[10px] uppercase font-bold tracking-wider mt-0.5">Make Occasion Better</p>
+          <p class="text-stone-400 mt-2">Central Mill Manufacturing & Super Stockist Distribution Hub.</p>
+        </div>
+
+        <div>
+          <h6 class="font-bold text-amber-400 uppercase tracking-wider text-[11px]">Surat Atelier Coordinates</h6>
+          <p id="footerFirmAddress" class="mt-1 leading-relaxed">
+            A-1001, Rajhans Fabrizo, Near Polaris Textile City, BRTS Road, Magob, Surat, Gujarat – 395010
+          </p>
+          <p id="footerFirmTimings" class="text-stone-400 mt-1">10:00 AM – 07:00 PM (Monday–Saturday)</p>
+        </div>
+
+        <div>
+          <h6 class="font-bold text-amber-400 uppercase tracking-wider text-[11px]">Direct Management Desks</h6>
+          <p class="mt-1">Nayan Sir (NA39): <a href="tel:+919879471039" class="text-white hover:underline font-bold">+91 98794 71039</a></p>
+          <p>Chetan Sir (CH33): <a href="tel:+919913643433" class="text-white hover:underline font-bold">+91 99136 43433</a></p>
+          <p>Arvind Sir (AR38): <a href="tel:+919824982338" class="text-white hover:underline font-bold">+91 98249 82338</a></p>
+        </div>
+      </div>
+
+      <div class="border-t border-stone-900 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-stone-500">
+        <p>© 1998–2026 Saurashtra Sarees. All Rights Reserved. Surat, Gujarat, India.</p>
+        <div class="flex items-center gap-4">
+          <a href="index.html" class="text-stone-400 hover:text-white transition-colors">Atelier Heritage</a>
+          <span>•</span>
+          <a href="admin.html" class="text-stone-400 hover:text-white transition-colors">Super-Admin</a>
+        </div>
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- Main Application Script -->
+  <script src="app.js"></script>
+</body>
+</html>

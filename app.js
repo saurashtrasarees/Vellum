@@ -174,6 +174,7 @@ const state = {
   catalogs: [],
   filteredCatalogs: [],
   selectedCategory: 'all',
+  selectedCategories: [], // Multi-select fabric weaves array
   selectedPriceRange: 'all',
   searchQuery: '',
   sortBy: 'newest',
@@ -253,7 +254,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   renderCategoryPills();
   applyFiltersAndRender();
   
-  if (state.hasAttachedCode) {
+  if (document.getElementById('screenCatalogShowroom')) {
+    showCatalogShowroom();
+  } else if (state.hasAttachedCode) {
     showCatalogShowroom();
   } else {
     showBrandLanding();
@@ -737,7 +740,7 @@ function getColorwayDesigns(cat) {
 // --------------------------------------------------------------------------
 function renderCategoryPills() {
   const fabricSelect = document.getElementById('fabricSelectFilter');
-  if (!fabricSelect) return;
+  const checkboxList = document.getElementById('fabricCheckboxList');
 
   const counts = {};
   state.catalogs.forEach(c => {
@@ -747,15 +750,138 @@ function renderCategoryPills() {
   });
 
   const categories = Object.keys(counts).sort();
-  fabricSelect.innerHTML = `
-    <option value="all">🧵 All Fabrics (${state.catalogs.length})</option>
-    ${categories.map(cat => `
-      <option value="${cat}" ${state.selectedCategory === cat ? 'selected' : ''}>
-        ${cat} (${counts[cat]})
-      </option>
-    `).join('')}
-  `;
+
+  if (fabricSelect) {
+    fabricSelect.innerHTML = `
+      <option value="all">🧵 All Fabrics (${state.catalogs.length})</option>
+      ${categories.map(cat => `
+        <option value="${cat}" ${state.selectedCategory === cat ? 'selected' : ''}>
+          ${cat} (${counts[cat]})
+        </option>
+      `).join('')}
+    `;
+  }
+
+  if (checkboxList) {
+    checkboxList.innerHTML = categories.map(cat => {
+      const isChecked = state.selectedCategories.length === 0 || state.selectedCategories.includes(cat);
+      return `
+        <label class="flex items-center justify-between p-2 hover:bg-amber-50 rounded-xl cursor-pointer text-xs font-semibold text-stone-800 transition-colors">
+          <div class="flex items-center gap-2.5">
+            <input 
+              type="checkbox" 
+              value="${cat}" 
+              class="fabric-option-checkbox accent-[#8b1d40] rounded w-4 h-4 cursor-pointer" 
+              onchange="handleFabricCheckbox('${cat}', this.checked)" 
+              ${isChecked ? 'checked' : ''}
+            >
+            <span>${cat}</span>
+          </div>
+          <span class="text-[10px] bg-stone-100 text-stone-600 px-2 py-0.5 rounded-full font-bold">${counts[cat]}</span>
+        </label>
+      `;
+    }).join('');
+    updateFabricDropdownUI();
+  }
 }
+
+function toggleFabricDropdown(event) {
+  if (event) {
+    event.stopPropagation();
+  }
+  const menu = document.getElementById('fabricDropdownMenu');
+  if (menu) {
+    menu.classList.toggle('hidden');
+  }
+}
+
+function closeFabricDropdown() {
+  const menu = document.getElementById('fabricDropdownMenu');
+  if (menu) menu.classList.add('hidden');
+}
+
+function handleFabricCheckbox(cat, isChecked) {
+  const checkboxes = document.querySelectorAll('.fabric-option-checkbox');
+  const totalOptions = checkboxes.length;
+  
+  if (state.selectedCategories.length === 0) {
+    state.selectedCategories = Array.from(checkboxes).map(cb => cb.value);
+  }
+
+  if (isChecked) {
+    if (!state.selectedCategories.includes(cat)) {
+      state.selectedCategories.push(cat);
+    }
+  } else {
+    state.selectedCategories = state.selectedCategories.filter(c => c !== cat);
+  }
+
+  if (state.selectedCategories.length === totalOptions) {
+    state.selectedCategories = [];
+  }
+
+  updateFabricDropdownUI();
+  applyFiltersAndRender();
+}
+
+function selectAllFabrics() {
+  state.selectedCategories = [];
+  const checkboxes = document.querySelectorAll('.fabric-option-checkbox');
+  checkboxes.forEach(cb => cb.checked = true);
+  updateFabricDropdownUI();
+  applyFiltersAndRender();
+}
+
+function clearAllFabrics() {
+  state.selectedCategories = ['__NONE__'];
+  const checkboxes = document.querySelectorAll('.fabric-option-checkbox');
+  checkboxes.forEach(cb => cb.checked = false);
+  updateFabricDropdownUI();
+  applyFiltersAndRender();
+}
+
+function filterFabricOptions(query) {
+  const q = (query || '').toLowerCase().trim();
+  const labels = document.querySelectorAll('#fabricCheckboxList label');
+  labels.forEach(lbl => {
+    const text = lbl.textContent.toLowerCase();
+    if (text.includes(q)) {
+      lbl.classList.remove('hidden');
+    } else {
+      lbl.classList.add('hidden');
+    }
+  });
+}
+
+function updateFabricDropdownUI() {
+  const btnLabel = document.getElementById('fabricDropdownBtnLabel');
+  const summary = document.getElementById('fabricSelectionSummary');
+  const count = state.selectedCategories.length;
+  const checkboxes = document.querySelectorAll('.fabric-option-checkbox');
+  const totalOptions = checkboxes.length;
+
+  if (count === 0 || count === totalOptions) {
+    if (btnLabel) btnLabel.textContent = `All Fabrics (${state.catalogs.length})`;
+    if (summary) summary.textContent = `All Fabrics (${totalOptions}) Active`;
+  } else if (state.selectedCategories.includes('__NONE__') || count === 0) {
+    if (btnLabel) btnLabel.textContent = `Select Fabrics (0)`;
+    if (summary) summary.textContent = `0 Fabrics Selected`;
+  } else if (count === 1) {
+    if (btnLabel) btnLabel.textContent = `${state.selectedCategories[0]} (1)`;
+    if (summary) summary.textContent = `1 Fabric Selected`;
+  } else {
+    if (btnLabel) btnLabel.textContent = `${count} Fabrics Selected`;
+    if (summary) summary.textContent = `${count} Fabrics Selected`;
+  }
+}
+
+document.addEventListener('click', function(e) {
+  const container = document.getElementById('fabricDropdownContainer');
+  const menu = document.getElementById('fabricDropdownMenu');
+  if (container && menu && !container.contains(e.target)) {
+    menu.classList.add('hidden');
+  }
+});
 
 function setCategory(cat) {
   state.selectedCategory = cat;
@@ -859,7 +985,14 @@ function renderActiveFilterTags() {
     `);
   }
 
-  if (state.selectedCategory !== 'all') {
+  if (state.selectedCategories && state.selectedCategories.length > 0 && !state.selectedCategories.includes('__NONE__')) {
+    tags.push(`
+      <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-purple-100 text-purple-900 border border-purple-300 shadow-2xs">
+        🧵 ${state.selectedCategories.length} Fabrics Selected
+        <button onclick="selectAllFabrics()" class="hover:text-red-600 font-bold ml-1">✕</button>
+      </span>
+    `);
+  } else if (state.selectedCategory !== 'all') {
     tags.push(`
       <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-purple-100 text-purple-900 border border-purple-300 shadow-2xs">
         🧵 ${state.selectedCategory}
@@ -895,8 +1028,14 @@ function applyFiltersAndRender() {
     list = list.filter(c => c.shootType === 'table' || !c.has2mb);
   }
 
-  // 2. Fabric Category Filter
-  if (state.selectedCategory !== 'all') {
+  // 2. Fabric Category Filter (Multi-Select Support)
+  if (state.selectedCategories && state.selectedCategories.length > 0) {
+    if (state.selectedCategories.includes('__NONE__')) {
+      list = [];
+    } else {
+      list = list.filter(c => state.selectedCategories.includes(c.category));
+    }
+  } else if (state.selectedCategory !== 'all') {
     list = list.filter(c => c.category === state.selectedCategory);
   }
 
@@ -992,21 +1131,16 @@ function renderCatalogGrid() {
     const primeRate = cat.resellerRate;
 
     const catStock = window.vellumAdapter ? window.vellumAdapter.getCatalogStock(cat.id) : 'in_stock';
-    let stockBadgeHtml = `
-      <span class="text-[9px] sm:text-[10px] font-bold px-1.5 sm:px-2 py-0.5 rounded-full bg-emerald-600 text-white shadow-xs flex items-center gap-1">
-        <span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
-        <span class="hidden sm:inline">Ready Lot</span>
-        <span class="sm:hidden">Ready</span>
-      </span>`;
+    let stockBadgeHtml = '';
     if (catStock === 'temp_out_of_stock') {
       stockBadgeHtml = `
-        <span class="text-[9px] sm:text-[10px] font-bold px-1.5 sm:px-2 py-0.5 rounded-full bg-amber-500 text-amber-950 shadow-xs flex items-center gap-1">
+        <span class="text-[9px] sm:text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-500 text-amber-950 shadow-xs flex items-center gap-1">
           <span class="w-1.5 h-1.5 rounded-full bg-amber-950 animate-pulse"></span>
           <span>⏳ Weaving</span>
         </span>`;
     } else if (catStock === 'perm_out_of_stock') {
       stockBadgeHtml = `
-        <span class="text-[9px] sm:text-[10px] font-bold px-1.5 sm:px-2 py-0.5 rounded-full bg-rose-600 text-white shadow-xs flex items-center gap-1">
+        <span class="text-[9px] sm:text-[10px] font-bold px-2 py-0.5 rounded-full bg-rose-600 text-white shadow-xs flex items-center gap-1">
           <span>🚫 Sold Out</span>
         </span>`;
     }
@@ -1201,7 +1335,9 @@ function navigateToProduct(catalogCode) {
 
 function navigateToHome() {
   window.location.hash = '';
-  if (state.hasAttachedCode) {
+  if (document.getElementById('screenCatalogShowroom')) {
+    showCatalogShowroom();
+  } else if (state.hasAttachedCode) {
     showCatalogShowroom();
   } else {
     showBrandLanding();
@@ -1242,10 +1378,14 @@ function showBrandLanding() {
   const screenBrand = document.getElementById('screenBrandHome');
   const screenShowroom = document.getElementById('screenCatalogShowroom');
   const screenProduct = document.getElementById('screenProduct');
-  if (screenBrand) screenBrand.classList.remove('hidden');
-  if (screenShowroom) screenShowroom.classList.add('hidden');
-  if (screenProduct) screenProduct.classList.add('hidden');
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  if (screenBrand) {
+    screenBrand.classList.remove('hidden');
+    if (screenShowroom) screenShowroom.classList.add('hidden');
+    if (screenProduct) screenProduct.classList.add('hidden');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  } else if (screenShowroom) {
+    showCatalogShowroom();
+  }
 }
 
 function showCatalogShowroom() {
@@ -1365,11 +1505,20 @@ function renderPdpScreen() {
     if (singlePriceCard) {
       singlePriceCard.classList.remove('hidden');
       const activeRate = getActiveRate(cat);
-      document.getElementById('pdpPrice').textContent = `₹${activeRate}`;
+      const pdpPriceEl = document.getElementById('pdpPrice') || document.getElementById('pdpPriceDisplay');
+      if (pdpPriceEl) pdpPriceEl.textContent = `₹${activeRate}`;
       let roleLabel = 'Catalog MRP / Retail Rate';
       if (state.currentRole === 'wholesale') roleLabel = 'Wholesale Price (Direct Mill)';
       else if (state.currentRole === 'prime') roleLabel = 'Prime Wholesale Rate';
-      document.getElementById('pdpRoleName').textContent = roleLabel;
+      const roleNameEl = document.getElementById('pdpRoleName') || document.getElementById('pdpRoleBadge');
+      if (roleNameEl) roleNameEl.textContent = roleLabel;
+
+      const ratePrimeEl = document.getElementById('ratePrimeDisplay');
+      const rateWsEl = document.getElementById('rateWholesaleDisplay');
+      const rateRetEl = document.getElementById('rateRetailDisplay');
+      if (ratePrimeEl) ratePrimeEl.textContent = `₹${cat.resellerRate}`;
+      if (rateWsEl) rateWsEl.textContent = `₹${cat.wholesaleRate}`;
+      if (rateRetEl) rateRetEl.textContent = `₹${cat.retailRate}`;
     }
   }
 
@@ -1465,14 +1614,14 @@ function updatePdpShootUI() {
     const shootType = (window.vellumAdapter && window.vellumAdapter.getCatalogShoot(cat.id)) || (cat.has2mb ? 'model' : 'table');
     const driveConfig = window.vellumAdapter ? window.vellumAdapter.loadDriveConfig() : {};
     const isModel = state.activePdpShoot === 'model' || (state.activePdpShoot === 'all' && shootType === 'model');
-    const targetUrl = isModel ? driveConfig.modelShootFolderUrl : driveConfig.tableShootFolderUrl;
+    const targetUrl = cat.driveFolderUrl || (isModel ? driveConfig.modelShootFolderUrl : driveConfig.tableShootFolderUrl);
     
     const driveLink = document.getElementById('pdpShootDriveLink');
     const driveText = document.getElementById('pdpShootDriveText');
     if (driveLink && targetUrl) {
       driveLink.href = targetUrl;
       if (driveText) {
-        driveText.textContent = isModel ? 'Open Model Shoot Drive Folder ↗' : 'Open Table Shoot Drive Folder ↗';
+        driveText.textContent = `Open ${cat.name} Drive Folder ↗`;
       }
     }
   }
@@ -1589,10 +1738,13 @@ function updatePdpGallery() {
     }
   }
 
-  // Thumbnails Strip (No Saree Pose Names - Clean Visual Numbering)
-  const thumbStrip = document.getElementById('pdpThumbStrip');
+  // Thumbnails Strip (Support both pdpThumbnailsRow and pdpThumbStrip)
+  const thumbStrip = document.getElementById('pdpThumbnailsRow') || document.getElementById('pdpThumbStrip');
+  const countLabel = document.getElementById('pdpThumbCount') || document.getElementById('pdpAngleCount');
+  if (countLabel) {
+    countLabel.textContent = `${realUrls.length} HD Photos Available`;
+  }
   if (thumbStrip) {
-    document.getElementById('pdpAngleCount').textContent = `${realUrls.length} HD Photos Available`;
     
     thumbStrip.innerHTML = realUrls.map((imgUrl, i) => {
       const isSelected = i === state.activePdpImageIndex;
