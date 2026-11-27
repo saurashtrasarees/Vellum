@@ -284,23 +284,28 @@ class VellumDataAdapter {
     return (this.stockOverrides.colors && this.stockOverrides.colors[key]) || defaultStatus;
   }
 
-  // 3. Dual Firm Profiles Management (Keya Fashion & Saurashtra Sarees)
+  // 3. Multi-Firm Profiles Management (Keya Fashion & Saurashtra Sarees permanently preserved)
   loadFirmProfiles() {
+    let savedObj = {};
     try {
       const saved = localStorage.getItem(STORAGE_KEYS.FIRM_PROFILES);
-      if (saved) return { ...DEFAULT_FIRM_PROFILES, ...JSON.parse(saved) };
+      if (saved) savedObj = JSON.parse(saved);
     } catch (e) {
       console.warn('Failed to parse firm profiles from localStorage', e);
     }
-    return { ...DEFAULT_FIRM_PROFILES };
+    // Deeply preserve DEFAULT_FIRM_PROFILES so keya & saurashtra can NEVER be lost or deleted
+    const merged = { ...DEFAULT_FIRM_PROFILES };
+    Object.keys(savedObj).forEach(k => {
+      if (savedObj[k] && typeof savedObj[k] === 'object') {
+        merged[k] = { ...(merged[k] || {}), ...savedObj[k], id: k };
+      }
+    });
+    return merged;
   }
 
   saveFirmProfiles(profiles) {
-    this.firmProfiles = {
-      ...this.firmProfiles,
-      ...profiles,
-      lastUpdated: new Date().toISOString()
-    };
+    const merged = { ...DEFAULT_FIRM_PROFILES, ...profiles, lastUpdated: new Date().toISOString() };
+    this.firmProfiles = merged;
     try {
       localStorage.setItem(STORAGE_KEYS.FIRM_PROFILES, JSON.stringify(this.firmProfiles));
       window.dispatchEvent(new CustomEvent('vellum:firm-updated', { detail: this.firmProfiles }));
@@ -324,13 +329,23 @@ class VellumDataAdapter {
   }
 
   deleteFirmProfile(firmId) {
-    const current = this.loadFirmProfiles();
-    if (Object.keys(current).length <= 1) {
-      console.warn('Cannot delete the last remaining firm');
+    if (firmId === 'keya' || firmId === 'saurashtra') {
+      console.warn('Foundational firms (Keya Fashion, Saurashtra Sarees) are permanently locked and cannot be deleted.');
       return false;
     }
+    const current = this.loadFirmProfiles();
     delete current[firmId];
-    return this.saveFirmProfiles(current);
+    this.firmProfiles = { ...DEFAULT_FIRM_PROFILES, ...current, lastUpdated: new Date().toISOString() };
+    delete this.firmProfiles[firmId];
+    try {
+      localStorage.setItem(STORAGE_KEYS.FIRM_PROFILES, JSON.stringify(this.firmProfiles));
+      window.dispatchEvent(new CustomEvent('vellum:firm-updated', { detail: this.firmProfiles }));
+      this.syncToSupabaseIfConnected('firm_profiles', this.firmProfiles);
+      return true;
+    } catch (e) {
+      console.error('Error deleting firm profile:', e);
+      return false;
+    }
   }
 
   getFirmProfile(firmId) {
@@ -479,7 +494,8 @@ class VellumDataAdapter {
               window.dispatchEvent(new CustomEvent('vellum:stock-updated', { detail: this.stockOverrides }));
             }
             if (payload.new && payload.new.key === 'firm_profiles') {
-              this.firmProfiles = payload.new.value;
+              const merged = { ...DEFAULT_FIRM_PROFILES, ...(payload.new.value || {}) };
+              this.firmProfiles = merged;
               localStorage.setItem(STORAGE_KEYS.FIRM_PROFILES, JSON.stringify(this.firmProfiles));
               window.dispatchEvent(new CustomEvent('vellum:firm-updated', { detail: this.firmProfiles }));
             }

@@ -148,10 +148,10 @@ function renderStaffHub() {
                   </p>
                   <p class="text-[11px] text-stone-500 mt-0.5 font-medium">${staff.title || 'Catalog Representative'}</p>
 
-                  <!-- 3 Direct Smart Links with 1-Click Copy & Open -->
+                  <!-- Selective Smart Links: Retail (Default) + On-Demand Wholesale & Prime -->
                   <div class="mt-4 space-y-2 pt-3 border-t border-amber-100">
                     
-                    <!-- 1. Retail MRP Link -->
+                    <!-- 1. Retail MRP Link (Always Active Default) -->
                     <div class="p-2.5 bg-stone-50 rounded-xl border border-stone-200/90 space-y-1">
                       <div class="flex items-center justify-between">
                         <span class="text-[9px] uppercase font-bold text-purple-800 bg-purple-50 px-1.5 py-0.5 rounded border border-purple-200">Retail MRP (Default)</span>
@@ -166,35 +166,59 @@ function renderStaffHub() {
                       </a>
                     </div>
 
-                    <!-- 2. Wholesale Rate Link -->
-                    <div class="p-2.5 bg-emerald-50/70 rounded-xl border border-emerald-200 space-y-1">
-                      <div class="flex items-center justify-between">
-                        <span class="text-[9px] uppercase font-bold text-emerald-800 bg-emerald-100 px-1.5 py-0.5 rounded border border-emerald-300">Wholesale B2B</span>
-                        <div class="flex items-center gap-1.5">
-                          <button onclick="copyToClipboard('${wholesaleLink}', 'Wholesale link for ${staff.code}W copied!')" class="text-[10px] text-emerald-800 hover:text-emerald-950 font-bold">Copy</button>
-                          <span class="text-emerald-300">•</span>
-                          <a href="${wholesaleLink}" target="_blank" class="text-[10px] text-emerald-800 hover:text-emerald-950 font-bold">Open ↗</a>
+                    <!-- 2. Wholesale Rate Link (Shown ONLY when granted by Admin) -->
+                    ${staff.hasWholesaleLink ? `
+                      <div class="p-2.5 bg-emerald-50/70 rounded-xl border border-emerald-300 space-y-1">
+                        <div class="flex items-center justify-between">
+                          <span class="text-[9px] uppercase font-bold text-emerald-800 bg-emerald-100 px-1.5 py-0.5 rounded border border-emerald-300">Wholesale B2B</span>
+                          <div class="flex items-center gap-1.5">
+                            <button onclick="copyToClipboard('${wholesaleLink}', 'Wholesale link for ${staff.code}W copied!')" class="text-[10px] text-emerald-800 hover:text-emerald-950 font-bold">Copy</button>
+                            <span class="text-emerald-300">•</span>
+                            <a href="${wholesaleLink}" target="_blank" class="text-[10px] text-emerald-800 hover:text-emerald-950 font-bold">Open ↗</a>
+                            <span class="text-emerald-300">•</span>
+                            <button onclick="toggleStaffRateLink('${staff.code}', 'wholesale', false)" title="Revoke Wholesale Link" class="text-[10px] text-rose-600 hover:underline font-bold">Revoke</button>
+                          </div>
                         </div>
+                        <a href="${wholesaleLink}" target="_blank" class="block text-[11px] font-mono text-emerald-800 hover:underline truncate font-bold">
+                          ?u=${staff.code}W
+                        </a>
                       </div>
-                      <a href="${wholesaleLink}" target="_blank" class="block text-[11px] font-mono text-emerald-800 hover:underline truncate font-bold">
-                        ?u=${staff.code}W
-                      </a>
-                    </div>
+                    ` : ''}
 
-                    <!-- 3. Prime Rate Link -->
-                    <div class="p-2.5 bg-amber-50/80 rounded-xl border border-amber-300 space-y-1">
-                      <div class="flex items-center justify-between">
-                        <span class="text-[9px] uppercase font-bold text-amber-900 bg-amber-200 px-1.5 py-0.5 rounded border border-amber-400">Prime Exclusive</span>
-                        <div class="flex items-center gap-1.5">
-                          <button onclick="copyToClipboard('${primeLink}', 'Prime link for ${staff.code}P copied!')" class="text-[10px] text-amber-900 hover:text-amber-950 font-bold">Copy</button>
-                          <span class="text-amber-300">•</span>
-                          <a href="${primeLink}" target="_blank" class="text-[10px] text-amber-900 hover:text-amber-950 font-bold">Open ↗</a>
+                    <!-- 3. Prime Rate Link (Shown ONLY when granted by Admin) -->
+                    ${staff.hasPrimeLink ? `
+                      <div class="p-2.5 bg-amber-50/80 rounded-xl border border-amber-300 space-y-1">
+                        <div class="flex items-center justify-between">
+                          <span class="text-[9px] uppercase font-bold text-amber-900 bg-amber-200 px-1.5 py-0.5 rounded border border-amber-400">Prime Exclusive</span>
+                          <div class="flex items-center gap-1.5">
+                            <button onclick="copyToClipboard('${primeLink}', 'Prime link for ${staff.code}P copied!')" class="text-[10px] text-amber-900 hover:text-amber-950 font-bold">Copy</button>
+                            <span class="text-amber-300">•</span>
+                            <a href="${primeLink}" target="_blank" class="text-[10px] text-amber-900 hover:text-amber-950 font-bold">Open ↗</a>
+                            <span class="text-amber-300">•</span>
+                            <button onclick="toggleStaffRateLink('${staff.code}', 'prime', false)" title="Revoke Prime Link" class="text-[10px] text-rose-600 hover:underline font-bold">Revoke</button>
+                          </div>
                         </div>
+                        <a href="${primeLink}" target="_blank" class="block text-[11px] font-mono text-amber-900 hover:underline truncate font-bold">
+                          ?u=${staff.code}P
+                        </a>
                       </div>
-                      <a href="${primeLink}" target="_blank" class="block text-[11px] font-mono text-amber-900 hover:underline truncate font-bold">
-                        ?u=${staff.code}P
-                      </a>
-                    </div>
+                    ` : ''}
+
+                    <!-- Grant Extra Rate Links On-Demand -->
+                    ${(!staff.hasWholesaleLink || !staff.hasPrimeLink) ? `
+                      <div class="flex flex-wrap items-center gap-1.5 pt-1.5">
+                        ${!staff.hasWholesaleLink ? `
+                          <button onclick="toggleStaffRateLink('${staff.code}', 'wholesale', true)" class="px-2.5 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 text-[10px] font-bold flex items-center gap-1 transition-all">
+                            <span>+ Grant Wholesale (?u=${staff.code}W)</span>
+                          </button>
+                        ` : ''}
+                        ${!staff.hasPrimeLink ? `
+                          <button onclick="toggleStaffRateLink('${staff.code}', 'prime', true)" class="px-2.5 py-1 rounded-lg bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 text-[10px] font-bold flex items-center gap-1 transition-all">
+                            <span>+ Grant Prime (?u=${staff.code}P)</span>
+                          </button>
+                        ` : ''}
+                      </div>
+                    ` : ''}
 
                   </div>
                 </div>
@@ -214,6 +238,20 @@ function renderStaffHub() {
   }).join('');
 
   if (window.lucide) lucide.createIcons();
+}
+
+function toggleStaffRateLink(code, tier, enable) {
+  const staffList = window.vellumAdapter ? window.vellumAdapter.loadStaffProfiles() : [];
+  const staff = staffList.find(s => s.code.toUpperCase() === code.toUpperCase());
+  if (staff) {
+    if (tier === 'wholesale') staff.hasWholesaleLink = enable;
+    if (tier === 'prime') staff.hasPrimeLink = enable;
+    if (window.vellumAdapter) {
+      window.vellumAdapter.saveStaffProfiles(staffList);
+    }
+    renderStaffHub();
+    showAdminToast(`${staff.name} ${tier.toUpperCase()} Link ${enable ? 'generated & authorized' : 'revoked'}`);
+  }
 }
 
 // Staff Modal CRUD Handlers
@@ -578,14 +616,14 @@ function toggleColorStockLevel(catId, designCode, status) {
 }
 
 function markAllCatalogsInStock() {
-  if (!confirm('Mark all 26 catalog collections as Ready to Dispatch?')) return;
+  if (!confirm('Mark all catalog collections as Ready to Dispatch?')) return;
   adminCatalogs.forEach(c => {
     if (window.vellumAdapter) {
       window.vellumAdapter.setCatalogStock(c.id, 'in_stock');
     }
   });
   renderStockManager();
-  showAdminToast('All 26 catalogs marked In Stock!');
+  showAdminToast('All catalog collections marked In Stock!');
 }
 
 function filterStockStatus(status) {
@@ -627,7 +665,7 @@ function filterStockManager(query) {
 }
 
 // --------------------------------------------------------------------------
-// 5. COMMERCIAL RATE MATRIX
+// 5. COMMERCIAL RATE MATRIX (Prime, Wholesale & Retail / MRP)
 // --------------------------------------------------------------------------
 function renderRatesTable() {
   const tbody = document.getElementById('ratesTableBody');
@@ -640,22 +678,25 @@ function renderRatesTable() {
       <td class="p-3.5">
         <input 
           type="number" 
-          value="${c.wholesaleRate}" 
-          class="w-24 px-2 py-1 bg-white border border-stone-300 rounded-lg text-xs font-mono font-bold text-stone-800"
+          value="${c.resellerRate}" 
+          class="w-24 px-2 py-1 bg-white border border-stone-300 rounded-lg text-xs font-mono font-bold text-amber-900"
+          placeholder="Prime Rate"
         >
       </td>
       <td class="p-3.5">
         <input 
           type="number" 
-          value="${c.resellerRate}" 
-          class="w-24 px-2 py-1 bg-white border border-stone-300 rounded-lg text-xs font-mono font-bold text-stone-800"
+          value="${c.wholesaleRate}" 
+          class="w-24 px-2 py-1 bg-white border border-stone-300 rounded-lg text-xs font-mono font-bold text-emerald-800"
+          placeholder="Wholesale Rate"
         >
       </td>
       <td class="p-3.5">
         <input 
           type="number" 
           value="${c.retailRate}" 
-          class="w-24 px-2 py-1 bg-white border border-stone-300 rounded-lg text-xs font-mono font-bold text-stone-800"
+          class="w-24 px-2 py-1 bg-white border border-stone-300 rounded-lg text-xs font-mono font-bold text-stone-900"
+          placeholder="Retail MRP"
         >
       </td>
       <td class="p-3.5">
@@ -766,9 +807,11 @@ function renderFirmProfilesUI() {
   container.innerHTML = firmKeys.map(fId => {
     const f = profiles[fId];
     const isKeya = fId === 'keya';
-    const borderClass = isKeya ? 'border-sky-300' : 'border-rose-300';
-    const tagBg = isKeya ? 'bg-sky-50 text-sky-800 border-sky-200' : 'bg-rose-50 text-rose-800 border-rose-200';
-    const btnColor = isKeya ? 'bg-sky-600 hover:bg-sky-700' : 'bg-rose-700 hover:bg-rose-800';
+    const isSaurashtra = fId === 'saurashtra';
+    const isCore = isKeya || isSaurashtra;
+    const borderClass = isKeya ? 'border-sky-300' : isSaurashtra ? 'border-rose-300' : 'border-amber-300';
+    const tagBg = isKeya ? 'bg-sky-50 text-sky-800 border-sky-200' : isSaurashtra ? 'bg-rose-50 text-rose-800 border-rose-200' : 'bg-amber-50 text-amber-800 border-amber-200';
+    const btnColor = isKeya ? 'bg-sky-600 hover:bg-sky-700' : isSaurashtra ? 'bg-rose-700 hover:bg-rose-800' : 'bg-amber-600 hover:bg-amber-700';
 
     return `
       <div class="bg-white border-2 ${borderClass} rounded-3xl p-6 space-y-5 shadow-sm">
@@ -789,11 +832,15 @@ function renderFirmProfilesUI() {
             <span id="saveBadge-${fId}" class="hidden text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-300">
               ✓ Saved
             </span>
-            ${firmKeys.length > 1 ? `
-              <button onclick="deleteFirm('${fId}')" title="Delete Firm" class="p-1.5 text-stone-400 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-all">
+            ${isCore ? `
+              <span class="text-[10px] font-bold text-amber-700 bg-amber-50 px-2 py-0.5 rounded-lg border border-amber-200 flex items-center gap-1">
+                🛡️ Foundation
+              </span>
+            ` : `
+              <button onclick="deleteFirm('${fId}')" title="Delete Custom Firm" class="p-1.5 text-stone-400 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-all">
                 <i data-lucide="trash-2" class="w-4 h-4"></i>
               </button>
-            ` : ''}
+            `}
           </div>
         </div>
 
@@ -931,10 +978,22 @@ function saveModalNewFirm() {
     window.vellumAdapter.saveFirmProfile(key, firmData);
   }
 
+  // Clear modal inputs
+  const kInput = document.getElementById('modalFirmKey');
+  if (kInput) kInput.value = '';
+  const nInput = document.getElementById('modalFirmName');
+  if (nInput) nInput.value = '';
+  const tInput = document.getElementById('modalFirmTagline');
+  if (tInput) tInput.value = '';
+  const pInput = document.getElementById('modalFirmPrimaryPhone');
+  if (pInput) pInput.value = '';
+  const oInput = document.getElementById('modalFirmOrderPhone');
+  if (oInput) oInput.value = '';
+
   closeFirmModal();
   renderFirmProfilesUI();
   renderStaffHub();
-  showAdminToast(`New firm ${name} created!`);
+  showAdminToast(`New firm "${name}" successfully created and synced!`);
 }
 
 // --------------------------------------------------------------------------

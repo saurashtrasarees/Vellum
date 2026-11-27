@@ -82,15 +82,15 @@
       <div class="hidden lg:flex items-center bg-slate-100 p-1 rounded-2xl border border-slate-200/80 shadow-inner">
         <button id="btnShootAll" onclick="setShootType('all')" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all shadow-sm bg-white text-slate-900">
           <span>🌟</span>
-          <span>All Shoots</span>
+          <span>All (132 Collections)</span>
         </button>
         <button id="btnShootModel" onclick="setShootType('model')" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium text-slate-600 hover:text-slate-900 transition-all">
           <span>👗</span>
-          <span>Model Shoot</span>
+          <span>Model Shoot (45 Volumes)</span>
         </button>
         <button id="btnShootTable" onclick="setShootType('table')" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium text-slate-600 hover:text-slate-900 transition-all">
           <span>🪑</span>
-          <span>Table Shoot</span>
+          <span>Table Shoot (87 Volumes)</span>
         </button>
       </div>
 
@@ -167,13 +167,13 @@
     <!-- Mobile Shoot Switcher -->
     <div class="lg:hidden px-4 py-2 bg-slate-100/90 border-t border-slate-200 flex items-center justify-center gap-1.5">
       <button onclick="setShootType('all')" id="mobileBtnAll" class="flex-1 py-1.5 rounded-lg text-xs font-bold bg-white text-slate-900 shadow-xs text-center">
-        🌟 All Shoots
+        🌟 All (132)
       </button>
       <button onclick="setShootType('model')" id="mobileBtnModel" class="flex-1 py-1.5 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 text-center">
-        👗 Model
+        👗 Model (45)
       </button>
       <button onclick="setShootType('table')" id="mobileBtnTable" class="flex-1 py-1.5 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 text-center">
-        🪑 Table
+        🪑 Table (87)
       </button>
     </div>
   </header>
@@ -183,8 +183,8 @@
   <!-- ====================================================================== -->
   <div id="screenHome" class="view-screen flex-1 flex flex-col">
     
-    <!-- Hero Banner (Dreamy Vibrant Cloud Textures & Luxury Atmospheric Canvas) -->
-    <section class="cloud-hero-wrap py-10 sm:py-14 px-4 sm:px-6 lg:px-8">
+    <!-- Imperial Haute Couture Ethnic Wear Header (Lively Textured, Regal & Mobile-First) -->
+    <section class="cloud-hero-wrap py-8 sm:py-12 px-4 sm:px-6 lg:px-8 border-b-2 border-amber-300/80 shadow-xs">
       
       <!-- Floating Colorful Atmospheric Cloud Orbs -->
       <div class="cloud-orb cloud-orb-peach"></div>
@@ -192,35 +192,61 @@
       <div class="cloud-orb cloud-orb-rose"></div>
       <div class="cloud-orb cloud-orb-gold"></div>
 
-      <div class="relative max-w-5xl mx-auto text-center space-y-3.5 z-10">
+      <div class="relative max-w-4xl mx-auto text-center space-y-4 z-10">
         
-        <!-- Royal Showroom Emblem Badge -->
-        <div class="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-white/95 backdrop-blur-md border border-amber-300/80 text-stone-800 text-xs font-extrabold shadow-sm hover:shadow-md transition-all">
-          <span class="text-amber-500 text-sm">👑</span>
-          <span id="heroFirmTag" class="text-stone-900 font-extrabold tracking-wide">Saurashtra Sarees Direct Wholesale</span>
+        <!-- Imperial Crest / Atelier Badge -->
+        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/95 backdrop-blur-md border border-amber-300 shadow-xs text-stone-800 text-xs font-black">
+          <span class="text-amber-600 text-sm">👑</span>
+          <span id="heroFirmTag" class="text-amber-950 font-black tracking-wide uppercase text-[11px]">Saurashtra Sarees Atelier</span>
           <span class="text-amber-300">•</span>
-          <span class="font-bold text-stone-600">26 Volumes</span>
-          <span class="text-amber-300">•</span>
-          <span class="inline-flex items-center gap-1.5 text-emerald-800 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-300 font-black text-[10px]">
-            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-            Surat Mill Direct
+          <span class="text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-300 font-bold text-[10px] flex items-center gap-1">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping"></span>
+            Direct Surat Mill
           </span>
         </div>
 
-        <p class="text-xs sm:text-sm text-stone-700 max-w-2xl mx-auto leading-relaxed font-medium pt-1">
-          High-fashion model drapes and flat-lay table weave details. Dedicated B2B wholesale lookbook for stockists, portal sellers, and boutique owners.
-        </p>
+        <!-- Imperial Main Title & Craft Subtitle -->
+        <div class="space-y-1.5">
+          <h1 class="font-serif text-2xl sm:text-4xl lg:text-5xl font-black text-stone-900 tracking-tight leading-tight">
+            Curated Imperial Saree Collections
+          </h1>
+          <p class="text-xs sm:text-sm text-stone-700 max-w-2xl mx-auto leading-relaxed font-medium">
+            Surat mill direct wholesale lookbook. Featuring haute couture model runway drapes and authentic flat-lay table weaves for boutiques, stockists, and global connoisseurs.
+          </p>
+        </div>
 
-        <!-- Elegant Single-Line Trust Badges in Frosted Cloud Pills -->
-        <div class="pt-2 flex flex-wrap items-center justify-center gap-2 sm:gap-3 text-[11px] font-bold text-stone-700">
+        <!-- 45 Model Shoot & 87 Table Shoot Interactive Volume Cards -->
+        <div class="pt-1 flex flex-wrap items-center justify-center gap-3">
+          <button onclick="setShootType('model')" class="px-4 py-2.5 rounded-2xl bg-white/95 border-2 border-sky-300 hover:border-sky-500 text-stone-900 shadow-xs hover:shadow-md transition-all flex items-center gap-3 group text-left">
+            <span class="w-9 h-9 rounded-xl bg-sky-100 text-sky-800 flex items-center justify-center text-base font-bold shadow-xs group-hover:scale-105 transition-transform">👗</span>
+            <div>
+              <p class="text-[9px] uppercase font-black text-sky-700 tracking-wider">Haute Couture</p>
+              <p class="text-xs sm:text-sm font-black text-stone-900">45 Model Shoot Volumes</p>
+            </div>
+          </button>
+
+          <button onclick="setShootType('table')" class="px-4 py-2.5 rounded-2xl bg-white/95 border-2 border-amber-300 hover:border-amber-500 text-stone-900 shadow-xs hover:shadow-md transition-all flex items-center gap-3 group text-left">
+            <span class="w-9 h-9 rounded-xl bg-amber-100 text-amber-900 flex items-center justify-center text-base font-bold shadow-xs group-hover:scale-105 transition-transform">🪑</span>
+            <div>
+              <p class="text-[9px] uppercase font-black text-amber-800 tracking-wider">Artisanal Details</p>
+              <p class="text-xs sm:text-sm font-black text-stone-900">87 Table Shoot Volumes</p>
+            </div>
+          </button>
+        </div>
+
+        <!-- Single-Lined Textured Trust Strip -->
+        <div class="pt-2 flex flex-wrap items-center justify-center gap-2 sm:gap-2.5 text-[11px] font-bold text-stone-700">
           <span class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/90 backdrop-blur-xs border border-amber-200/90 shadow-xs">
-            <span class="text-amber-600">🧵</span> 100% Verified Handloom Lots
+            <span class="text-amber-600">🧵</span> 100% Verified Pure Zari & Handloom
           </span>
           <span class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/90 backdrop-blur-xs border border-amber-200/90 shadow-xs">
             <span class="text-emerald-600">🚚</span> 24–48h Nationwide Dispatch
           </span>
           <span class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/90 backdrop-blur-xs border border-amber-200/90 shadow-xs">
-            <span class="text-sky-600">📸</span> Model & Table Shoot HD Visuals
+            <span class="text-sky-600">🎥</span> 4K Video Reels & Zoom Lookbooks
+          </span>
+          <span class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/90 backdrop-blur-xs border border-amber-200/90 shadow-xs">
+            <span class="text-amber-700">🏛️</span> Magob, Surat Direct Mill
           </span>
         </div>
 
@@ -801,29 +827,44 @@
           Premier Indian saree manufacturer and bulk textile supply house in Surat, Gujarat. Serving wholesale stockists, portal sellers, and independent boutiques nationwide with direct mill pricing.
         </p>
 
-        <!-- Contact Support & Timings Box (Light Luxury) -->
-        <div class="p-4 rounded-2xl bg-white border border-amber-200/90 shadow-xs space-y-2 max-w-lg">
-          <div class="flex items-center justify-between">
-            <span class="text-[10px] font-extrabold uppercase tracking-wider text-amber-800 flex items-center gap-1.5">
-              <i data-lucide="headphones" class="w-3.5 h-3.5 text-amber-700"></i> Contact Support
+        <!-- Contact Support & Timings Box (Dynamically Bound to Staff & Firm) -->
+        <div class="p-4 sm:p-5 rounded-2xl bg-white border-2 border-amber-300 shadow-sm space-y-3 max-w-lg">
+          <div class="flex items-center justify-between pb-1.5 border-b border-stone-100">
+            <span class="text-[11px] font-black uppercase tracking-wider text-amber-900 flex items-center gap-1.5">
+              <i data-lucide="headphones" class="w-4 h-4 text-amber-700"></i> CONTACT SUPPORT
             </span>
-            <span class="text-[9px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-mono font-bold border border-emerald-300">
+            <span class="text-[10px] bg-emerald-50 text-emerald-800 px-2 py-0.5 rounded font-mono font-bold border border-emerald-300 flex items-center gap-1">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
               Live Desk
             </span>
           </div>
 
-          <div class="text-[11px] text-stone-700 space-y-1.5 pt-1">
+          <!-- Representative Dedicated Tag -->
+          <div id="footerRepRow" class="flex items-center justify-between bg-amber-50/70 p-2.5 rounded-xl border border-amber-200/90 text-xs">
+            <div class="flex items-center gap-2.5">
+              <span id="footerRepBadge" class="w-7 h-7 rounded-lg bg-amber-600 text-white font-mono font-bold text-xs flex items-center justify-center shadow-xs">AR</span>
+              <div>
+                <p class="text-[9px] uppercase font-black text-amber-800 tracking-wider">Assigned Representative</p>
+                <p id="footerRepName" class="font-bold text-stone-900 text-xs">Arvind Sir</p>
+              </div>
+            </div>
+            <a id="footerRepCallBtn" href="tel:+919824982338" class="px-3 py-1 bg-amber-600 hover:bg-amber-700 text-white rounded-lg text-[11px] font-bold flex items-center gap-1.5 shadow-xs transition-all">
+              <i data-lucide="phone" class="w-3 h-3"></i> Call Direct
+            </a>
+          </div>
+
+          <div class="text-[11px] text-stone-700 space-y-1.5 pt-0.5">
             <p class="flex items-center gap-1.5 text-stone-900 font-medium">
               <i data-lucide="clock" class="w-3.5 h-3.5 text-amber-700 shrink-0"></i>
-              <span>09:00 AM–07:00 PM (Monday–Saturday)</span>
+              <span id="footerFirmTimings">09:00 AM–07:00 PM (Monday–Saturday)</span>
             </p>
             <p class="flex items-center gap-1.5">
               <i data-lucide="phone" class="w-3.5 h-3.5 text-stone-500 shrink-0"></i>
-              <span>Direct: <strong class="text-stone-900">+91 98794 71039</strong> / <strong class="text-stone-900">+91 99136 43433</strong></span>
+              <span id="footerSupportPhoneLine">Direct: <strong id="footerDirectPhone" class="text-stone-900 font-mono">+91 98249 82338</strong> / Order Desk: <strong id="footerSecondaryPhone" class="text-stone-900 font-mono">+91 98794 71039</strong></span>
             </p>
             <p class="flex items-start gap-1.5 leading-snug">
               <i data-lucide="map-pin" class="w-3.5 h-3.5 text-amber-700 shrink-0 mt-0.5"></i>
-              <span class="font-medium text-stone-800">A-1001, Rajhans Fabrizo, Near Polaris Textile City, BRTS Road, Magob, Surat, Gujarat – 395010</span>
+              <span id="footerFirmAddress" class="font-medium text-stone-800">A-1001, Rajhans Fabrizo, Near Polaris Textile City, BRTS Road, Magob, Surat, Gujarat – 395010</span>
             </p>
           </div>
         </div>

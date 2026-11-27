@@ -345,10 +345,20 @@ function applyFirmTheme() {
   document.getElementById('announcementTagline').textContent = firm.tagline;
   document.getElementById('footerFirmName').textContent = firm.name;
   document.getElementById('footerFirmTagline').textContent = firm.tagline;
-  document.getElementById('heroFirmTag').textContent = `${firm.name} Direct Wholesale`;
+  document.getElementById('heroFirmTag').textContent = `${firm.name} Atelier`;
   
   const pillLabel = document.getElementById('currentFirmPillLabel');
   if (pillLabel) pillLabel.textContent = `Firm: ${firm.name.split(' ')[0]}`;
+
+  // Footer Dynamic Address, Timings & Secondary Phone
+  const footerAddressEl = document.getElementById('footerFirmAddress');
+  if (footerAddressEl) footerAddressEl.textContent = firm.address || 'A-1001, Rajhans Fabrizo, Near Polaris Textile City, BRTS Road, Magob, Surat, Gujarat – 395010';
+
+  const footerTimingsEl = document.getElementById('footerFirmTimings');
+  if (footerTimingsEl) footerTimingsEl.textContent = firm.timings || '09:00 AM–07:00 PM (Monday–Saturday)';
+
+  const footerSecPhoneEl = document.getElementById('footerSecondaryPhone');
+  if (footerSecPhoneEl) footerSecPhoneEl.textContent = firm.orderPhone || firm.partner1Phone || firm.primaryPhone || '+91 99136 43433';
 
   // Footer Dynamic Copyright & Disclaimer
   const copyrightEl = document.getElementById('footerCopyright');
@@ -402,10 +412,24 @@ function updateStaffUI() {
   });
 
   const phoneEl = document.getElementById('staffPhoneDisplay');
-  if (phoneEl) phoneEl.textContent = user.displayPhone;
+  if (phoneEl) phoneEl.textContent = user.displayPhone || ('+91 ' + user.phone);
 
+  const cleanPhone = (user.phone || '').replace(/[^0-9]/g, '');
   const callLink = document.getElementById('staffCallLink');
-  if (callLink) callLink.href = `tel:+91${user.phone}`;
+  if (callLink) callLink.href = `tel:+91${cleanPhone}`;
+
+  // Footer Live Representative Binding
+  const footerRepName = document.getElementById('footerRepName');
+  if (footerRepName) footerRepName.textContent = `${user.name} (${user.code})`;
+
+  const footerRepBadge = document.getElementById('footerRepBadge');
+  if (footerRepBadge) footerRepBadge.textContent = user.initials || user.code;
+
+  const footerDirectPhone = document.getElementById('footerDirectPhone');
+  if (footerDirectPhone) footerDirectPhone.textContent = user.displayPhone || ('+91 ' + user.phone);
+
+  const footerRepCallBtn = document.getElementById('footerRepCallBtn');
+  if (footerRepCallBtn) footerRepCallBtn.href = `tel:+91${cleanPhone}`;
 }
 
 function switchFirm(firmId) {
@@ -732,6 +756,17 @@ function applyFiltersAndRender() {
 function renderCatalogCount() {
   const countEl = document.getElementById('activeCatalogCount');
   if (countEl) countEl.textContent = state.filteredCatalogs.length;
+
+  const countLabel = document.getElementById('catalogCountLabel');
+  if (countLabel) {
+    if (state.currentShoot === 'model') {
+      countLabel.textContent = `Showing ${state.filteredCatalogs.length} Model Shoot Volumes (45 Total)`;
+    } else if (state.currentShoot === 'table') {
+      countLabel.textContent = `Showing ${state.filteredCatalogs.length} Table Shoot Volumes (87 Total)`;
+    } else {
+      countLabel.textContent = `Showing ${state.filteredCatalogs.length} Collections (45 Model • 87 Table)`;
+    }
+  }
 }
 
 function getActiveRate(cat) {
