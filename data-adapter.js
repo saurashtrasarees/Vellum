@@ -33,6 +33,7 @@ const DEFAULT_FIRM_PROFILES = {
     name: 'Keya Fashion',
     tagline: 'Stop wishing. Start living....',
     address: 'A-1001, Rajhans Fabrizo, Near Polaris Textile City, BRTS Road, Magob, Surat, Gujarat – 395010',
+    atelierCoordinates: 'A-1001, Rajhans Fabrizo, Near Polaris Textile City, Magob, Surat, Gujarat – 395010',
     timings: '10:00 AM – 07:00 PM (Monday–Saturday)',
     primaryPhone: '+91 98794 71039',
     orderPhone: '+91 99136 43433',
@@ -51,6 +52,7 @@ const DEFAULT_FIRM_PROFILES = {
     name: 'Saurashtra Sarees',
     tagline: 'Make Occasion Better',
     address: 'A-1001, Rajhans Fabrizo, Near Polaris Textile City, BRTS Road, Magob, Surat, Gujarat – 395010',
+    atelierCoordinates: 'A-1001, Rajhans Fabrizo, Near Polaris Textile City, Magob, Surat, Gujarat – 395010',
     timings: '10:00 AM – 07:00 PM (Monday–Saturday)',
     primaryPhone: '+91 98794 71039',
     orderPhone: '+91 99136 43433',
@@ -389,6 +391,16 @@ class VellumDataAdapter {
     return false;
   }
 
+  getFirmProfile(firmId = 'saurashtra') {
+    const profiles = this.loadFirmProfiles();
+    return profiles[firmId] || profiles.saurashtra || DEFAULT_FIRM_PROFILES.saurashtra;
+  }
+
+  getAtelierCoordinates(firmId = 'saurashtra') {
+    const firm = this.getFirmProfile(firmId);
+    return firm.atelierCoordinates || firm.address || 'A-1001, Rajhans Fabrizo, Near Polaris Textile City, Magob, Surat, Gujarat – 395010';
+  }
+
   // 6. Sales Staff Profiles (Full CRUD)
   loadStaffProfiles() {
     try {
@@ -411,6 +423,10 @@ class VellumDataAdapter {
     }
   }
 
+  saveStaffProfile(staffData) {
+    return this.addOrUpdateStaff(staffData);
+  }
+
   addOrUpdateStaff(staffData) {
     const list = this.loadStaffProfiles();
     const idx = list.findIndex(s => s.code.toUpperCase() === staffData.code.toUpperCase());
@@ -420,6 +436,10 @@ class VellumDataAdapter {
       list.push(staffData);
     }
     return this.saveStaffProfiles(list);
+  }
+
+  deleteStaffProfile(staffCode) {
+    return this.deleteStaff(staffCode);
   }
 
   deleteStaff(staffCode) {

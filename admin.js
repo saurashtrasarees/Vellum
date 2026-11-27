@@ -282,7 +282,7 @@ function openStaffModal(code = null) {
   const firms = window.vellumAdapter ? window.vellumAdapter.loadFirmProfiles() : {};
   if (firmEl) {
     firmEl.innerHTML = Object.keys(firms).map(k => `
-      <option value="${k}">${firms[k].name}</option>
+      <option value="${k}">${firms[k].name || k}</option>
     `).join('');
   }
 
@@ -290,14 +290,14 @@ function openStaffModal(code = null) {
     const list = window.vellumAdapter ? window.vellumAdapter.loadStaffProfiles() : [];
     const staff = list.find(s => s.code.toUpperCase() === code.toUpperCase());
     if (staff) {
-      if (titleEl) titleEl.textContent = `Edit Staff: ${staff.name}`;
-      if (nameEl) nameEl.value = staff.name;
+      if (titleEl) titleEl.textContent = `Edit Staff: ${staff.name} (${staff.code})`;
+      if (nameEl) nameEl.value = staff.name || '';
       if (codeEl) {
         codeEl.value = staff.code;
-        codeEl.disabled = true; // Lock code during edit
+        codeEl.disabled = true; // Lock code during edit so identifier is preserved
       }
-      if (firmEl) firmEl.value = staff.firm;
-      if (phoneEl) phoneEl.value = staff.phone;
+      if (firmEl) firmEl.value = staff.firm || 'saurashtra';
+      if (phoneEl) phoneEl.value = staff.phone || '';
       if (titleInput) titleInput.value = staff.title || '';
     }
   } else {
@@ -307,6 +307,7 @@ function openStaffModal(code = null) {
       codeEl.value = '';
       codeEl.disabled = false;
     }
+    if (firmEl) firmEl.value = 'saurashtra';
     if (phoneEl) phoneEl.value = '';
     if (titleInput) titleInput.value = '';
   }
@@ -321,9 +322,9 @@ function closeStaffModal() {
 }
 
 function saveModalStaff() {
+  const code = (editingStaffCode || document.getElementById('modalStaffCode')?.value || '').trim().toUpperCase();
   const name = document.getElementById('modalStaffName')?.value.trim();
-  const code = document.getElementById('modalStaffCode')?.value.trim().toUpperCase();
-  const firm = document.getElementById('modalStaffFirm')?.value;
+  const firm = document.getElementById('modalStaffFirm')?.value || 'saurashtra';
   const phone = document.getElementById('modalStaffPhone')?.value.trim().replace(/[^0-9]/g, '');
   const title = document.getElementById('modalStaffTitle')?.value.trim();
 
@@ -333,9 +334,14 @@ function saveModalStaff() {
   }
 
   const firms = window.vellumAdapter ? window.vellumAdapter.loadFirmProfiles() : {};
-  const firmName = firms[firm]?.name || firm;
+  const firmName = firms[firm]?.name || (firm === 'keya' ? 'Keya Fashion' : 'Saurashtra Sarees');
+
+  // Load existing profile to preserve link flags (hasWholesaleLink, hasPrimeLink)
+  const currentList = window.vellumAdapter ? window.vellumAdapter.loadStaffProfiles() : [];
+  const existing = currentList.find(s => s.code.toUpperCase() === code.toUpperCase()) || {};
 
   const staffObj = {
+    ...existing,
     code,
     name,
     firm,
@@ -343,25 +349,30 @@ function saveModalStaff() {
     phone,
     displayPhone: `+91 ${phone.slice(0, 5)} ${phone.slice(5)}`,
     whatsapp: `91${phone}`,
-    title: title || 'Catalog Representative',
-    rateType: 'retail',
-    rateLabel: 'Retail MRP Rate Only'
+    title: title || existing.title || 'Catalog Representative',
+    rateType: existing.rateType || 'retail',
+    rateLabel: existing.rateLabel || 'Retail MRP Rate Only'
   };
 
   if (window.vellumAdapter) {
     window.vellumAdapter.saveStaffProfile(staffObj);
+    window.vellumAdapter.addOrUpdateStaff(staffObj);
   }
 
   closeStaffModal();
   renderStaffHub();
   initDeepLinkUI();
-  showAdminToast(`Staff profile for ${name} (${code}) saved!`);
+  showAdminToast(`Staff profile for ${name} (${code}) updated & saved!`);
 }
 
 function deleteStaff(code) {
-  if (!confirm(`Are you sure you want to delete staff code ${code}?`)) return;
+  if (typeof confirm === 'function' && !confirm(`Are you sure you want to delete staff code ${code}?`)) return;
   if (window.vellumAdapter) {
-    window.vellumAdapter.deleteStaffProfile(code);
+    if (typeof window.vellumAdapter.deleteStaffProfile === 'function') {
+      window.vellumAdapter.deleteStaffProfile(code);
+    } else if (typeof window.vellumAdapter.deleteStaff === 'function') {
+      window.vellumAdapter.deleteStaff(code);
+    }
   }
   renderStaffHub();
   initDeepLinkUI();

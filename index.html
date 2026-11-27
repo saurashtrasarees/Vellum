@@ -135,7 +135,7 @@
       <div class="relative max-w-5xl mx-auto text-center space-y-7 z-10">
         
         <!-- Imperial Crest -->
-        <div class="inline-flex items-center gap-2.5 px-4 sm:px-5 py-2 rounded-full bg-white/95 backdrop-blur-md border border-amber-300 shadow-sm text-stone-800 text-xs font-black">
+        <div class="imperial-crest inline-flex items-center gap-2.5 px-4 sm:px-5 py-2 rounded-full bg-white/95 backdrop-blur-md border border-amber-300 shadow-sm text-stone-800 text-xs font-black">
           <span class="text-base text-amber-600">👑</span>
           <span class="text-amber-950 font-black tracking-widest uppercase text-[11px]">Saurashtra Sarees • Surat Mill Direct</span>
           <span class="text-amber-300">•</span>
@@ -146,25 +146,25 @@
 
         <!-- Majestic Title & Official Slogan -->
         <div class="space-y-4">
-          <h1 class="font-serif text-4xl sm:text-6xl lg:text-7xl font-black text-stone-900 tracking-tight leading-[1.1]">
+          <h1 class="hero-title font-serif text-4xl sm:text-6xl lg:text-7xl font-black text-stone-900 tracking-tight leading-[1.1]">
             Make Occasion Better
           </h1>
-          <p class="font-serif italic text-xl sm:text-2xl lg:text-3xl text-amber-900/90 max-w-3xl mx-auto font-medium">
+          <p class="hero-subtitle font-serif italic text-xl sm:text-2xl lg:text-3xl text-amber-900/90 max-w-3xl mx-auto font-medium">
             Premier Indian Ethnic Wear Mill & Super Stockist Distribution Hub
           </p>
-          <p class="text-sm sm:text-base text-stone-600 max-w-2xl mx-auto leading-relaxed pt-2">
+          <p class="hero-desc text-sm sm:text-base text-stone-600 max-w-2xl mx-auto leading-relaxed pt-2">
             Direct factory manufacturing and nationwide supply from the heart of Surat’s historic textile corridor. Serving boutique owners, wholesale stockists, and portal sellers with pure zari handloom and master powerloom saree drapes.
           </p>
         </div>
 
         <!-- Call to Actions -->
         <div class="pt-2 flex flex-wrap items-center justify-center gap-3.5 sm:gap-4">
-          <a href="#leadership" class="px-6 py-3.5 rounded-2xl bg-gradient-to-r from-[#8b1d40] to-[#5e0f28] hover:from-[#751634] hover:to-[#4a0b1f] text-white text-xs sm:text-sm font-bold shadow-lg hover:shadow-xl transition-all flex items-center gap-2.5 border border-amber-400/40">
+          <a href="#leadership" class="hero-btn px-6 py-3.5 rounded-2xl bg-gradient-to-r from-[#8b1d40] to-[#5e0f28] hover:from-[#751634] hover:to-[#4a0b1f] text-white text-xs sm:text-sm font-bold shadow-lg hover:shadow-xl transition-all flex items-center gap-2.5 border border-amber-400/40">
             <i data-lucide="phone-call" class="w-4 h-4 text-amber-300"></i>
             <span>Connect with Executive Desk</span>
           </a>
 
-          <a href="#coordinates" class="px-6 py-3.5 rounded-2xl bg-white hover:bg-amber-50 text-stone-800 border-2 border-amber-300 text-xs sm:text-sm font-bold shadow-sm hover:shadow-md transition-all flex items-center gap-2.5">
+          <a href="#coordinates" class="hero-btn px-6 py-3.5 rounded-2xl bg-white hover:bg-amber-50 text-stone-800 border-2 border-amber-300 text-xs sm:text-sm font-bold shadow-sm hover:shadow-md transition-all flex items-center gap-2.5">
             <i data-lucide="map-pin" class="w-4 h-4 text-amber-700"></i>
             <span>Visit Mill & Atelier Facility</span>
           </a>
@@ -516,8 +516,8 @@
                 <i data-lucide="map-pin" class="w-4 h-4"></i>
               </div>
               <div>
-                <strong class="text-stone-900 block font-bold text-sm">Full Registered Address:</strong>
-                <span>A-1001, Rajhans Fabrizo, Near Polaris Textile City, BRTS Road, Magob, Surat, Gujarat – 395010</span>
+                <strong class="text-stone-900 block font-bold text-sm">Surat Atelier Coordinates:</strong>
+                <span id="firmAtelierAddress">A-1001, Rajhans Fabrizo, Near Polaris Textile City, Magob, Surat, Gujarat – 395010</span>
               </div>
             </div>
 
@@ -661,10 +661,10 @@
         <!-- Col 2: Registered Atelier Coordinates -->
         <div class="space-y-3 text-xs text-stone-300">
           <h5 class="font-bold text-amber-400 uppercase tracking-wider text-[11px] flex items-center gap-1.5">
-            <i data-lucide="map-pin" class="w-3.5 h-3.5"></i> Registered Mill Address
+            <i data-lucide="map-pin" class="w-3.5 h-3.5"></i> Surat Atelier Coordinates
           </h5>
-          <p class="leading-relaxed text-stone-300">
-            A-1001, Rajhans Fabrizo, Near Polaris Textile City, BRTS Road, Magob, Surat, Gujarat – 395010
+          <p id="firmFooterAddress" class="leading-relaxed text-stone-300">
+            A-1001, Rajhans Fabrizo, Near Polaris Textile City, Magob, Surat, Gujarat – 395010
           </p>
           <p class="text-stone-400 text-[11px]">
             Operating Hours: <strong class="text-stone-200">10:00 AM – 07:00 PM</strong> (Monday–Saturday)
@@ -740,6 +740,18 @@
     </div>
   </footer>
 
+  <!-- Mobile Bottom Floating Action Bar (Visible only on smartphones) -->
+  <aside class="mobile-bottom-dock" aria-label="Mobile Quick Contacts">
+    <a href="https://api.whatsapp.com/send?phone=919879471039&text=Hello%20Nayan%20Sir,%20I%20would%20like%20to%20inquire%20about%20Saurashtra%20Sarees%20wholesale%20dealership." target="_blank" rel="noopener noreferrer" class="bg-emerald-600 hover:bg-emerald-700 text-white shadow-md">
+      <i data-lucide="message-circle" class="w-4 h-4"></i>
+      <span>WhatsApp Desk</span>
+    </a>
+    <a href="tel:+919879471039" class="bg-gradient-to-r from-[#8b1d40] to-[#5e0f28] text-white border border-amber-300/40 shadow-md">
+      <i data-lucide="phone-call" class="w-4 h-4 text-amber-300"></i>
+      <span>Call Mill Hub</span>
+    </a>
+  </aside>
+
   <script>
     // Handle Public Wholesale Inquiry Submission
     function handlePublicInquiry(e) {
@@ -764,9 +776,18 @@
       window.open(whatsappUrl, '_blank');
     }
 
-    if (window.lucide) {
-      lucide.createIcons();
-    }
+    document.addEventListener('DOMContentLoaded', function() {
+      if (window.vellumAdapter) {
+        var coords = window.vellumAdapter.getAtelierCoordinates('saurashtra');
+        var atelierEl = document.getElementById('firmAtelierAddress');
+        var footerEl = document.getElementById('firmFooterAddress');
+        if (atelierEl) atelierEl.textContent = coords;
+        if (footerEl) footerEl.textContent = coords;
+      }
+      if (window.lucide && typeof window.lucide.createIcons === 'function') {
+        window.lucide.createIcons();
+      }
+    });
   </script>
 </body>
 </html>

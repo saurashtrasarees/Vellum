@@ -364,7 +364,7 @@ function applyFirmTheme() {
 
   // Footer Dynamic Address, Timings & Secondary Phone
   const footerAddressEl = document.getElementById('footerFirmAddress');
-  if (footerAddressEl) footerAddressEl.textContent = firm.address || 'A-1001, Rajhans Fabrizo, Near Polaris Textile City, BRTS Road, Magob, Surat, Gujarat – 395010';
+  if (footerAddressEl) footerAddressEl.textContent = firm.atelierCoordinates || firm.address || 'A-1001, Rajhans Fabrizo, Near Polaris Textile City, Magob, Surat, Gujarat – 395010';
 
   const footerTimingsEl = document.getElementById('footerFirmTimings');
   if (footerTimingsEl) footerTimingsEl.textContent = firm.timings || '10:00 AM – 07:00 PM (Monday–Saturday)';
