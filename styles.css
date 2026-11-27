@@ -1,21 +1,44 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&family=Inter:wght@400;500;600;700&display=swap');
 
 :root {
-  --primary: #8b1d40; /* Royal Saree Maroon */
-  --primary-dark: #63102a;
-  --primary-light: #fbeff2;
-  --accent: #d4af37; /* Luxury Gold */
-  --accent-light: #fcf8e3;
-  --surface: #ffffff;
-  --bg: #f8fafc;
+  /* Default Saurashtra Sarees Theme (Royal Heritage Maroon & Gold) */
+  --theme-primary: #8b1d40;
+  --theme-primary-dark: #5e0f28;
+  --theme-primary-light: #fbf0f3;
+  --theme-accent: #d4af37;
+  --theme-accent-light: #fcf8e8;
+  --theme-surface: #ffffff;
+  --theme-bg: #f8fafc;
   --text-main: #0f172a;
   --text-muted: #64748b;
   --border: #e2e8f0;
 }
 
+/* Keya Fashion Theme (Sky Blue, Sun Gold & Fresh Green) */
+body.theme-keya {
+  --theme-primary: #0284c7;
+  --theme-primary-dark: #0369a1;
+  --theme-primary-light: #f0f9ff;
+  --theme-accent: #f59e0b;
+  --theme-accent-light: #fef3c7;
+  --theme-surface: #ffffff;
+  --theme-bg: #f8fafc;
+}
+
+/* Saurashtra Sarees Theme (Deep Heritage Crimson & Antique Gold) */
+body.theme-saurashtra {
+  --theme-primary: #8b1d40;
+  --theme-primary-dark: #5e0f28;
+  --theme-primary-light: #fbf0f3;
+  --theme-accent: #d4af37;
+  --theme-accent-light: #fcf8e8;
+  --theme-surface: #ffffff;
+  --theme-bg: #f8fafc;
+}
+
 body {
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  background-color: var(--bg);
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background-color: var(--theme-bg);
   color: var(--text-main);
   -webkit-font-smoothing: antialiased;
 }
@@ -24,12 +47,12 @@ body {
   font-family: 'Playfair Display', Georgia, serif;
 }
 
-/* Glassmorphism */
+/* Glassmorphism Header */
 .glass-nav {
-  background: rgba(255, 255, 255, 0.88);
+  background: rgba(255, 255, 255, 0.92);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+  border-bottom: 1px solid rgba(226, 232, 240, 0.85);
 }
 
 /* Custom Scrollbar */
@@ -48,55 +71,69 @@ body {
   background: #94a3b8;
 }
 
-/* Catalog Card Effects */
+/* Shopify-Grade Catalog Card */
 .catalog-card {
-  transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .catalog-card:hover {
-  transform: translateY(-4px);
+  transform: translateY(-5px);
   box-shadow: 0 20px 25px -5px rgba(15, 23, 42, 0.08), 0 8px 10px -6px rgba(15, 23, 42, 0.04);
 }
 
-/* Swatch active indicator */
-.swatch-btn {
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
-}
-.swatch-btn:hover {
-  transform: scale(1.15);
-}
-.swatch-btn.active {
-  transform: scale(1.2);
-  box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px var(--primary);
+/* Color Swatches with Tooltips */
+.swatch-wrapper {
+  position: relative;
+  display: inline-block;
 }
 
-/* Modal Animation */
-.modal-overlay {
-  animation: fadeIn 0.2s ease-out;
-}
-.modal-content {
-  animation: slideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes slideUp {
-  from { opacity: 0; transform: translateY(16px) scale(0.98); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
-}
-
-/* Gold Gradient Shimmer */
-.gold-gradient {
-  background: linear-gradient(135deg, #d4af37 0%, #aa820a 100%);
+.swatch-tooltip {
+  visibility: hidden;
+  position: absolute;
+  bottom: 125%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #0f172a;
+  color: #ffffff;
+  text-align: center;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-size: 10px;
+  font-weight: 600;
+  white-space: nowrap;
+  z-index: 50;
+  opacity: 0;
+  transition: opacity 0.2s, visibility 0.2s;
+  pointer-events: none;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
 }
 
-.maroon-gradient {
-  background: linear-gradient(135deg, #8b1d40 0%, #580d24 100%);
+.swatch-tooltip::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -4px;
+  border-width: 4px;
+  border-style: solid;
+  border-color: #0f172a transparent transparent transparent;
 }
 
-/* Badge Glow */
+.swatch-wrapper:hover .swatch-tooltip {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* Smooth Image Crossfade */
+.hero-image-fade {
+  transition: opacity 0.25s ease-in-out;
+}
+
+/* Badges */
+.badge-all {
+  background: #f1f5f9;
+  color: #334155;
+  border: 1px solid #cbd5e1;
+}
 .badge-model {
   background: #eff6ff;
   color: #1d4ed8;
@@ -106,4 +143,26 @@ body {
   background: #fef3c7;
   color: #b45309;
   border: 1px solid #fde68a;
+}
+
+/* Shopify Product Screen Transitions */
+.view-screen {
+  animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Image Zoom Magnifier */
+.zoom-container {
+  overflow: hidden;
+  cursor: crosshair;
+}
+.zoom-container img {
+  transition: transform 0.3s ease;
+}
+.zoom-container:hover img {
+  transform: scale(1.4);
 }

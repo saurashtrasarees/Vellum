@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vellum Super-Admin | BinduGrid Studio</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col antialiased">
+
+  <!-- ====================================================================== -->
+  <!-- PIN LOCK SCREEN                                                        -->
+  <!-- ====================================================================== -->
+  <div id="adminLockScreen" class="fixed inset-0 z-50 bg-slate-950 flex items-center justify-center p-4">
+    <div class="max-w-sm w-full bg-slate-900 border border-slate-800 rounded-3xl p-8 shadow-2xl text-center space-y-6">
+      <div class="w-14 h-14 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-400 mx-auto flex items-center justify-center">
+        <i data-lucide="lock" class="w-7 h-7"></i>
+      </div>
+      <div>
+        <h2 class="font-serif text-2xl font-bold text-white">Super-Admin Access</h2>
+        <p class="text-xs text-slate-400 mt-1">Manage Firms, Staff Links & Catalog Rates</p>
+      </div>
+
+      <div class="space-y-3">
+        <input 
+          type="password" 
+          id="adminPinInput" 
+          placeholder="Enter 4-Digit Security PIN" 
+          maxlength="8"
+          class="w-full text-center text-lg tracking-widest px-4 py-3 bg-slate-950 border border-slate-700 rounded-xl text-white focus:outline-none focus:border-amber-400 transition-all font-mono"
+          onkeydown="if(event.key === 'Enter') unlockAdmin()"
+        >
+        <p id="pinErrorMsg" class="hidden text-xs text-rose-400 font-semibold">Incorrect PIN. Please try again.</p>
+        <button onclick="unlockAdmin()" class="w-full py-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs uppercase tracking-wider transition-all">
+          Unlock Dashboard
+        </button>
+      </div>
+      <p class="text-[10px] text-slate-500">Default PIN: 9879 (Configured for Saurashtra & Keya Management)</p>
+    </div>
+  </div>
+
+  <!-- ====================================================================== -->
+  <!-- SUPER-ADMIN MAIN DASHBOARD                                             -->
+  <!-- ====================================================================== -->
+  <div id="adminDashboard" class="hidden flex-1 flex flex-col">
+    
+    <!-- Top Admin Header -->
+    <header class="bg-slate-950 border-b border-slate-800 sticky top-0 z-40">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 flex items-center justify-between">
+        
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-500 to-amber-700 flex items-center justify-center font-bold text-slate-950 text-base">
+            <i data-lucide="shield" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h1 class="font-serif text-lg font-bold text-white tracking-wide">Vellum Super-Admin</h1>
+            <p class="text-[10px] uppercase tracking-widest text-amber-400 font-semibold -mt-0.5">BinduGrid Studio Engine</p>
+          </div>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <nav class="hidden md:flex items-center gap-1 bg-slate-900 p-1 rounded-xl border border-slate-800 text-xs">
+          <button onclick="switchTab('links')" id="tabBtn-links" class="px-3.5 py-1.5 rounded-lg font-bold bg-amber-500 text-slate-950 shadow-xs">
+            🔗 Smart Link Generator
+          </button>
+          <button onclick="switchTab('staff')" id="tabBtn-staff" class="px-3.5 py-1.5 rounded-lg font-medium text-slate-400 hover:text-white">
+            👥 Staff Directory
+          </button>
+          <button onclick="switchTab('rates')" id="tabBtn-rates" class="px-3.5 py-1.5 rounded-lg font-medium text-slate-400 hover:text-white">
+            💰 Rates & Stock
+          </button>
+          <button onclick="switchTab('firms')" id="tabBtn-firms" class="px-3.5 py-1.5 rounded-lg font-medium text-slate-400 hover:text-white">
+            🏢 Firms & Themes
+          </button>
+        </nav>
+
+        <div class="flex items-center gap-3">
+          <a href="index.html" target="_blank" class="px-3 py-1.5 rounded-lg border border-slate-700 hover:bg-slate-800 text-xs font-semibold text-slate-300 flex items-center gap-1.5">
+            <span>Live Showroom</span> ↗
+          </a>
+          <button onclick="lockAdmin()" class="p-2 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-slate-800 transition-colors" title="Lock Admin">
+            <i data-lucide="log-out" class="w-4 h-4"></i>
+          </button>
+        </div>
+
+      </div>
+
+      <!-- Mobile Tab Bar -->
+      <div class="md:hidden flex items-center overflow-x-auto border-t border-slate-800 px-4 py-2 gap-2 text-xs">
+        <button onclick="switchTab('links')" id="mTabBtn-links" class="px-3 py-1 rounded-lg font-bold bg-amber-500 text-slate-950 whitespace-nowrap">Links</button>
+        <button onclick="switchTab('staff')" id="mTabBtn-staff" class="px-3 py-1 rounded-lg font-medium text-slate-400 whitespace-nowrap">Staff</button>
+        <button onclick="switchTab('rates')" id="mTabBtn-rates" class="px-3 py-1 rounded-lg font-medium text-slate-400 whitespace-nowrap">Rates</button>
+        <button onclick="switchTab('firms')" id="mTabBtn-firms" class="px-3 py-1 rounded-lg font-medium text-slate-400 whitespace-nowrap">Firms</button>
+      </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full flex-1">
+      
+      <!-- ================================================================== -->
+      <!-- TAB 1: SMART LINK GENERATOR (Requirement 2)                        -->
+      <!-- ================================================================== -->
+      <div id="tabContent-links" class="space-y-8">
+        
+        <div class="border-b border-slate-800 pb-5">
+          <h2 class="font-serif text-2xl font-bold text-white">Staff-Wise Smart Link Generator</h2>
+          <p class="text-xs text-slate-400 mt-1">
+            Generate custom showroom links for each staff member, firm, and customer pricing tier. When the buyer opens the link, all calls and WhatsApp inquiries route directly to that staff member!
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          
+          <!-- Generator Form (7 cols) -->
+          <div class="lg:col-span-7 bg-slate-950 border border-slate-800 rounded-3xl p-6 sm:p-7 space-y-5">
+            
+            <!-- 1. Select Firm -->
+            <div>
+              <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">1. Select Firm Brand</label>
+              <div class="grid grid-cols-2 gap-3">
+                <label class="flex items-center gap-3 p-3.5 rounded-2xl border border-slate-700 bg-slate-900 cursor-pointer hover:border-amber-400 transition-all">
+                  <input type="radio" name="genFirm" value="saurashtra" checked onchange="updateGeneratedLink()" class="text-amber-500 focus:ring-0">
+                  <div>
+                    <p class="text-xs font-bold text-white">Saurashtra Sarees</p>
+                    <p class="text-[10px] text-slate-400">Royal Maroon Theme</p>
+                  </div>
+                </label>
+                <label class="flex items-center gap-3 p-3.5 rounded-2xl border border-slate-700 bg-slate-900 cursor-pointer hover:border-amber-400 transition-all">
+                  <input type="radio" name="genFirm" value="keya" onchange="updateGeneratedLink()" class="text-amber-500 focus:ring-0">
+                  <div>
+                    <p class="text-xs font-bold text-white">Keya Fashion</p>
+                    <p class="text-[10px] text-slate-400">Sky Blue & Gold Theme</p>
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            <!-- 2. Select Staff Member -->
+            <div>
+              <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">2. Assigned Staff Member (Routing Contact)</label>
+              <select id="genStaffSelect" onchange="updateGeneratedLink()" class="w-full px-4 py-3 bg-slate-900 border border-slate-700 rounded-xl text-xs text-white font-semibold focus:outline-none focus:border-amber-400">
+                <!-- Populated by JS -->
+              </select>
+            </div>
+
+            <!-- 3. Customer Role Tier -->
+            <div>
+              <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">3. Customer Pricing Tier</label>
+              <div class="grid grid-cols-3 gap-2.5">
+                <label class="p-3 rounded-xl border border-slate-700 bg-slate-900 cursor-pointer hover:border-amber-400 text-center block">
+                  <input type="radio" name="genRole" value="wholesale" checked onchange="updateGeneratedLink()" class="sr-only">
+                  <span class="block text-xs font-bold text-emerald-400">Wholesale</span>
+                  <span class="block text-[10px] text-slate-400 mt-0.5">Key: prime</span>
+                </label>
+                <label class="p-3 rounded-xl border border-slate-700 bg-slate-900 cursor-pointer hover:border-amber-400 text-center block">
+                  <input type="radio" name="genRole" value="reseller" onchange="updateGeneratedLink()" class="sr-only">
+                  <span class="block text-xs font-bold text-blue-400">Reseller / Portal</span>
+                  <span class="block text-[10px] text-slate-400 mt-0.5">Key: seller</span>
+                </label>
+                <label class="p-3 rounded-xl border border-slate-700 bg-slate-900 cursor-pointer hover:border-amber-400 text-center block">
+                  <input type="radio" name="genRole" value="retail" onchange="updateGeneratedLink()" class="sr-only">
+                  <span class="block text-xs font-bold text-purple-400">Retail MRP</span>
+                  <span class="block text-[10px] text-slate-400 mt-0.5">Safe (No Key)</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- 4. Default Shoot View -->
+            <div>
+              <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">4. Default Shoot View</label>
+              <div class="grid grid-cols-3 gap-2.5 text-xs">
+                <label class="p-2.5 rounded-xl border border-slate-700 bg-slate-900 cursor-pointer text-center block">
+                  <input type="radio" name="genShoot" value="all" checked onchange="updateGeneratedLink()">
+                  <span class="font-bold text-slate-300 ml-1">All (Default)</span>
+                </label>
+                <label class="p-2.5 rounded-xl border border-slate-700 bg-slate-900 cursor-pointer text-center block">
+                  <input type="radio" name="genShoot" value="model" onchange="updateGeneratedLink()">
+                  <span class="font-bold text-slate-300 ml-1">Model Only</span>
+                </label>
+                <label class="p-2.5 rounded-xl border border-slate-700 bg-slate-900 cursor-pointer text-center block">
+                  <input type="radio" name="genShoot" value="table" onchange="updateGeneratedLink()">
+                  <span class="font-bold text-slate-300 ml-1">Table Only</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- 5. Direct Catalog Link (Optional) -->
+            <div>
+              <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">5. Direct Catalog Landing (Optional)</label>
+              <select id="genCatalogSelect" onchange="updateGeneratedLink()" class="w-full px-4 py-2.5 bg-slate-900 border border-slate-700 rounded-xl text-xs text-white focus:outline-none focus:border-amber-400">
+                <option value="">-- Open Full Showroom Collection (Home) --</option>
+                <!-- Populated by JS -->
+              </select>
+            </div>
+
+          </div>
+
+          <!-- Generated Link Output Box (5 cols) -->
+          <div class="lg:col-span-5 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 border border-amber-500/30 rounded-3xl p-6 sm:p-7 flex flex-col justify-between space-y-6 shadow-2xl">
+            
+            <div class="space-y-4">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-extrabold text-amber-400 uppercase tracking-widest flex items-center gap-1.5">
+                  <i data-lucide="check-circle" class="w-4 h-4"></i> Ready-to-Share Smart Link
+                </span>
+                <span id="previewFirmBadge" class="text-[10px] font-bold px-2 py-0.5 rounded bg-brand-maroon text-white">Saurashtra</span>
+              </div>
+
+              <!-- Live URL Display -->
+              <div class="p-4 bg-slate-950 rounded-2xl border border-slate-800 break-all text-xs font-mono text-amber-200">
+                <span id="generatedUrlText">https://shaktidevelops.github.io/Vellum/?firm=saurashtra&staff=saurabh&k=prime</span>
+              </div>
+
+              <!-- Summary Card -->
+              <div class="p-4 rounded-2xl bg-slate-900/80 border border-slate-800 text-xs space-y-2 text-slate-300">
+                <div class="flex justify-between">
+                  <span class="text-slate-500">Firm:</span>
+                  <strong id="previewFirmName" class="text-white">Saurashtra Sarees</strong>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-slate-500">Staff Assigned:</span>
+                  <strong id="previewStaffName" class="text-white">Saurabh Bhai (+91 9879471039)</strong>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-slate-500">Rate Displayed:</span>
+                  <strong id="previewRoleName" class="text-emerald-400">Super Wholesale (prime)</strong>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-slate-500">Default Shoot:</span>
+                  <strong id="previewShootName" class="text-slate-300">All Shoots</strong>
+                </div>
+              </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="space-y-2.5">
+              <button onclick="copyGeneratedLink()" class="w-full py-3.5 px-4 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-amber-500/20 transition-all">
+                <i data-lucide="copy" class="w-4 h-4"></i>
+                <span>Copy Smart Link</span>
+              </button>
+
+              <button onclick="copyWhatsAppBroadcast()" class="w-full py-3 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center justify-center gap-2 transition-all">
+                <i data-lucide="message-circle" class="w-4 h-4 fill-current"></i>
+                <span>Copy Ready WhatsApp Message</span>
+              </button>
+
+              <a id="previewTestBtn" href="#" target="_blank" class="w-full py-2.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold flex items-center justify-center gap-1.5 transition-all">
+                <span>Test Link in New Tab</span> ↗
+              </a>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- ================================================================== -->
+      <!-- TAB 2: STAFF DIRECTORY MANAGER (Requirement 2)                     -->
+      <!-- ================================================================== -->
+      <div id="tabContent-staff" class="hidden space-y-6">
+        
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-5">
+          <div>
+            <h2 class="font-serif text-2xl font-bold text-white">Sales Staff Directory</h2>
+            <p class="text-xs text-slate-400 mt-1">Manage staff numbers, assigned firm, and dedicated link slugs</p>
+          </div>
+          <button onclick="openAddStaffModal()" class="px-4 py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold rounded-xl flex items-center gap-1.5 self-start shadow-xs">
+            <i data-lucide="user-plus" class="w-4 h-4"></i>
+            <span>Add New Staff</span>
+          </button>
+        </div>
+
+        <div class="bg-slate-950 border border-slate-800 rounded-3xl overflow-hidden">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-slate-900 border-b border-slate-800 text-[10px] uppercase tracking-wider text-slate-400">
+                <tr>
+                  <th class="py-3.5 px-4">Staff Name</th>
+                  <th class="py-3.5 px-4">Firm Brand</th>
+                  <th class="py-3.5 px-4">Phone Number</th>
+                  <th class="py-3.5 px-4">WhatsApp Routing</th>
+                  <th class="py-3.5 px-4">Link Slug</th>
+                  <th class="py-3.5 px-4 text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="staffTableBody" class="divide-y divide-slate-800/80 text-slate-300">
+                <!-- Rendered by JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ================================================================== -->
+      <!-- TAB 3: LIVE RATES & STOCK EDITOR (Requirement 6)                   -->
+      <!-- ================================================================== -->
+      <div id="tabContent-rates" class="hidden space-y-6">
+        
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-5">
+          <div>
+            <h2 class="font-serif text-2xl font-bold text-white">Catalog Rates & Stock Manager</h2>
+            <p class="text-xs text-slate-400 mt-1">Edit Wholesale, Reseller, and Retail prices across all 26 collections</p>
+          </div>
+          <div class="flex items-center gap-3">
+            <a href="https://docs.google.com/spreadsheets/d/1O-F9nVgPdkamtTGDesEcde8PCZSK7pyjUJDi8PrwmaY/edit" target="_blank" class="px-4 py-2 bg-emerald-700 hover:bg-emerald-600 text-white text-xs font-bold rounded-xl flex items-center gap-1.5">
+              <span>Open Master Google Sheet</span> ↗
+            </a>
+            <button onclick="saveRatesToLocal()" class="px-4 py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold rounded-xl flex items-center gap-1.5">
+              <i data-lucide="save" class="w-4 h-4"></i>
+              <span>Save Rates</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="bg-slate-950 border border-slate-800 rounded-3xl overflow-hidden">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-slate-900 border-b border-slate-800 text-[10px] uppercase tracking-wider text-slate-400">
+                <tr>
+                  <th class="py-3.5 px-4">Catalog</th>
+                  <th class="py-3.5 px-4">Category</th>
+                  <th class="py-3.5 px-4">Wholesale Rate (₹)</th>
+                  <th class="py-3.5 px-4">Reseller Rate (₹)</th>
+                  <th class="py-3.5 px-4">Retail MRP (₹)</th>
+                  <th class="py-3.5 px-4">Status</th>
+                </tr>
+              </thead>
+              <tbody id="ratesTableBody" class="divide-y divide-slate-800/80 text-slate-300">
+                <!-- Rendered by JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ================================================================== -->
+      <!-- TAB 4: FIRMS & THEMES (Requirement 7)                              -->
+      <!-- ================================================================== -->
+      <div id="tabContent-firms" class="hidden space-y-6">
+        
+        <div class="border-b border-slate-800 pb-5">
+          <h2 class="font-serif text-2xl font-bold text-white">Dual Firm Brand Identity</h2>
+          <p class="text-xs text-slate-400 mt-1">Configure theme colors, logos, and default trade details for each firm</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          
+          <!-- Saurashtra Sarees Card -->
+          <div class="bg-slate-950 border border-slate-800 rounded-3xl p-6 space-y-4">
+            <div class="flex items-center gap-3">
+              <img src="assets/saurashtra-sarees-logo.jpg" alt="Saurashtra Logo" class="h-12 w-auto object-contain bg-white p-1 rounded-xl">
+              <div>
+                <h3 class="font-serif text-lg font-bold text-white">Saurashtra Sarees</h3>
+                <p class="text-xs text-slate-400">Make Occasion Better</p>
+              </div>
+            </div>
+            <div class="space-y-2 text-xs text-slate-300 pt-2 border-t border-slate-800">
+              <div class="flex justify-between py-1"><span class="text-slate-500">Theme Palette:</span> <span class="font-bold text-rose-400">Royal Maroon (#8B1D40) & Gold</span></div>
+              <div class="flex justify-between py-1"><span class="text-slate-500">Primary Contact:</span> <span>+91 9879471039</span></div>
+              <div class="flex justify-between py-1"><span class="text-slate-500">Default Staff:</span> <span>Saurabh Bhai</span></div>
+            </div>
+          </div>
+
+          <!-- Keya Fashion Card -->
+          <div class="bg-slate-950 border border-slate-800 rounded-3xl p-6 space-y-4">
+            <div class="flex items-center gap-3">
+              <img src="assets/keya-fashion-logo.jpg" alt="Keya Logo" class="h-12 w-auto object-contain bg-white p-1 rounded-xl">
+              <div>
+                <h3 class="font-serif text-lg font-bold text-white">Keya Fashion</h3>
+                <p class="text-xs text-slate-400">Stop wishing. Start living....</p>
+              </div>
+            </div>
+            <div class="space-y-2 text-xs text-slate-300 pt-2 border-t border-slate-800">
+              <div class="flex justify-between py-1"><span class="text-slate-500">Theme Palette:</span> <span class="font-bold text-sky-400">Cyan Sky Blue (#0284c7) & Yellow/Green</span></div>
+              <div class="flex justify-between py-1"><span class="text-slate-500">Primary Contact:</span> <span>+91 9913643433</span></div>
+              <div class="flex justify-between py-1"><span class="text-slate-500">Default Staff:</span> <span>Keyur Bhai</span></div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </main>
+
+  </div>
+
+  <!-- Toast -->
+  <div id="adminToast" class="hidden fixed bottom-6 right-6 z-50 bg-slate-800 text-white px-4 py-3 rounded-2xl shadow-xl text-xs font-semibold flex items-center gap-2 border border-slate-700">
+    <i data-lucide="check-circle" class="w-4 h-4 text-emerald-400"></i>
+    <span id="adminToastMsg">Copied!</span>
+  </div>
+
+  <script src="admin.js"></script>
+</body>
+</html>

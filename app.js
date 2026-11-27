@@ -1,20 +1,106 @@
 // ==========================================================================
-// VELLUM — Luxury Digital Textile Showroom Engine
-// Developed for BinduGrid Studio
+// VELLUM — Multi-Firm Luxury Saree Showroom Engine
+// Developed by BinduGrid Studio
 // ==========================================================================
 
 const CONFIG = {
   sheetId: '1O-F9nVgPdkamtTGDesEcde8PCZSK7pyjUJDi8PrwmaY',
   sheetUrl: 'https://docs.google.com/spreadsheets/d/1O-F9nVgPdkamtTGDesEcde8PCZSK7pyjUJDi8PrwmaY/gviz/tq?tqx=out:csv&sheet=Catalogs%20%26%20Pricing',
-  whatsappPrimary: '919879471039',
-  whatsappSecondary: '919913643433',
   defaultKeys: {
     wholesale: 'prime',
     reseller: 'seller'
   }
 };
 
-// Global App State
+// --------------------------------------------------------------------------
+// 1. FIRMS CONFIGURATION (Keya Fashion & Saurashtra Sarees)
+// --------------------------------------------------------------------------
+const FIRMS = {
+  saurashtra: {
+    id: 'saurashtra',
+    name: 'Saurashtra Sarees',
+    tagline: 'Make Occasion Better',
+    logo: 'assets/saurashtra-sarees-logo.jpg',
+    themeClass: 'theme-saurashtra',
+    primaryColor: '#8b1d40',
+    accentColor: '#d4af37',
+    defaultPhone: '9879471039',
+    defaultWhatsapp: '919879471039'
+  },
+  keya: {
+    id: 'keya',
+    name: 'Keya Fashion',
+    tagline: 'Stop wishing. Start living....',
+    logo: 'assets/keya-fashion-logo.jpg',
+    themeClass: 'theme-keya',
+    primaryColor: '#0284c7',
+    accentColor: '#f59e0b',
+    defaultPhone: '9913643433',
+    defaultWhatsapp: '919913643433'
+  }
+};
+
+// --------------------------------------------------------------------------
+// 2. STAFF DIRECTORY (Supports 3-6 dedicated staff members)
+// --------------------------------------------------------------------------
+const DEFAULT_STAFF = [
+  {
+    id: 'staff-1',
+    slug: 'saurabh',
+    name: 'Saurabh Bhai',
+    firm: 'saurashtra',
+    phone: '9879471039',
+    whatsapp: '919879471039',
+    role: 'Wholesale Sales Head'
+  },
+  {
+    id: 'staff-2',
+    slug: 'keyur',
+    name: 'Keyur Bhai',
+    firm: 'keya',
+    phone: '9913643433',
+    whatsapp: '919913643433',
+    role: 'Portal & Reseller Specialist'
+  },
+  {
+    id: 'staff-3',
+    slug: 'rajesh',
+    name: 'Rajesh Bhai',
+    firm: 'saurashtra',
+    phone: '9879471039',
+    whatsapp: '919879471039',
+    role: 'B2B Trade Coordinator'
+  },
+  {
+    id: 'staff-4',
+    slug: 'neha',
+    name: 'Neha Ben',
+    firm: 'keya',
+    phone: '9913643433',
+    whatsapp: '919913643433',
+    role: 'Online Catalog Desk'
+  },
+  {
+    id: 'staff-5',
+    slug: 'amit',
+    name: 'Amit Bhai',
+    firm: 'saurashtra',
+    phone: '9879471039',
+    whatsapp: '919879471039',
+    role: 'Senior Sales Executive'
+  },
+  {
+    id: 'staff-6',
+    slug: 'priya',
+    name: 'Priya Ben',
+    firm: 'keya',
+    phone: '9913643433',
+    whatsapp: '919913643433',
+    role: 'Customer Success Manager'
+  }
+];
+
+// Global Application State
 const state = {
   catalogs: [],
   filteredCatalogs: [],
@@ -22,43 +108,145 @@ const state = {
   searchQuery: '',
   sortBy: 'newest',
   currentRole: 'retail', // 'wholesale', 'reseller', 'retail'
-  currentShoot: 'model', // 'model', 'table'
-  activeModalCatalog: null,
-  activeModalDesignIndex: 0,
-  activeModalShoot: 'model',
-  activeModalImageIndex: 0
+  currentShoot: 'all',   // 'all' (default), 'model', 'table'
+  activeFirm: 'saurashtra',
+  activeStaff: null,
+  activePdpCatalog: null,
+  activePdpDesignIndex: 0,
+  activePdpImageIndex: 0,
+  activePdpShoot: 'all'
 };
 
-// Initialize Application
+// --------------------------------------------------------------------------
+// 3. INITIALIZATION & ROUTING
+// --------------------------------------------------------------------------
 document.addEventListener('DOMContentLoaded', async () => {
-  resolveRoleFromUrl();
+  resolveUrlContext();
   await loadCatalogData();
   renderCategoryPills();
   applyFiltersAndRender();
+  
+  // Hash Routing Listener (for Shopify PDP navigation)
+  window.addEventListener('hashchange', handleHashRoute);
+  handleHashRoute();
+
+  if (window.lucide) lucide.createIcons();
 });
 
-// --------------------------------------------------------------------------
-// 1. Role & Secret Key Resolution (Tactic 1: Obfuscated Keys)
-// --------------------------------------------------------------------------
-function resolveRoleFromUrl() {
+// Resolve Firm, Staff, Role and Shoot from URL parameters
+function resolveUrlContext() {
   const params = new URLSearchParams(window.location.search);
+  
+  // 1. Firm resolution
+  const firmParam = (params.get('firm') || params.get('f') || '').toLowerCase().trim();
+  if (firmParam === 'keya' || firmParam === 'keyafashion') {
+    state.activeFirm = 'keya';
+  } else {
+    state.activeFirm = 'saurashtra';
+  }
+
+  // 2. Staff resolution (stored in localStorage or from DEFAULT_STAFF)
+  const savedStaff = JSON.parse(localStorage.getItem('vellum_staff_list') || 'null') || DEFAULT_STAFF;
+  const staffParam = (params.get('staff') || params.get('rep') || params.get('s') || '').toLowerCase().trim();
+  
+  if (staffParam) {
+    const matched = savedStaff.find(s => s.slug.toLowerCase() === staffParam || s.id.toLowerCase() === staffParam);
+    if (matched) {
+      state.activeStaff = matched;
+      state.activeFirm = matched.firm; // Firm follows the staff member's assignment
+    }
+  }
+
+  if (!state.activeStaff) {
+    // Default to the first staff of the active firm
+    state.activeStaff = savedStaff.find(s => s.firm === state.activeFirm) || savedStaff[0];
+  }
+
+  // 3. Shoot resolution (Default is "all")
+  const shootParam = (params.get('shoot') || '').toLowerCase().trim();
+  if (shootParam === 'model') state.currentShoot = 'model';
+  else if (shootParam === 'table') state.currentShoot = 'table';
+  else state.currentShoot = 'all';
+
+  // 4. Role resolution
   const key = (params.get('k') || params.get('key') || params.get('ref') || '').toLowerCase().trim();
-  const shoot = (params.get('shoot') || '').toLowerCase().trim();
-
-  state.currentShoot = (shoot === 'table') ? 'table' : 'model';
-
-  // Key matching
   if (key === CONFIG.defaultKeys.wholesale || key === 'wholesale' || key === 'dealer' || key === 'bulk') {
     state.currentRole = 'wholesale';
   } else if (key === CONFIG.defaultKeys.reseller || key === 'seller' || key === 'portal' || key === 'reseller') {
     state.currentRole = 'reseller';
   } else {
-    // If no key or invalid key is provided -> Safe Fallback to Retail / MRP
     state.currentRole = 'retail';
   }
 
+  applyFirmTheme();
   updateRoleUI();
   updateShootUI();
+  updateStaffUI();
+}
+
+function applyFirmTheme() {
+  const firm = FIRMS[state.activeFirm] || FIRMS.saurashtra;
+  const body = document.getElementById('appBody');
+  
+  if (body) {
+    body.className = `${firm.themeClass} min-h-screen flex flex-col antialiased selection:bg-slate-900 selection:text-white`;
+  }
+
+  // Update Page Title & Firm Logos
+  document.getElementById('pageTitle').textContent = `${firm.name} | Digital Wholesale Showroom`;
+  
+  const logoImg = document.getElementById('firmLogoImg');
+  if (logoImg) logoImg.src = firm.logo;
+
+  const footerLogo = document.getElementById('footerFirmLogo');
+  if (footerLogo) footerLogo.src = firm.logo;
+
+  // Text Elements
+  document.getElementById('headerFirmName').textContent = firm.name;
+  document.getElementById('announcementFirmText').textContent = firm.name;
+  document.getElementById('announcementTagline').textContent = firm.tagline;
+  document.getElementById('footerFirmName').textContent = firm.name;
+  document.getElementById('footerFirmTagline').textContent = firm.tagline;
+  document.getElementById('heroFirmTag').textContent = `${firm.name} Direct Wholesale`;
+  document.getElementById('currentFirmPillLabel').textContent = `Firm: ${firm.name.split(' ')[0]}`;
+}
+
+function updateStaffUI() {
+  const staff = state.activeStaff;
+  if (!staff) return;
+
+  const staffNameEls = [
+    document.getElementById('staffNameDisplay'),
+    document.getElementById('badgeStaffActive')
+  ];
+  staffNameEls.forEach(el => {
+    if (el) el.textContent = staff.name;
+  });
+
+  const phoneEl = document.getElementById('staffPhoneDisplay');
+  if (phoneEl) phoneEl.textContent = `+91 ${staff.phone}`;
+
+  const callLink = document.getElementById('staffCallLink');
+  if (callLink) callLink.href = `tel:+91${staff.phone}`;
+}
+
+function switchFirm(firmId) {
+  state.activeFirm = firmId;
+  applyFirmTheme();
+  
+  // Re-assign a matching staff member
+  const savedStaff = JSON.parse(localStorage.getItem('vellum_staff_list') || 'null') || DEFAULT_STAFF;
+  state.activeStaff = savedStaff.find(s => s.firm === state.activeFirm) || savedStaff[0];
+  updateStaffUI();
+
+  toggleFirmMenu();
+  applyFiltersAndRender();
+  if (state.activePdpCatalog) renderPdpScreen();
+}
+
+function toggleFirmMenu() {
+  const menu = document.getElementById('firmMenu');
+  if (menu) menu.classList.toggle('hidden');
 }
 
 function updateRoleUI() {
@@ -86,46 +274,6 @@ function updateRoleUI() {
   }
 }
 
-function updateShootUI() {
-  const btnModel = document.getElementById('btnShootModel');
-  const btnTable = document.getElementById('btnShootTable');
-  const mobileBtnModel = document.getElementById('mobileBtnModel');
-  const mobileBtnTable = document.getElementById('mobileBtnTable');
-  const badgeShoot = document.getElementById('badgeShootActive');
-
-  const isModel = state.currentShoot === 'model';
-
-  if (btnModel && btnTable) {
-    btnModel.className = isModel 
-      ? 'flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all shadow-sm bg-white text-brand-maroon'
-      : 'flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 transition-all';
-    
-    btnTable.className = !isModel 
-      ? 'flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all shadow-sm bg-white text-brand-maroon'
-      : 'flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 transition-all';
-  }
-
-  if (mobileBtnModel && mobileBtnTable) {
-    mobileBtnModel.className = isModel
-      ? 'flex-1 py-1.5 rounded-lg text-xs font-bold bg-white text-brand-maroon shadow-sm text-center'
-      : 'flex-1 py-1.5 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 text-center';
-
-    mobileBtnTable.className = !isModel
-      ? 'flex-1 py-1.5 rounded-lg text-xs font-bold bg-white text-brand-maroon shadow-sm text-center'
-      : 'flex-1 py-1.5 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 text-center';
-  }
-
-  if (badgeShoot) {
-    badgeShoot.textContent = isModel ? 'Model Shoot (Draped)' : 'Table Shoot (Flat Lay Detail)';
-  }
-}
-
-function setShootType(type) {
-  state.currentShoot = type;
-  updateShootUI();
-  applyFiltersAndRender();
-}
-
 function toggleRoleMenu() {
   const menu = document.getElementById('roleMenu');
   if (menu) menu.classList.toggle('hidden');
@@ -136,10 +284,53 @@ function setRole(role) {
   updateRoleUI();
   toggleRoleMenu();
   applyFiltersAndRender();
+  if (state.activePdpCatalog) renderPdpScreen();
+}
+
+function updateShootUI() {
+  const btnAll = document.getElementById('btnShootAll');
+  const btnModel = document.getElementById('btnShootModel');
+  const btnTable = document.getElementById('btnShootTable');
+  
+  const mBtnAll = document.getElementById('mobileBtnAll');
+  const mBtnModel = document.getElementById('mobileBtnModel');
+  const mBtnTable = document.getElementById('mobileBtnTable');
+
+  const badgeShoot = document.getElementById('badgeShootActive');
+
+  const activeClass = 'flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all shadow-xs bg-white text-slate-900';
+  const inactiveClass = 'flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium text-slate-600 hover:text-slate-900 transition-all';
+
+  if (btnAll && btnModel && btnTable) {
+    btnAll.className = (state.currentShoot === 'all') ? activeClass : inactiveClass;
+    btnModel.className = (state.currentShoot === 'model') ? activeClass : inactiveClass;
+    btnTable.className = (state.currentShoot === 'table') ? activeClass : inactiveClass;
+  }
+
+  const mActiveClass = 'flex-1 py-1.5 rounded-lg text-xs font-bold bg-white text-slate-900 shadow-xs text-center';
+  const mInactiveClass = 'flex-1 py-1.5 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 text-center';
+
+  if (mBtnAll && mBtnModel && mBtnTable) {
+    mBtnAll.className = (state.currentShoot === 'all') ? mActiveClass : mInactiveClass;
+    mBtnModel.className = (state.currentShoot === 'model') ? mActiveClass : mInactiveClass;
+    mBtnTable.className = (state.currentShoot === 'table') ? mActiveClass : mInactiveClass;
+  }
+
+  if (badgeShoot) {
+    badgeShoot.textContent = (state.currentShoot === 'all') 
+      ? 'All Shoots (Model + Table)' 
+      : (state.currentShoot === 'model' ? 'Model Shoot Only' : 'Table Shoot Only');
+  }
+}
+
+function setShootType(type) {
+  state.currentShoot = type;
+  updateShootUI();
+  applyFiltersAndRender();
 }
 
 // --------------------------------------------------------------------------
-// 2. Data Loading (Google Sheet Live Sync + Local Fallback)
+// 4. DATA LOADING & GOOGLE SHEET LIVE PRICING
 // --------------------------------------------------------------------------
 async function loadCatalogData() {
   try {
@@ -151,7 +342,7 @@ async function loadCatalogData() {
     console.warn('Local catalog fallback error:', err);
   }
 
-  // Live Google Sheet sync for dynamic rates
+  // Live Google Sheet sync
   try {
     const sheetRes = await fetch(CONFIG.sheetUrl);
     if (sheetRes.ok) {
@@ -212,7 +403,43 @@ function parseCsvRow(line) {
 }
 
 // --------------------------------------------------------------------------
-// 3. Category Filter Pills
+// 5. ACCURATE INDIAN TEXTILE COLOR PALETTE & HOVER TOOLTIPS
+// --------------------------------------------------------------------------
+function getAccurateColor(colorName) {
+  if (!colorName) return { hex: '#94a3b8', label: 'Multi-Color' };
+  const c = colorName.toLowerCase().replace(/_/g, ' ');
+
+  if (c.includes('wine') || c.includes('burgundy')) return { hex: '#722F37', label: 'Deep Wine' };
+  if (c.includes('maroon')) return { hex: '#800000', label: 'Royal Maroon' };
+  if (c.includes('red')) return { hex: '#C41E3A', label: 'Ruby Red' };
+  if (c.includes('peacock') || c.includes('rama')) return { hex: '#005F73', label: 'Peacock Rama' };
+  if (c.includes('navy')) return { hex: '#0B1B3D', label: 'Midnight Navy' };
+  if (c.includes('sky')) return { hex: '#38BDF8', label: 'Firozi Sky Blue' };
+  if (c.includes('blue')) return { hex: '#1E3A8A', label: 'Royal Blue' };
+  if (c.includes('rani') || c.includes('magenta')) return { hex: '#E11D48', label: 'Rani Pink' };
+  if (c.includes('pink')) return { hex: '#F472B6', label: 'Gulabi Pink' };
+  if (c.includes('haldi') || c.includes('gold')) return { hex: '#EAB308', label: 'Haldi Gold' };
+  if (c.includes('mustard')) return { hex: '#CA8A04', label: 'Mustard Yellow' };
+  if (c.includes('yellow')) return { hex: '#FACC15', label: 'Bright Yellow' };
+  if (c.includes('mehendi')) return { hex: '#4D7C0F', label: 'Mehendi Green' };
+  if (c.includes('pista')) return { hex: '#86EFAC', label: 'Pista Green' };
+  if (c.includes('parrot')) return { hex: '#22C55E', label: 'Parrot Green' };
+  if (c.includes('sea green')) return { hex: '#14B8A6', label: 'Sea Green' };
+  if (c.includes('green')) return { hex: '#15803D', label: 'Emerald Green' };
+  if (c.includes('purple')) return { hex: '#6B21A8', label: 'Imperial Purple' };
+  if (c.includes('lavender')) return { hex: '#A855F7', label: 'Soft Lavender' };
+  if (c.includes('orange')) return { hex: '#EA580C', label: 'Kesari Orange' };
+  if (c.includes('peach')) return { hex: '#FDBA74', label: 'Aadu Peach' };
+  if (c.includes('black')) return { hex: '#18181B', label: 'Jet Black' };
+  if (c.includes('grey') || c.includes('gray')) return { hex: '#64748B', label: 'Charcoal Grey' };
+  if (c.includes('chiku') || c.includes('beige')) return { hex: '#D4A373', label: 'Chiku Beige' };
+  if (c.includes('cream') || c.includes('white')) return { hex: '#FEF3C7', label: 'Makkhan Cream' };
+
+  return { hex: '#64748b', label: colorName };
+}
+
+// --------------------------------------------------------------------------
+// 6. SCREEN 1: CATALOGUE COLLECTION & CARDS
 // --------------------------------------------------------------------------
 function renderCategoryPills() {
   const container = document.getElementById('categoryPills');
@@ -224,7 +451,7 @@ function renderCategoryPills() {
     const val = cat === 'All Collections' ? 'all' : cat;
     const isActive = state.selectedCategory === val;
     const activeClass = isActive 
-      ? 'bg-brand-maroon text-white font-bold shadow-sm'
+      ? 'bg-slate-900 text-white font-bold shadow-xs'
       : 'bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium';
 
     return `
@@ -272,9 +499,18 @@ function resetFilters() {
   applyFiltersAndRender();
 }
 
-// --------------------------------------------------------------------------
-// 4. Filtering, Sorting & Card Rendering
-// --------------------------------------------------------------------------
+function getActiveRate(catalog) {
+  if (state.currentRole === 'wholesale') return catalog.wholesaleRate;
+  if (state.currentRole === 'reseller') return catalog.resellerRate;
+  return catalog.retailRate;
+}
+
+function getRoleTag() {
+  if (state.currentRole === 'wholesale') return 'Wholesale';
+  if (state.currentRole === 'reseller') return 'Reseller';
+  return 'MRP';
+}
+
 function applyFiltersAndRender() {
   let list = [...state.catalogs];
 
@@ -325,18 +561,6 @@ function applyFiltersAndRender() {
   if (window.lucide) lucide.createIcons();
 }
 
-function getActiveRate(catalog) {
-  if (state.currentRole === 'wholesale') return catalog.wholesaleRate;
-  if (state.currentRole === 'reseller') return catalog.resellerRate;
-  return catalog.retailRate;
-}
-
-function getRoleTag() {
-  if (state.currentRole === 'wholesale') return 'Wholesale';
-  if (state.currentRole === 'reseller') return 'Reseller';
-  return 'MRP';
-}
-
 function renderGrid(catalogs) {
   const grid = document.getElementById('catalogGrid');
   if (!grid) return;
@@ -345,35 +569,45 @@ function renderGrid(catalogs) {
     const firstDesign = cat.designs[0] || {};
     const rate = getActiveRate(cat);
     const roleTag = getRoleTag();
-    const isModel = state.currentShoot === 'model';
-    const shootBadge = isModel ? '👗 Model Shoot' : '🪑 Table Shoot';
-    const shootBadgeClass = isModel ? 'badge-model' : 'badge-table';
 
-    // Hero image logic: use real Google Drive photo if available
-    const displayImgUrl = firstDesign.heroImageUrl || cat.heroImageUrl || 'https://placehold.co/600x800/2c0d16/d4af37?text=' + encodeURIComponent(cat.name);
+    // Shoot badge calculation based on currentShoot
+    let shootBadge = '🌟 All Shoots';
+    let shootBadgeClass = 'badge-all';
 
-    // Color swatches (first 6 dots)
+    if (state.currentShoot === 'model') {
+      shootBadge = '👗 Model Shoot';
+      shootBadgeClass = 'badge-model';
+    } else if (state.currentShoot === 'table') {
+      shootBadge = '🪑 Table Shoot';
+      shootBadgeClass = 'badge-table';
+    }
+
+    const displayImgUrl = firstDesign.heroImageUrl || cat.heroImageUrl || 'https://placehold.co/600x800/1e293b/d4af37?text=' + encodeURIComponent(cat.name);
+
+    // Color Swatches with Tooltips (Requirement 5)
     const swatchesHtml = cat.designs.slice(0, 6).map((d, dIdx) => {
-      const colorBg = getColorHex(d.color);
+      const colorObj = getAccurateColor(d.color);
       const isSelected = dIdx === 0;
       return `
-        <button 
-          type="button"
-          onclick="event.stopPropagation(); switchCardDesign('${cat.code}', ${dIdx})"
-          title="${d.color} (Design ${d.code})"
-          class="card-dot-${cat.code} w-4 h-4 rounded-full border-2 border-white shadow-xs inline-block transition-transform hover:scale-130 ${isSelected ? 'ring-2 ring-brand-maroon scale-115' : 'opacity-85'}"
-          style="background-color: ${colorBg};"
-        ></button>
+        <div class="swatch-wrapper">
+          <span class="swatch-tooltip">Design ${d.code}: ${colorObj.label}</span>
+          <button 
+            type="button"
+            onclick="event.stopPropagation(); switchCardDesign('${cat.code}', ${dIdx})"
+            class="card-dot-${cat.code} w-4 h-4 rounded-full border-2 border-white shadow-xs inline-block transition-transform hover:scale-130 ${isSelected ? 'ring-2 ring-slate-900 scale-115' : 'opacity-85'}"
+            style="background-color: ${colorObj.hex};"
+          ></button>
+        </div>
       `;
     }).join('');
 
     const moreColors = cat.designs.length > 6 ? `<span class="text-[10px] text-slate-400 font-bold">+${cat.designs.length - 6}</span>` : '';
 
     return `
-      <div class="catalog-card bg-white rounded-3xl overflow-hidden border border-slate-200/90 flex flex-col group shadow-sm hover:shadow-xl transition-all">
+      <div class="catalog-card bg-white rounded-3xl overflow-hidden border border-slate-200/90 flex flex-col group shadow-xs hover:shadow-xl transition-all">
         
-        <!-- Media Visual Frame -->
-        <div onclick="openProductModal('${cat.code}')" class="relative aspect-[3/4] bg-slate-900 overflow-hidden cursor-pointer flex items-center justify-center">
+        <!-- Media Frame: Clicking navigates to dedicated Shopify PDP -->
+        <div onclick="navigateToProduct('${cat.code}')" class="relative aspect-[3/4] bg-slate-900 overflow-hidden cursor-pointer flex items-center justify-center">
           
           <img 
             id="card-hero-${cat.code}"
@@ -382,7 +616,7 @@ function renderGrid(catalogs) {
             alt="${cat.name}" 
             loading="lazy" 
             class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-108"
-            onerror="this.onerror=null; this.src='https://placehold.co/600x800/2c0d16/d4af37?text=${encodeURIComponent(cat.name)}';"
+            onerror="this.onerror=null; this.src='https://placehold.co/600x800/1e293b/d4af37?text=${encodeURIComponent(cat.name)}';"
           >
 
           <!-- Badges Floating -->
@@ -398,20 +632,20 @@ function renderGrid(catalogs) {
           </div>
 
           <!-- Quick Look Icon on Hover -->
-          <div class="absolute inset-0 bg-slate-950/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none">
+          <div class="absolute inset-0 bg-slate-950/25 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none">
             <span class="px-4 py-2 bg-white/95 backdrop-blur-md rounded-xl text-xs font-bold text-slate-900 shadow-xl flex items-center gap-1.5 transform translate-y-2 group-hover:translate-y-0 transition-transform">
-              <span>Open Lookbook</span> ↗
+              <span>View Product Details</span> ↗
             </span>
           </div>
 
         </div>
 
-        <!-- Content Area -->
+        <!-- Content Details Area -->
         <div class="p-5 flex-1 flex flex-col justify-between space-y-4">
           
           <div class="space-y-1.5">
             <div class="flex items-center justify-between text-xs">
-              <span class="font-extrabold uppercase tracking-wider text-brand-maroon text-[10px] bg-brand-maroonlight px-2 py-0.5 rounded">
+              <span class="font-extrabold uppercase tracking-wider text-slate-700 text-[10px] bg-slate-100 px-2 py-0.5 rounded">
                 ${cat.code}
               </span>
               <span class="text-[11px] font-semibold text-emerald-600 flex items-center gap-1">
@@ -419,12 +653,12 @@ function renderGrid(catalogs) {
               </span>
             </div>
 
-            <h3 onclick="openProductModal('${cat.code}')" class="font-serif text-lg font-bold text-slate-900 hover:text-brand-maroon cursor-pointer transition-colors leading-tight">
+            <h3 onclick="navigateToProduct('${cat.code}')" class="font-serif text-lg font-bold text-slate-900 hover:text-slate-700 cursor-pointer transition-colors leading-tight">
               ${cat.name}
             </h3>
 
-            <!-- Active Selected Color Label on Card -->
-            <p id="card-design-${cat.code}" class="text-[11px] font-bold text-brand-maroon">
+            <!-- Active Selected Design & Color -->
+            <p id="card-design-${cat.code}" class="text-[11px] font-bold text-slate-700">
               Design ${firstDesign.code || '101'} — ${firstDesign.color || 'Color 1'}
             </p>
 
@@ -432,9 +666,8 @@ function renderGrid(catalogs) {
               ${cat.fabric}
             </p>
 
-            <!-- Color Swatches Row with 101, 201, 301 click switching -->
+            <!-- Color Swatches with Tooltips -->
             <div class="pt-1">
-              <span class="text-[10px] text-slate-400 font-semibold block mb-1">Click to view color:</span>
               <div class="flex items-center gap-2">
                 ${swatchesHtml}
                 ${moreColors}
@@ -442,7 +675,7 @@ function renderGrid(catalogs) {
             </div>
           </div>
 
-          <!-- Price & Actions Footer -->
+          <!-- Price & Quick Actions -->
           <div class="pt-3 border-t border-slate-100 space-y-3">
             <div class="flex items-baseline justify-between">
               <div>
@@ -452,16 +685,16 @@ function renderGrid(catalogs) {
                   <span class="text-[11px] text-slate-400">/ pc</span>
                 </div>
               </div>
-              <span class="text-[10px] font-bold px-2 py-0.5 bg-amber-50 text-amber-900 border border-amber-200/60 rounded">
+              <span class="text-[10px] font-bold px-2 py-0.5 bg-slate-100 text-slate-700 rounded">
                 ${cat.skuCount} Colors
               </span>
             </div>
 
             <div class="grid grid-cols-2 gap-2">
-              <button onclick="openProductModal('${cat.code}')" class="py-2.5 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold transition-all text-center">
-                Lookbook
+              <button onclick="navigateToProduct('${cat.code}')" class="py-2.5 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold transition-all text-center">
+                Full Details
               </button>
-              <button onclick="quickWhatsApp('${cat.code}', '${firstDesign.color || 'All Colors'} (Design ${firstDesign.code || '101'})', ${rate})" class="py-2.5 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold flex items-center justify-center gap-1.5 shadow-sm transition-all">
+              <button onclick="sendStaffWhatsApp('${cat.code}', '${firstDesign.color || 'All Colors'}', ${rate})" class="py-2.5 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold flex items-center justify-center gap-1.5 shadow-xs transition-all">
                 <span>Inquire</span>
               </button>
             </div>
@@ -474,12 +707,13 @@ function renderGrid(catalogs) {
   }).join('');
 }
 
-// Switch Color / Design directly on the card
+// Switch design/color directly on card
 function switchCardDesign(catCode, designIdx) {
   const cat = state.catalogs.find(c => c.code.toLowerCase() === catCode.toLowerCase());
   if (!cat || !cat.designs[designIdx]) return;
 
   const design = cat.designs[designIdx];
+  const colorObj = getAccurateColor(design.color);
 
   // Update card hero image
   const imgEl = document.getElementById(`card-hero-${cat.code}`);
@@ -490,188 +724,182 @@ function switchCardDesign(catCode, designIdx) {
   // Update design label text
   const labelEl = document.getElementById(`card-design-${cat.code}`);
   if (labelEl) {
-    labelEl.textContent = `Design ${design.code} — ${design.color}`;
+    labelEl.textContent = `Design ${design.code} — ${colorObj.label}`;
   }
 
-  // Update active border on swatch buttons
+  // Highlight active dot
   const dots = document.querySelectorAll(`.card-dot-${cat.code}`);
   dots.forEach((dot, idx) => {
     if (idx === designIdx) {
-      dot.className = `card-dot-${cat.code} w-4 h-4 rounded-full border-2 border-white shadow-xs inline-block transition-transform scale-125 ring-2 ring-brand-maroon`;
+      dot.className = `card-dot-${cat.code} w-4 h-4 rounded-full border-2 border-white shadow-xs inline-block transition-transform scale-125 ring-2 ring-slate-900`;
     } else {
       dot.className = `card-dot-${cat.code} w-4 h-4 rounded-full border-2 border-white shadow-xs inline-block transition-transform hover:scale-125 opacity-85`;
     }
   });
 }
 
-// Helper: Color to CSS Hex Map
-function getColorHex(colorName) {
-  if (!colorName) return '#e2e8f0';
-  const c = colorName.toLowerCase();
-  if (c.includes('red')) return '#dc2626';
-  if (c.includes('wine')) return '#881337';
-  if (c.includes('maroon')) return '#800000';
-  if (c.includes('blue') || c.includes('navy')) return '#1e40af';
-  if (c.includes('sky')) return '#38bdf8';
-  if (c.includes('pink') || c.includes('magenta')) return '#db2777';
-  if (c.includes('yellow') || c.includes('gold')) return '#eab308';
-  if (c.includes('green') || c.includes('pista')) return '#16a34a';
-  if (c.includes('teal') || c.includes('rama')) return '#0d9488';
-  if (c.includes('purple') || c.includes('lavender')) return '#7c3aed';
-  if (c.includes('orange') || c.includes('peach')) return '#ea580c';
-  if (c.includes('grey') || c.includes('gray')) return '#64748b';
-  if (c.includes('black')) return '#0f172a';
-  if (c.includes('beige') || c.includes('chiku') || c.includes('cream')) return '#d4a373';
-  return '#cbd5e1';
+// --------------------------------------------------------------------------
+// 7. SCREEN 2: 100% SHOPIFY PRODUCT DETAIL PAGE (PDP)
+// --------------------------------------------------------------------------
+function navigateToProduct(catalogCode) {
+  window.location.hash = `#catalog/${catalogCode.toLowerCase()}`;
 }
 
-// --------------------------------------------------------------------------
-// 5. Lookbook Detail Modal
-// --------------------------------------------------------------------------
-function openProductModal(catalogCode, startDesignIdx = 0) {
-  const cat = state.catalogs.find(c => c.code.toLowerCase() === catalogCode.toLowerCase());
+function navigateToHome() {
+  window.location.hash = '';
+}
+
+function handleHashRoute() {
+  const hash = window.location.hash || '';
+  const screenHome = document.getElementById('screenHome');
+  const screenProduct = document.getElementById('screenProduct');
+
+  if (hash.startsWith('#catalog/')) {
+    const code = hash.replace('#catalog/', '').trim().toLowerCase();
+    const cat = state.catalogs.find(c => c.code.toLowerCase() === code || c.id.toLowerCase() === code);
+    
+    if (cat) {
+      state.activePdpCatalog = cat;
+      state.activePdpDesignIndex = 0;
+      state.activePdpImageIndex = 0;
+      state.activePdpShoot = state.currentShoot;
+
+      if (screenHome) screenHome.classList.add('hidden');
+      if (screenProduct) screenProduct.classList.remove('hidden');
+      renderPdpScreen();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+  }
+
+  // Default: Show Home Screen
+  if (screenHome) screenHome.classList.remove('hidden');
+  if (screenProduct) screenProduct.classList.add('hidden');
+  state.activePdpCatalog = null;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function renderPdpScreen() {
+  const cat = state.activePdpCatalog;
   if (!cat) return;
 
-  state.activeModalCatalog = cat;
-  state.activeModalDesignIndex = startDesignIdx;
-  state.activeModalShoot = state.currentShoot;
-  state.activeModalImageIndex = 0;
+  const firm = FIRMS[state.activeFirm] || FIRMS.saurashtra;
+  const staff = state.activeStaff || DEFAULT_STAFF[0];
+  const rate = getActiveRate(cat);
 
-  // Header
-  document.getElementById('modalCatalogCode').textContent = cat.code;
-  document.getElementById('modalCategory').textContent = `${cat.category} Collection`;
-  document.getElementById('modalTitle').textContent = cat.name;
+  // Breadcrumbs
+  document.getElementById('pdpBreadcrumbCategory').textContent = cat.category;
+  document.getElementById('pdpBreadcrumbTitle').textContent = cat.name;
 
-  // Specs
-  document.getElementById('modalFabric').textContent = cat.fabric;
-  document.getElementById('modalBorder').textContent = cat.border;
-  document.getElementById('modalPallu').textContent = cat.pallu;
-  document.getElementById('modalBlouse').textContent = cat.blouse;
-  document.getElementById('modalLength').textContent = cat.length;
-
-  updateModalShootUI();
-  updateModalPriceUI();
-  renderModalColorSwatches();
-  updateModalGallery();
-
-  const modal = document.getElementById('productModal');
-  if (modal) modal.classList.remove('hidden');
-  document.body.classList.add('overflow-hidden');
-  if (window.lucide) lucide.createIcons();
-}
-
-function closeProductModal() {
-  const modal = document.getElementById('productModal');
-  if (modal) modal.classList.add('hidden');
-  document.body.classList.remove('overflow-hidden');
-}
-
-function setModalShoot(shootType) {
-  state.activeModalShoot = shootType;
-  updateModalShootUI();
-  updateModalGallery();
-}
-
-function updateModalShootUI() {
-  const btnModel = document.getElementById('modalBtnModel');
-  const btnTable = document.getElementById('modalBtnTable');
-  const badge = document.getElementById('modalShootBadge');
-  const indicator = document.getElementById('modalShootIndicator');
-
-  const isModel = state.activeModalShoot === 'model';
-
-  if (btnModel && btnTable) {
-    btnModel.className = isModel
-      ? 'flex-1 py-1.5 rounded-lg text-xs font-bold transition-all shadow-sm bg-white text-brand-maroon'
-      : 'flex-1 py-1.5 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 transition-all';
-
-    btnTable.className = !isModel
-      ? 'flex-1 py-1.5 rounded-lg text-xs font-bold transition-all shadow-sm bg-white text-brand-maroon'
-      : 'flex-1 py-1.5 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 transition-all';
-  }
-
-  if (badge) {
-    badge.textContent = isModel ? 'Model Shoot' : 'Table Shoot';
-    badge.className = isModel ? 'text-xs px-2 py-0.5 rounded-md font-bold badge-model' : 'text-xs px-2 py-0.5 rounded-md font-bold badge-table';
-  }
-
-  if (indicator) {
-    indicator.textContent = isModel ? 'Model Drape Angle' : 'Flat Lay Fabric & Pallu Angle';
-  }
-}
-
-function updateModalPriceUI() {
-  if (!state.activeModalCatalog) return;
-  const rate = getActiveRate(state.activeModalCatalog);
+  // Title, Category & Specs
+  document.getElementById('pdpCategoryTag').textContent = `${firm.name} • ${cat.category} Collection`;
+  document.getElementById('pdpTitle').textContent = cat.name;
+  document.getElementById('pdpCode').textContent = `SKU: ${cat.code}`;
+  document.getElementById('pdpPrice').textContent = `₹${rate}`;
+  
   const roleName = state.currentRole === 'wholesale' 
     ? 'Wholesale / Super Stockist Rate' 
     : state.currentRole === 'reseller' 
       ? 'Portal Seller / Reseller Rate' 
       : 'Retail / Catalog MRP';
+  document.getElementById('pdpRoleName').textContent = roleName;
 
-  document.getElementById('modalPrice').textContent = `₹${rate}`;
-  document.getElementById('modalRoleName').textContent = roleName;
+  document.getElementById('pdpFabric').textContent = cat.fabric;
+  document.getElementById('pdpBorder').textContent = cat.border;
+  document.getElementById('pdpPallu').textContent = cat.pallu;
+  document.getElementById('pdpBlouse').textContent = cat.blouse;
+  document.getElementById('pdpLength').textContent = cat.length;
+
+  // Staff Assignment Card
+  document.getElementById('pdpStaffName').textContent = staff.name;
+  document.getElementById('pdpStaffFirm').textContent = `${firm.name} • ${staff.role}`;
+  document.getElementById('pdpStaffCallBtn').href = `tel:+91${staff.phone}`;
+
+  // Color Swatches with accurate colors & hover tooltips
+  renderPdpColorSwatches();
+  updatePdpGallery();
+  updatePdpShootUI();
+  renderRelatedCatalogs();
+
+  if (window.lucide) lucide.createIcons();
 }
 
-function renderModalColorSwatches() {
-  const cat = state.activeModalCatalog;
+function setPdpShoot(shootType) {
+  state.activePdpShoot = shootType;
+  updatePdpShootUI();
+  updatePdpGallery();
+}
+
+function updatePdpShootUI() {
+  const btnAll = document.getElementById('pdpBtnShootAll');
+  const btnModel = document.getElementById('pdpBtnShootModel');
+  const btnTable = document.getElementById('pdpBtnShootTable');
+
+  const activeClass = 'flex-1 py-1.5 rounded-xl text-xs font-bold transition-all shadow-xs bg-white text-slate-900';
+  const inactiveClass = 'flex-1 py-1.5 rounded-xl text-xs font-medium text-slate-600 hover:text-slate-900 transition-all';
+
+  if (btnAll && btnModel && btnTable) {
+    btnAll.className = (state.activePdpShoot === 'all') ? activeClass : inactiveClass;
+    btnModel.className = (state.activePdpShoot === 'model') ? activeClass : inactiveClass;
+    btnTable.className = (state.activePdpShoot === 'table') ? activeClass : inactiveClass;
+  }
+}
+
+function renderPdpColorSwatches() {
+  const cat = state.activePdpCatalog;
   if (!cat) return;
 
-  const container = document.getElementById('modalColorSwatches');
+  const container = document.getElementById('pdpColorSwatchesContainer');
   if (!container) return;
 
   container.innerHTML = cat.designs.map((d, idx) => {
-    const isSelected = idx === state.activeModalDesignIndex;
-    const bgHex = getColorHex(d.color);
-    const activeClass = isSelected ? 'ring-3 ring-offset-2 ring-brand-maroon scale-115 shadow-md' : 'opacity-80 hover:opacity-100 hover:scale-110';
+    const isSelected = idx === state.activePdpDesignIndex;
+    const colorObj = getAccurateColor(d.color);
+    const activeClass = isSelected ? 'ring-3 ring-offset-2 ring-slate-900 scale-120 shadow-md' : 'opacity-85 hover:opacity-100 hover:scale-110';
 
     return `
-      <button 
-        type="button"
-        onclick="selectModalDesign(${idx})" 
-        title="Design ${d.code} — ${d.color}"
-        class="w-7 h-7 rounded-full border-2 border-white shadow-sm transition-all ${activeClass}"
-        style="background-color: ${bgHex};"
-      ></button>
+      <div class="swatch-wrapper">
+        <span class="swatch-tooltip">Design ${d.code}: ${colorObj.label}</span>
+        <button 
+          type="button"
+          onclick="selectPdpDesign(${idx})" 
+          class="w-7 h-7 rounded-full border-2 border-white shadow-xs transition-all ${activeClass}"
+          style="background-color: ${colorObj.hex};"
+        ></button>
+      </div>
     `;
   }).join('');
 
-  const activeDesign = cat.designs[state.activeModalDesignIndex] || {};
-  document.getElementById('modalSelectedColor').textContent = `Design ${activeDesign.code || '101'} — ${activeDesign.color || 'Color 1'}`;
+  const activeDesign = cat.designs[state.activePdpDesignIndex] || {};
+  const activeColorObj = getAccurateColor(activeDesign.color);
+  document.getElementById('pdpSelectedColorLabel').textContent = `Design ${activeDesign.code || '101'} — ${activeColorObj.label}`;
 }
 
-function selectModalDesign(idx) {
-  state.activeModalDesignIndex = idx;
-  state.activeModalImageIndex = 0;
-  renderModalColorSwatches();
-  updateModalGallery();
+function selectPdpDesign(idx) {
+  state.activePdpDesignIndex = idx;
+  state.activePdpImageIndex = 0;
+  renderPdpColorSwatches();
+  updatePdpGallery();
 }
 
-function updateModalGallery() {
-  const cat = state.activeModalCatalog;
+function updatePdpGallery() {
+  const cat = state.activePdpCatalog;
   if (!cat) return;
 
-  const activeDesign = cat.designs[state.activeModalDesignIndex] || {};
-  
-  // Real Drive image URLs for this specific design (e.g. 101, 102, 103, 104)
+  const activeDesign = cat.designs[state.activePdpDesignIndex] || {};
   const realUrls = (activeDesign.imageUrls && activeDesign.imageUrls.length > 0)
     ? activeDesign.imageUrls 
     : [activeDesign.heroImageUrl || cat.heroImageUrl];
 
-  const currentImgUrl = realUrls[state.activeModalImageIndex] || realUrls[0];
+  const currentImgUrl = realUrls[state.activePdpImageIndex] || realUrls[0];
 
-  // Hero frame
-  const heroImg = document.getElementById('modalHeroImage');
-  if (heroImg) {
-    if (currentImgUrl) {
-      heroImg.src = currentImgUrl;
-    } else {
-      heroImg.src = `https://placehold.co/600x800/2c0d16/d4af37?text=${encodeURIComponent(cat.name)}+${activeDesign.color || ''}`;
-    }
+  const heroImg = document.getElementById('pdpHeroImage');
+  if (heroImg && currentImgUrl) {
+    heroImg.src = currentImgUrl;
   }
 
   // Video button
-  const videoBtn = document.getElementById('modalVideoBtn');
+  const videoBtn = document.getElementById('pdpVideoBtn');
   if (videoBtn) {
     if (activeDesign.video || cat.hasVideo || cat.videoUrl) {
       videoBtn.classList.remove('hidden');
@@ -680,16 +908,18 @@ function updateModalGallery() {
     }
   }
 
-  // Thumbnails Strip: All angles for THIS design (e.g. 101, 102, 103, 104)
-  const thumbStrip = document.getElementById('modalThumbStrip');
+  // Thumbnails Strip for THIS selected color (e.g. 101, 102, 103, 104)
+  const thumbStrip = document.getElementById('pdpThumbStrip');
   if (thumbStrip) {
+    document.getElementById('pdpAngleCount').textContent = `${realUrls.length} Multi-Angle Views`;
+    
     thumbStrip.innerHTML = realUrls.map((imgUrl, i) => {
-      const isSelected = i === state.activeModalImageIndex;
-      const borderClass = isSelected ? 'border-brand-maroon ring-2 ring-brand-maroon/40 scale-105' : 'border-slate-200 opacity-70 hover:opacity-100';
-      const angleLabel = i === 0 ? 'Front Drape' : i === 1 ? 'Pallu Detail' : i === 2 ? 'Border Zari' : i === 3 ? 'Pleats' : 'Blouse Piece';
+      const isSelected = i === state.activePdpImageIndex;
+      const borderClass = isSelected ? 'border-slate-900 ring-2 ring-slate-900/30 scale-105' : 'border-slate-200 opacity-70 hover:opacity-100';
+      const angleLabel = i === 0 ? 'Front Drape' : i === 1 ? 'Pallu Weave' : i === 2 ? 'Border Zari' : i === 3 ? 'Pleats' : 'Blouse Piece';
 
       return `
-        <div onclick="selectModalAngle(${i})" class="flex-shrink-0 w-16 h-20 rounded-xl overflow-hidden cursor-pointer border-2 transition-all relative group bg-slate-900 ${borderClass}">
+        <div onclick="selectPdpAngle(${i})" class="flex-shrink-0 w-20 h-24 rounded-2xl overflow-hidden cursor-pointer border-2 transition-all relative group bg-slate-900 ${borderClass}">
           <img 
             src="${imgUrl}" 
             referrerpolicy="no-referrer"
@@ -697,7 +927,7 @@ function updateModalGallery() {
             class="w-full h-full object-cover"
             onerror="this.onerror=null; this.src='https://placehold.co/100x120/1e293b/ffffff?text=${i+1}';"
           >
-          <span class="absolute bottom-1 left-1 right-1 bg-black/80 backdrop-blur-xs text-[8px] text-white font-bold text-center rounded py-0.5 truncate px-0.5">
+          <span class="absolute bottom-1.5 left-1.5 right-1.5 bg-black/80 backdrop-blur-xs text-[9px] text-white font-bold text-center rounded py-0.5 truncate px-1">
             ${angleLabel}
           </span>
         </div>
@@ -706,18 +936,133 @@ function updateModalGallery() {
   }
 }
 
-function selectModalAngle(angleIndex) {
-  state.activeModalImageIndex = angleIndex;
-  updateModalGallery();
+function selectPdpAngle(angleIdx) {
+  state.activePdpImageIndex = angleIdx;
+  updatePdpGallery();
+  
+  const angleLabel = angleIdx === 0 ? 'Front Drape Angle' : angleIdx === 1 ? 'Pallu Detail Angle' : angleIdx === 2 ? 'Border Zari Angle' : 'Pleats & Blouse Detail';
+  document.getElementById('pdpAngleIndicator').textContent = angleLabel;
 }
 
 // --------------------------------------------------------------------------
-// 6. Video Reel Player
+// 8. SECTION: RELATED CATALOGUES (YOU MAY ALSO LIKE) (Requirement 4)
 // --------------------------------------------------------------------------
-function playModalVideo() {
-  const cat = state.activeModalCatalog;
+function renderRelatedCatalogs() {
+  const cat = state.activePdpCatalog;
   if (!cat) return;
-  const activeDesign = cat.designs[state.activeModalDesignIndex] || {};
+
+  const container = document.getElementById('pdpRelatedGrid');
+  if (!container) return;
+
+  // Find 4 other catalogs (prioritizing same category, excluding active catalog)
+  let related = state.catalogs.filter(c => c.code !== cat.code && c.category === cat.category);
+  if (related.length < 4) {
+    const others = state.catalogs.filter(c => c.code !== cat.code && c.category !== cat.category);
+    related = [...related, ...others];
+  }
+  related = related.slice(0, 4);
+
+  container.innerHTML = related.map(item => {
+    const firstD = item.designs[0] || {};
+    const itemRate = getActiveRate(item);
+    const itemImg = firstD.heroImageUrl || item.heroImageUrl || 'https://placehold.co/600x800/1e293b/d4af37?text=' + encodeURIComponent(item.name);
+
+    return `
+      <div onclick="navigateToProduct('${item.code}')" class="bg-slate-50 hover:bg-white rounded-2xl p-3 border border-slate-200 cursor-pointer transition-all hover:shadow-lg group flex flex-col justify-between">
+        <div class="relative aspect-[3/4] bg-slate-900 rounded-xl overflow-hidden mb-3">
+          <img 
+            src="${itemImg}" 
+            referrerpolicy="no-referrer"
+            alt="${item.name}" 
+            class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-108"
+            onerror="this.onerror=null; this.src='https://placehold.co/600x800/1e293b/d4af37?text=${encodeURIComponent(item.name)}';"
+          >
+          <span class="absolute top-2 left-2 text-[9px] font-extrabold bg-black/75 text-white px-2 py-0.5 rounded">
+            ${item.skuCount} Colors
+          </span>
+        </div>
+        <div>
+          <span class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">${item.category}</span>
+          <h4 class="font-serif text-sm font-bold text-slate-900 group-hover:text-brand-maroon transition-colors line-clamp-1">${item.name}</h4>
+          <div class="flex items-baseline justify-between mt-1">
+            <span class="font-serif text-base font-extrabold text-slate-900">₹${itemRate}</span>
+            <span class="text-[10px] text-emerald-600 font-bold">${item.status}</span>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+// --------------------------------------------------------------------------
+// 9. DEDICATED STAFF WHATSAPP & CALL INQUIRIES (Requirement 2)
+// --------------------------------------------------------------------------
+function sendStaffWhatsApp(catalogCode, color, rate) {
+  const firm = FIRMS[state.activeFirm] || FIRMS.saurashtra;
+  const staff = state.activeStaff || DEFAULT_STAFF[0];
+
+  const msg = encodeURIComponent(
+    `Hello ${staff.name} (${firm.name}),\n` +
+    `I am inquiring about this catalog:\n\n` +
+    `🥻 Catalog: ${catalogCode}\n` +
+    `🎨 Color/Design: ${color}\n` +
+    `💰 Rate: ₹${rate}\n` +
+    `View Mode: ${state.currentShoot.toUpperCase()}\n\n` +
+    `Please share stock availability and dispatch schedule.`
+  );
+  window.open(`https://wa.me/${staff.whatsapp}?text=${msg}`, '_blank');
+}
+
+function sendPdpWhatsApp() {
+  const cat = state.activePdpCatalog;
+  if (!cat) return;
+  const activeDesign = cat.designs[state.activePdpDesignIndex] || {};
+  const colorObj = getAccurateColor(activeDesign.color);
+  const rate = getActiveRate(cat);
+
+  sendStaffWhatsApp(cat.code, `${colorObj.label} (Design ${activeDesign.code})`, rate);
+}
+
+function copyPdpSpecs() {
+  const cat = state.activePdpCatalog;
+  if (!cat) return;
+  const firm = FIRMS[state.activeFirm] || FIRMS.saurashtra;
+  const staff = state.activeStaff || DEFAULT_STAFF[0];
+  const rate = getActiveRate(cat);
+
+  const textToCopy = 
+`🆕 PREMIUM SAREE CATALOG 🆕
+Brand: ${firm.name}
+Catalogue: ${cat.code} (${cat.category})
+Price: ₹${rate}/- Only
+
+Fabric Details:
+• Fabric: ${cat.fabric}
+• Border: ${cat.border}
+• Pallu: ${cat.pallu}
+• Blouse: ${cat.blouse}
+• Length: ${cat.length}
+
+Total Colors: ${cat.skuCount} Premium Colors
+Status: ${cat.status}
+
+Direct Inquiries & Booking:
+📞 Representative: ${staff.name}
+📱 WhatsApp / Call: +91 ${staff.phone}
+Powered by ${firm.name}`;
+
+  navigator.clipboard.writeText(textToCopy).then(() => {
+    showToast(`Specs copied for ${staff.name}'s desk!`);
+  });
+}
+
+// --------------------------------------------------------------------------
+// 10. VIDEO REEL PLAYER & TOAST
+// --------------------------------------------------------------------------
+function playCurrentVideo() {
+  const cat = state.activePdpCatalog || state.catalogs[0];
+  if (!cat) return;
+  const activeDesign = cat.designs[state.activePdpDesignIndex] || {};
   const vName = activeDesign.video || '100.mp4';
   const videoId = cat.videoDriveId || '1jLmIGfRmmDEZSNy-8xVNIyVnx9tAGwn6';
 
@@ -737,76 +1082,6 @@ function playModalVideo() {
 function closeVideoModal() {
   const vModal = document.getElementById('videoModal');
   if (vModal) vModal.classList.add('hidden');
-}
-
-// --------------------------------------------------------------------------
-// 7. WhatsApp & Inquiry Actions
-// --------------------------------------------------------------------------
-function quickWhatsApp(catalogCode, color, rate) {
-  const msg = encodeURIComponent(
-    `Hello BinduGrid Studio / Saurashtra Sarees,\n` +
-    `I am inquiring about:\n\n` +
-    `🥻 Catalog: ${catalogCode}\n` +
-    `🎨 Color: ${color}\n` +
-    `💰 Rate: ₹${rate}\n` +
-    `Shoot View: ${state.currentShoot === 'model' ? 'Model Shoot' : 'Table Shoot'}\n\n` +
-    `Please share stock availability and dispatch schedule.`
-  );
-  window.open(`https://wa.me/${CONFIG.whatsappPrimary}?text=${msg}`, '_blank');
-}
-
-function sendWhatsAppInquiry() {
-  const cat = state.activeModalCatalog;
-  if (!cat) return;
-  const activeDesign = cat.designs[state.activeModalDesignIndex] || {};
-  const rate = getActiveRate(cat);
-
-  quickWhatsApp(cat.code, `${activeDesign.color} (Design ${activeDesign.code})`, rate);
-}
-
-function copyCatalogCopy() {
-  const cat = state.activeModalCatalog;
-  if (!cat) return;
-  const rate = getActiveRate(cat);
-
-  const textToCopy = 
-`🆕 PREMIUM SAREE CATALOG 🆕
-Catalogue: ${cat.code} (${cat.category})
-Price: ₹${rate}/- Only
-
-Fabric Details:
-• Fabric: ${cat.fabric}
-• Border: ${cat.border}
-• Pallu: ${cat.pallu}
-• Blouse: ${cat.blouse}
-• Length: ${cat.length}
-
-Total Colors: ${cat.skuCount} Premium Colors
-Status: ${cat.status}
-
-Direct Inquiries & Booking:
-📞 Call / WhatsApp: +91 9879471039 / +91 9913643433
-Powered by BinduGrid Studio`;
-
-  navigator.clipboard.writeText(textToCopy).then(() => {
-    showToast('Catalog specs copied for WhatsApp groups!');
-  });
-}
-
-function copyShareLink() {
-  let url = window.location.origin + window.location.pathname;
-  if (state.currentRole === 'wholesale') {
-    url += `?k=${CONFIG.defaultKeys.wholesale}`;
-  } else if (state.currentRole === 'reseller') {
-    url += `?k=${CONFIG.defaultKeys.reseller}`;
-  }
-  if (state.currentShoot === 'table') {
-    url += (url.includes('?') ? '&' : '?') + 'shoot=table';
-  }
-
-  navigator.clipboard.writeText(url).then(() => {
-    showToast(`Smart Link copied for ${state.currentRole.toUpperCase()}!`);
-  });
 }
 
 function showToast(msg) {
