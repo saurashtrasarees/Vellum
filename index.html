@@ -13,7 +13,7 @@
   <script src="https://unpkg.com/lucide@latest"></script>
   
   <!-- Vellum Data Engine -->
-  <script src="supabase-adapter.js"></script>
+  <script src="data-adapter.js"></script>
   
   <!-- Custom Styles -->
   <link rel="stylesheet" href="styles.css">
@@ -178,9 +178,307 @@
   </header>
 
   <!-- ====================================================================== -->
-  <!-- SCREEN 1: CATALOGUE COLLECTION SHOWROOM (HOME VIEW)                    -->
+  <!-- SCREEN 0: SAURASHTRA SAREES IMPERIAL BRAND HOMEPAGE (PUBLIC LANDING)   -->
+  <!-- Shown when NO staff/buyer code is attached to URL                      -->
   <!-- ====================================================================== -->
-  <div id="screenHome" class="view-screen flex-1 flex flex-col">
+  <div id="screenBrandHome" class="view-screen flex-1 flex flex-col bg-gradient-to-b from-[#fdfbf7] via-white to-[#faf6ee]">
+
+    <!-- Regal Palace Hero Section (Saurashtra Sarees Luxury Mill Direct) -->
+    <section class="relative overflow-hidden py-14 sm:py-20 px-4 sm:px-6 lg:px-8 border-b-2 border-amber-300/80 bg-gradient-to-b from-amber-50/60 via-white to-orange-50/30">
+      
+      <!-- Atmosphere Orbs -->
+      <div class="cloud-orb cloud-orb-rose" style="top:-50px; left:10%;"></div>
+      <div class="cloud-orb cloud-orb-gold" style="top:20%; right:8%;"></div>
+      <div class="cloud-orb cloud-orb-cyan" style="bottom:-80px; left:30%;"></div>
+
+      <div class="relative max-w-5xl mx-auto text-center space-y-6 z-10">
+        
+        <!-- Imperial Crest -->
+        <div class="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-white/95 backdrop-blur-md border border-amber-300 shadow-sm text-stone-800 text-xs font-black">
+          <span class="text-base text-amber-600">👑</span>
+          <span class="text-amber-950 font-black tracking-widest uppercase text-[11px]">Saurashtra Sarees • Surat Mill Direct</span>
+          <span class="text-amber-300">•</span>
+          <span class="text-emerald-800 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-300 font-bold text-[10px]">
+            Established 1998
+          </span>
+        </div>
+
+        <!-- Majestic Title & Official Slogan -->
+        <div class="space-y-3">
+          <h1 class="font-serif text-3xl sm:text-5xl lg:text-6xl font-black text-stone-900 tracking-tight leading-tight">
+            Make Occasion Better
+          </h1>
+          <p class="font-serif italic text-lg sm:text-xl text-amber-900/90 max-w-3xl mx-auto font-medium">
+            Premier Indian Ethnic Wear Mill & Super Stockist Distribution Hub
+          </p>
+          <p class="text-xs sm:text-sm text-stone-600 max-w-2xl mx-auto leading-relaxed">
+            Direct factory manufacturing and nationwide supply from the heart of Surat’s textile corridor. Serving boutique owners, wholesale stockists, and portal sellers with pure zari handloom and master powerloom saree drapes.
+          </p>
+        </div>
+
+        <!-- VIP Private Catalog Lookbook Access Gateway -->
+        <div class="max-w-xl mx-auto mt-6 p-6 sm:p-8 rounded-3xl bg-white border-2 border-amber-300/90 shadow-xl space-y-4 text-left">
+          <div class="flex items-center justify-between pb-3 border-b border-amber-100">
+            <div class="flex items-center gap-2.5">
+              <div class="w-8 h-8 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center font-bold">
+                <i data-lucide="lock" class="w-4 h-4"></i>
+              </div>
+              <div>
+                <h3 class="font-serif font-bold text-stone-900 text-sm">Private B2B Catalog Access</h3>
+                <p class="text-[11px] text-stone-500">Enter your assigned Staff Access Code to unlock live lookbooks & rates</p>
+              </div>
+            </div>
+            <span class="text-[10px] bg-amber-100 text-amber-900 px-2 py-0.5 rounded-full font-bold">VIP Portal</span>
+          </div>
+
+          <form onsubmit="event.preventDefault(); submitAccessCode();" class="flex flex-col sm:flex-row gap-2.5">
+            <input 
+              type="text" 
+              id="brandAccessCodeInput" 
+              placeholder="Enter Staff Code (e.g. NA39, CH33, AR38)" 
+              class="flex-1 px-4 py-3 rounded-xl border border-stone-300 bg-stone-50 text-stone-900 font-mono font-bold text-sm uppercase focus:outline-none focus:border-amber-600 focus:bg-white"
+            >
+            <button 
+              type="submit" 
+              class="px-6 py-3 rounded-xl bg-amber-700 hover:bg-amber-800 text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-md transition-all shrink-0"
+            >
+              <span>Unlock Catalog ➔</span>
+            </button>
+          </form>
+
+          <div class="pt-2 text-xs flex flex-wrap items-center gap-2 text-stone-500">
+            <span class="text-[11px] font-bold text-stone-700">Quick Access Desks:</span>
+            <button onclick="unlockCatalogWithCode('NA39')" class="px-2.5 py-1 rounded-lg bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-200 font-bold text-[11px] transition-all">Nayan Sir (NA39)</button>
+            <button onclick="unlockCatalogWithCode('CH33')" class="px-2.5 py-1 rounded-lg bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-200 font-bold text-[11px] transition-all">Chetan Sir (CH33)</button>
+            <button onclick="unlockCatalogWithCode('AR38')" class="px-2.5 py-1 rounded-lg bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-200 font-bold text-[11px] transition-all">Arvind Sir (AR38)</button>
+          </div>
+        </div>
+
+        <!-- Trust Features Strip -->
+        <div class="pt-2 flex flex-wrap items-center justify-center gap-2 sm:gap-3 text-xs font-bold text-stone-700">
+          <span class="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white/95 border border-amber-200 shadow-xs">
+            <span class="text-amber-600">🏛️</span> Magob, Surat Direct Mill
+          </span>
+          <span class="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white/95 border border-amber-200 shadow-xs">
+            <span class="text-emerald-600">📦</span> 132 Curated Wholesale Volumes
+          </span>
+          <span class="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white/95 border border-amber-200 shadow-xs">
+            <span class="text-sky-600">⚡</span> 24–48h Nationwide Logistics
+          </span>
+          <span class="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white/95 border border-amber-200 shadow-xs">
+            <span class="text-purple-600">💎</span> 100% Quality Inspected Lots
+          </span>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Master Weave & Fabric Specializations -->
+    <section class="py-14 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-8">
+      <div class="text-center max-w-2xl mx-auto space-y-2">
+        <span class="text-amber-800 text-xs uppercase font-extrabold tracking-widest">Master Textile Craftsmanship</span>
+        <h2 class="font-serif text-2xl sm:text-3xl font-bold text-stone-900">Six Decades of Surat Weaving Heritage</h2>
+        <p class="text-xs sm:text-sm text-stone-600">Every collection is engineered with precision warping, pure metallic zari wefts, and calibrated fall for the ultimate drape.</p>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="bg-white p-6 rounded-3xl border border-amber-200/90 shadow-xs space-y-3 hover:shadow-lg transition-all">
+          <div class="w-12 h-12 rounded-2xl bg-amber-100 text-amber-900 flex items-center justify-center text-xl font-bold">🥻</div>
+          <h3 class="font-serif font-bold text-base text-stone-900">Royal Kanjivaram & Gadwal Silk</h3>
+          <p class="text-xs text-stone-600 leading-relaxed">Two-tone pure soft silk with contrast Narayan Peth zari borders, dual motifs, and heavy bridal pallus.</p>
+        </div>
+        <div class="bg-white p-6 rounded-3xl border border-amber-200/90 shadow-xs space-y-3 hover:shadow-lg transition-all">
+          <div class="w-12 h-12 rounded-2xl bg-rose-100 text-rose-900 flex items-center justify-center text-xl font-bold">🧵</div>
+          <h3 class="font-serif font-bold text-base text-stone-900">Pure Banarasi Katan & Tanchoi</h3>
+          <p class="text-xs text-stone-600 leading-relaxed">Embossed self-woven jaal with antique copper & gold zari work, checks combinations, and rich festive borders.</p>
+        </div>
+        <div class="bg-white p-6 rounded-3xl border border-amber-200/90 shadow-xs space-y-3 hover:shadow-lg transition-all">
+          <div class="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-900 flex items-center justify-center text-xl font-bold">🦚</div>
+          <h3 class="font-serif font-bold text-base text-stone-900">Paithani & Narayan Peth</h3>
+          <p class="text-xs text-stone-600 leading-relaxed">Traditional Maharashtrian munia borders, rich peacock pallus, and lustrous two-tone silk body foundations.</p>
+        </div>
+        <div class="bg-white p-6 rounded-3xl border border-amber-200/90 shadow-xs space-y-3 hover:shadow-lg transition-all">
+          <div class="w-12 h-12 rounded-2xl bg-sky-100 text-sky-900 flex items-center justify-center text-xl font-bold">✨</div>
+          <h3 class="font-serif font-bold text-base text-stone-900">Organza & Tissue Glass Silk</h3>
+          <p class="text-xs text-stone-600 leading-relaxed">Lightweight translucent glass sheen sarees adorned with delicate floral zari vines and scalloped embroidery.</p>
+        </div>
+        <div class="bg-white p-6 rounded-3xl border border-amber-200/90 shadow-xs space-y-3 hover:shadow-lg transition-all">
+          <div class="w-12 h-12 rounded-2xl bg-purple-100 text-purple-900 flex items-center justify-center text-xl font-bold">🌾</div>
+          <h3 class="font-serif font-bold text-base text-stone-900">Chanderi & Tussar Silk</h3>
+          <p class="text-xs text-stone-600 leading-relaxed">Natural rustic silk textures combined with understated metallic borders, favored by high-end design studios.</p>
+        </div>
+        <div class="bg-white p-6 rounded-3xl border border-amber-200/90 shadow-xs space-y-3 hover:shadow-lg transition-all">
+          <div class="w-12 h-12 rounded-2xl bg-amber-50 text-amber-900 flex items-center justify-center text-xl font-bold">🌸</div>
+          <h3 class="font-serif font-bold text-base text-stone-900">Georgette & Festive Cotton Silk</h3>
+          <p class="text-xs text-stone-600 leading-relaxed">Graceful, breathable everyday luxury weaves with all-day drape comfort and brilliant colorfast festive dyes.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Leadership, Direct Inquiries & Manufacturing Desk -->
+    <section class="py-14 bg-gradient-to-r from-amber-50/70 via-orange-50/40 to-amber-50/70 border-y border-amber-200">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+        <div class="text-center max-w-2xl mx-auto space-y-2">
+          <span class="text-amber-800 text-xs uppercase font-extrabold tracking-widest">Direct Access Desk</span>
+          <h2 class="font-serif text-2xl sm:text-3xl font-bold text-stone-900">Manufacturing Partners & Executive Leadership</h2>
+          <p class="text-xs sm:text-sm text-stone-600">Connect directly with the mill founders and executive partners for bulk allocations, factory rates, and dealership onboarding.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          
+          <!-- Card 1: Nayan Sir -->
+          <div class="bg-white p-6 rounded-3xl border-2 border-amber-200/90 shadow-xs space-y-4 flex flex-col justify-between">
+            <div class="space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="w-10 h-10 rounded-2xl bg-amber-700 text-white font-mono font-bold text-sm flex items-center justify-center shadow-sm">NA</span>
+                <span class="text-[10px] bg-emerald-50 text-emerald-800 border border-emerald-300 px-2 py-0.5 rounded font-bold">Inquiries & Desk</span>
+              </div>
+              <div>
+                <h4 class="font-serif font-bold text-lg text-stone-900">Nayan Sir (NA39)</h4>
+                <p class="text-xs text-amber-800 font-semibold">Managing Partner & Factory Production Head</p>
+                <p class="text-xs text-stone-500 mt-1">Direct contact for factory orders, bulk lot production, and high-volume dispatch.</p>
+              </div>
+            </div>
+            <div class="space-y-2 pt-2 border-t border-stone-100">
+              <a href="tel:+919879471039" class="w-full py-2.5 px-4 rounded-xl bg-amber-700 hover:bg-amber-800 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-xs transition-all">
+                <i data-lucide="phone" class="w-3.5 h-3.5"></i>
+                <span>Call +91 98794 71039</span>
+              </a>
+              <a href="https://wa.me/919879471039" target="_blank" class="w-full py-2 px-4 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 font-bold text-xs flex items-center justify-center gap-2 transition-all">
+                <i data-lucide="message-circle" class="w-3.5 h-3.5"></i>
+                <span>WhatsApp Nayan Sir</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- Card 2: Chetan Sir -->
+          <div class="bg-white p-6 rounded-3xl border-2 border-amber-200/90 shadow-xs space-y-4 flex flex-col justify-between">
+            <div class="space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="w-10 h-10 rounded-2xl bg-amber-700 text-white font-mono font-bold text-sm flex items-center justify-center shadow-sm">CH</span>
+                <span class="text-[10px] bg-emerald-50 text-emerald-800 border border-emerald-300 px-2 py-0.5 rounded font-bold">Manufacturing & Sales</span>
+              </div>
+              <div>
+                <h4 class="font-serif font-bold text-lg text-stone-900">Chetan Sir (CH33)</h4>
+                <p class="text-xs text-amber-800 font-semibold">Executive Director & Super Stockist Distribution</p>
+                <p class="text-xs text-stone-500 mt-1">Direct contact for nationwide dealership onboarding, stockist allocation, and portal logistics.</p>
+              </div>
+            </div>
+            <div class="space-y-2 pt-2 border-t border-stone-100">
+              <a href="tel:+919913643433" class="w-full py-2.5 px-4 rounded-xl bg-amber-700 hover:bg-amber-800 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-xs transition-all">
+                <i data-lucide="phone" class="w-3.5 h-3.5"></i>
+                <span>Call +91 99136 43433</span>
+              </a>
+              <a href="https://wa.me/919913643433" target="_blank" class="w-full py-2 px-4 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 font-bold text-xs flex items-center justify-center gap-2 transition-all">
+                <i data-lucide="message-circle" class="w-3.5 h-3.5"></i>
+                <span>WhatsApp Chetan Sir</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- Card 3: Arvind Sir -->
+          <div class="bg-white p-6 rounded-3xl border-2 border-amber-200/90 shadow-xs space-y-4 flex flex-col justify-between">
+            <div class="space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="w-10 h-10 rounded-2xl bg-amber-700 text-white font-mono font-bold text-sm flex items-center justify-center shadow-sm">AR</span>
+                <span class="text-[10px] bg-sky-50 text-sky-800 border border-sky-300 px-2 py-0.5 rounded font-bold">Senior Rep</span>
+              </div>
+              <div>
+                <h4 class="font-serif font-bold text-lg text-stone-900">Arvind Sir (AR38)</h4>
+                <p class="text-xs text-amber-800 font-semibold">Senior Catalog Representative</p>
+                <p class="text-xs text-stone-500 mt-1">Dedicated representative for catalog lookbook sharing, assortment guidance, and client support.</p>
+              </div>
+            </div>
+            <div class="space-y-2 pt-2 border-t border-stone-100">
+              <a href="tel:+919824982338" class="w-full py-2.5 px-4 rounded-xl bg-amber-700 hover:bg-amber-800 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-xs transition-all">
+                <i data-lucide="phone" class="w-3.5 h-3.5"></i>
+                <span>Call +91 98249 82338</span>
+              </a>
+              <a href="https://wa.me/919824982338" target="_blank" class="w-full py-2 px-4 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 font-bold text-xs flex items-center justify-center gap-2 transition-all">
+                <i data-lucide="message-circle" class="w-3.5 h-3.5"></i>
+                <span>WhatsApp Arvind Sir</span>
+              </a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Registered Atelier & Surat Mill Facility Coordinates -->
+    <section class="py-14 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+      <div class="bg-white border-2 border-amber-300/80 rounded-3xl p-6 sm:p-10 shadow-sm grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+        <div class="space-y-4">
+          <span class="text-amber-800 text-xs uppercase font-extrabold tracking-widest">Surat Mill Facility</span>
+          <h3 class="font-serif text-2xl sm:text-3xl font-bold text-stone-900 leading-tight">
+            Registered Atelier & Wholesale Dispatch House
+          </h3>
+          <p class="text-xs sm:text-sm text-stone-600 leading-relaxed">
+            Located in Magob, Surat, adjacent to Polaris Textile City on the BRTS corridor. Our multi-storey weaving and logistics hub processes order assortments with strict multi-point hand inspection.
+          </p>
+
+          <div class="space-y-2 text-xs text-stone-800 font-medium pt-2">
+            <p class="flex items-start gap-2">
+              <i data-lucide="map-pin" class="w-4 h-4 text-amber-700 shrink-0 mt-0.5"></i>
+              <span><strong>Address:</strong> A-1001, Rajhans Fabrizo, Near Polaris Textile City, BRTS Road, Magob, Surat, Gujarat – 395010</span>
+            </p>
+            <p class="flex items-center gap-2">
+              <i data-lucide="clock" class="w-4 h-4 text-amber-700 shrink-0"></i>
+              <span><strong>Showroom Hours:</strong> 10:00 AM – 07:00 PM (Monday – Saturday)</span>
+            </p>
+            <p class="flex items-center gap-2">
+              <i data-lucide="phone" class="w-4 h-4 text-amber-700 shrink-0"></i>
+              <span><strong>Direct Order Desk:</strong> +91 98794 71039 / +91 99136 43433</span>
+            </p>
+          </div>
+        </div>
+
+        <!-- Quick Wholesale Inquiry Form -->
+        <div class="bg-amber-50/70 p-6 sm:p-8 rounded-2xl border border-amber-200/90 space-y-4">
+          <h4 class="font-serif font-bold text-stone-900 text-base">Direct Wholesale Inquiry</h4>
+          <p class="text-xs text-stone-600">Request current bulk catalogs, factory rates, or dispatch schedules.</p>
+
+          <form onsubmit="event.preventDefault(); sendBrandInquiry();" class="space-y-3 text-xs">
+            <div>
+              <label class="block font-bold text-stone-700 uppercase text-[10px] mb-1">Your Business Name / Boutique</label>
+              <input type="text" id="inqBusinessName" required placeholder="e.g. Meera Sarees, Jaipur" class="w-full px-3.5 py-2.5 bg-white border border-stone-300 rounded-xl">
+            </div>
+            <div>
+              <label class="block font-bold text-stone-700 uppercase text-[10px] mb-1">WhatsApp Mobile Number</label>
+              <input type="tel" id="inqMobile" required placeholder="10-digit mobile number" class="w-full px-3.5 py-2.5 bg-white border border-stone-300 rounded-xl">
+            </div>
+            <div>
+              <label class="block font-bold text-stone-700 uppercase text-[10px] mb-1">City & State</label>
+              <input type="text" id="inqCity" required placeholder="e.g. Bangalore, Karnataka" class="w-full px-3.5 py-2.5 bg-white border border-stone-300 rounded-xl">
+            </div>
+            <button type="submit" class="w-full py-3 rounded-xl bg-amber-700 hover:bg-amber-800 text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-xs transition-all">
+              <i data-lucide="send" class="w-3.5 h-3.5"></i>
+              <span>Submit Inquiry on WhatsApp</span>
+            </button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- ====================================================================== -->
+  <!-- SCREEN 1: CATALOGUE COLLECTION SHOWROOM (ACTIVE ON ATTACHED CODE)      -->
+  <!-- ====================================================================== -->
+  <div id="screenCatalogShowroom" class="view-screen hidden flex-1 flex flex-col">
+    
+    <!-- Top Return Banner to Brand Overview -->
+    <div class="bg-amber-100/80 border-b border-amber-300/80 py-2.5 px-4 sm:px-6 lg:px-8">
+      <div class="max-w-7xl mx-auto flex items-center justify-between text-xs">
+        <div class="flex items-center gap-2 text-amber-950 font-bold">
+          <span>🏛️</span>
+          <span>Saurashtra Sarees Private Wholesale Lookbook (132 Collections Active)</span>
+        </div>
+        <button onclick="showBrandLanding()" class="px-3 py-1 rounded-lg bg-white hover:bg-amber-50 text-amber-900 border border-amber-300 font-bold text-xs flex items-center gap-1.5 shadow-xs transition-all">
+          <span>← Back to Saurashtra Sarees Main Atelier</span>
+        </button>
+      </div>
+    </div>
     
     <!-- Imperial Haute Couture Ethnic Wear Header (Lively Textured, Regal & Mobile-First) -->
     <section class="cloud-hero-wrap py-8 sm:py-12 px-4 sm:px-6 lg:px-8 border-b-2 border-amber-300/80 shadow-xs">
@@ -415,7 +713,7 @@
               src="" 
               referrerpolicy="no-referrer" 
               alt="Saree View" 
-              class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-108"
+              class="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-108"
             >
 
             <!-- Floating Video Button -->

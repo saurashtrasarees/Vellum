@@ -419,3 +419,21 @@ body {
   font-size: 16px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
 }
+
+/* ========================================================================== */
+/* STRICT 3:4 ASPECT RATIO IMAGE FIT (Catalog Cards, PDP Hero & Angles)      */
+/* ========================================================================== */
+.aspect-3-4 {
+  aspect-ratio: 3 / 4 !important;
+}
+
+.aspect-\[3\/4\] {
+  aspect-ratio: 3 / 4 !important;
+}
+
+.img-saree-fit {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  object-position: center top !important;
+}

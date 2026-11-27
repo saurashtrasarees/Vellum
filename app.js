@@ -21,6 +21,13 @@ const FIRMS = {
     themeClass: 'theme-saurashtra',
     primaryColor: '#8b1d40',
     accentColor: '#d4af37',
+    primaryPhone: '+91 98794 71039',
+    secondaryPhone: '+91 99136 43433',
+    orderPhone: '+91 99136 43433',
+    directDesk: '+91 98794 71039 / +91 99136 43433',
+    address: 'A-1001, Rajhans Fabrizo, Near Polaris Textile City, BRTS Road, Magob, Surat, Gujarat – 395010',
+    timings: '10:00 AM – 07:00 PM (Monday–Saturday)',
+    focus: 'Direct Mill Wholesale & Super Stockist Distribution',
     defaultPhone: '9879471039',
     defaultWhatsapp: '919879471039'
   },
@@ -32,6 +39,13 @@ const FIRMS = {
     themeClass: 'theme-keya',
     primaryColor: '#0284c7',
     accentColor: '#f59e0b',
+    primaryPhone: '+91 98794 71039',
+    secondaryPhone: '+91 99136 43433',
+    orderPhone: '+91 99136 43433',
+    directDesk: '+91 98794 71039 / +91 99136 43433',
+    address: 'A-1001, Rajhans Fabrizo, Near Polaris Textile City, BRTS Road, Magob, Surat, Gujarat – 395010',
+    timings: '10:00 AM – 07:00 PM (Monday–Saturday)',
+    focus: 'Curated Catalogues & Retail Showroom Collections',
     defaultPhone: '9913643433',
     defaultWhatsapp: '919913643433'
   }
@@ -239,6 +253,12 @@ document.addEventListener('DOMContentLoaded', async () => {
   renderCategoryPills();
   applyFiltersAndRender();
   
+  if (state.hasAttachedCode) {
+    showCatalogShowroom();
+  } else {
+    showBrandLanding();
+  }
+
   // Hash Routing Listener (for Shopify PDP navigation)
   window.addEventListener('hashchange', handleHashRoute);
   handleHashRoute();
@@ -260,9 +280,6 @@ function resolveUrlContext() {
   }
 
   // 2. User Code Resolution & 3-Tier Rate Suffix
-  // Default link: ?u=AR38 -> Retail rate
-  // Wholesale link: ?u=AR38W -> Wholesale rate
-  // Prime link: ?u=AR38P -> Prime rate
   let rawUser = (params.get('u') || params.get('user') || params.get('staff') || '').toUpperCase().trim();
   rawUser = rawUser.replace(/[^A-Z0-9]/g, '');
 
@@ -287,7 +304,7 @@ function resolveUrlContext() {
 
   let matchedUser = USER_PROFILES[baseCode];
 
-  // Also check if someone passed the slug (e.g. ?staff=khushi)
+  // Also check if someone passed the slug (e.g. ?staff=nayan)
   if (!matchedUser && baseCode) {
     matchedUser = Object.values(USER_PROFILES).find(p => p.slug.toUpperCase().replace(/[^A-Z0-9]/g, '') === baseCode);
   }
@@ -297,18 +314,20 @@ function resolveUrlContext() {
     state.activeFirm = matchedUser.firm;
     state.isLocked = true; // Firm and user are locked!
     state.currentRole = rateTier;
+    state.hasAttachedCode = true;
   } else {
-    // If no user code supplied: check firm param or default
+    // If no user code supplied:
     const firmParam = (params.get('firm') || params.get('f') || '').toLowerCase().trim();
     if (firmParam === 'keya' || firmParam === 'keyafashion') {
       state.activeFirm = 'keya';
       state.activeUser = USER_PROFILES['KH28'] || Object.values(USER_PROFILES).find(p => p.firm === 'keya');
     } else {
       state.activeFirm = 'saurashtra';
-      state.activeUser = USER_PROFILES['AR38'] || Object.values(USER_PROFILES).find(p => p.firm === 'saurashtra');
+      state.activeUser = USER_PROFILES['NA39'] || USER_PROFILES['AR38'];
     }
     state.isLocked = false;
     state.currentRole = 'retail';
+    state.hasAttachedCode = Boolean(baseCode);
   }
 
   // 3. Shoot resolution (Default is always "all")
@@ -357,10 +376,13 @@ function applyFirmTheme() {
   if (footerAddressEl) footerAddressEl.textContent = firm.address || 'A-1001, Rajhans Fabrizo, Near Polaris Textile City, BRTS Road, Magob, Surat, Gujarat – 395010';
 
   const footerTimingsEl = document.getElementById('footerFirmTimings');
-  if (footerTimingsEl) footerTimingsEl.textContent = firm.timings || '09:00 AM–07:00 PM (Monday–Saturday)';
+  if (footerTimingsEl) footerTimingsEl.textContent = firm.timings || '10:00 AM – 07:00 PM (Monday–Saturday)';
 
   const footerSecPhoneEl = document.getElementById('footerSecondaryPhone');
-  if (footerSecPhoneEl) footerSecPhoneEl.textContent = firm.orderPhone || firm.partner1Phone || firm.primaryPhone || '+91 99136 43433';
+  if (footerSecPhoneEl) footerSecPhoneEl.textContent = firm.secondaryPhone || firm.orderPhone || '+91 99136 43433';
+
+  const footerDirectPhone = document.getElementById('footerDirectPhone');
+  if (footerDirectPhone) footerDirectPhone.textContent = firm.primaryPhone || '+91 98794 71039';
 
   // Footer Dynamic Copyright & Disclaimer
   const copyrightEl = document.getElementById('footerCopyright');
@@ -405,6 +427,8 @@ function updateStaffUI() {
   const user = state.activeUser;
   if (!user) return;
 
+  const firm = FIRMS[user.firm] || FIRMS[state.activeFirm] || FIRMS.saurashtra;
+
   const staffNameEls = [
     document.getElementById('staffNameDisplay'),
     document.getElementById('badgeStaffActive')
@@ -421,6 +445,9 @@ function updateStaffUI() {
   if (callLink) callLink.href = `tel:+91${cleanPhone}`;
 
   // Footer Live Representative Binding
+  const footerRepRow = document.getElementById('footerRepRow');
+  if (footerRepRow) footerRepRow.classList.remove('hidden');
+
   const footerRepName = document.getElementById('footerRepName');
   if (footerRepName) footerRepName.textContent = `${user.name} (${user.code})`;
 
@@ -429,6 +456,15 @@ function updateStaffUI() {
 
   const footerDirectPhone = document.getElementById('footerDirectPhone');
   if (footerDirectPhone) footerDirectPhone.textContent = user.displayPhone || ('+91 ' + user.phone);
+
+  const footerSecondaryPhone = document.getElementById('footerSecondaryPhone');
+  if (footerSecondaryPhone) footerSecondaryPhone.textContent = firm.secondaryPhone || firm.orderPhone || '+91 99136 43433';
+
+  const footerTimingsEl = document.getElementById('footerFirmTimings');
+  if (footerTimingsEl) footerTimingsEl.textContent = firm.timings || '10:00 AM – 07:00 PM (Monday–Saturday)';
+
+  const footerAddressEl = document.getElementById('footerFirmAddress');
+  if (footerAddressEl) footerAddressEl.textContent = firm.address || 'A-1001, Rajhans Fabrizo, Near Polaris Textile City, BRTS Road, Magob, Surat, Gujarat – 395010';
 
   const footerRepCallBtn = document.getElementById('footerRepCallBtn');
   if (footerRepCallBtn) footerRepCallBtn.href = `tel:+91${cleanPhone}`;
@@ -990,7 +1026,7 @@ function renderCatalogGrid() {
             src="${heroImg}" 
             referrerpolicy="no-referrer"
             alt="${cat.name}" 
-            class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-106 hero-image-fade"
+            class="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-106 hero-image-fade"
             onerror="this.onerror=null; this.src='assets/saurashtra-sarees-logo.jpg';"
           >
 
@@ -1165,11 +1201,90 @@ function navigateToProduct(catalogCode) {
 
 function navigateToHome() {
   window.location.hash = '';
+  if (state.hasAttachedCode) {
+    showCatalogShowroom();
+  } else {
+    showBrandLanding();
+  }
+}
+
+function submitAccessCode() {
+  const input = document.getElementById('brandAccessCodeInput');
+  const code = (input?.value || '').trim();
+  if (!code) {
+    alert('Please enter a valid Staff or Partner Access Code (e.g. NA39, CH33, AR38)');
+    return;
+  }
+  unlockCatalogWithCode(code);
+}
+
+function unlockCatalogWithCode(code) {
+  const clean = (code || '').toUpperCase().trim();
+  const matched = USER_PROFILES[clean] || Object.values(USER_PROFILES).find(p => p.code.toUpperCase() === clean);
+  if (matched) {
+    state.activeUser = matched;
+    state.activeFirm = matched.firm;
+    state.hasAttachedCode = true;
+    state.isLocked = true;
+    applyFirmTheme();
+    updateStaffUI();
+    
+    // Update browser URL query parameter seamlessly
+    const newUrl = `${window.location.pathname}?u=${clean}`;
+    window.history.pushState({ path: newUrl }, '', newUrl);
+  } else {
+    state.hasAttachedCode = true;
+  }
+  showCatalogShowroom();
+}
+
+function showBrandLanding() {
+  const screenBrand = document.getElementById('screenBrandHome');
+  const screenShowroom = document.getElementById('screenCatalogShowroom');
+  const screenProduct = document.getElementById('screenProduct');
+  if (screenBrand) screenBrand.classList.remove('hidden');
+  if (screenShowroom) screenShowroom.classList.add('hidden');
+  if (screenProduct) screenProduct.classList.add('hidden');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function showCatalogShowroom() {
+  const screenBrand = document.getElementById('screenBrandHome');
+  const screenShowroom = document.getElementById('screenCatalogShowroom');
+  const screenProduct = document.getElementById('screenProduct');
+  if (screenBrand) screenBrand.classList.add('hidden');
+  if (screenShowroom) screenShowroom.classList.remove('hidden');
+  if (screenProduct) screenProduct.classList.add('hidden');
+  applyFiltersAndRender();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  if (window.lucide) lucide.createIcons();
+}
+
+function sendBrandInquiry() {
+  const bName = document.getElementById('inqBusinessName')?.value.trim();
+  const mobile = document.getElementById('inqMobile')?.value.trim();
+  const city = document.getElementById('inqCity')?.value.trim();
+
+  if (!bName || !mobile) {
+    alert('Please provide your business name and mobile number.');
+    return;
+  }
+
+  const msg = encodeURIComponent(
+    `Hello Saurashtra Sarees (Atelier Desk),\n\n` +
+    `I would like to inquire about Direct Mill Wholesale & Super Stockist supply:\n` +
+    `🏢 Business Name: ${bName}\n` +
+    `📱 Contact: ${mobile}\n` +
+    `📍 City: ${city}\n\n` +
+    `Please share your latest bulk lookbook and factory dispatch terms.`
+  );
+  window.open(`https://wa.me/919879471039?text=${msg}`, '_blank');
 }
 
 function handleHashRoute() {
   const hash = window.location.hash || '';
-  const screenHome = document.getElementById('screenHome');
+  const screenBrand = document.getElementById('screenBrandHome');
+  const screenShowroom = document.getElementById('screenCatalogShowroom');
   const screenProduct = document.getElementById('screenProduct');
 
   if (hash.startsWith('#page/')) {
@@ -1189,7 +1304,8 @@ function handleHashRoute() {
       state.activePdpShoot = state.currentShoot;
       state.activePdpTab = 'specs';
 
-      if (screenHome) screenHome.classList.add('hidden');
+      if (screenBrand) screenBrand.classList.add('hidden');
+      if (screenShowroom) screenShowroom.classList.add('hidden');
       if (screenProduct) screenProduct.classList.remove('hidden');
       renderPdpScreen();
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -1197,9 +1313,15 @@ function handleHashRoute() {
     }
   }
 
-  // Default: Show Home Screen
-  if (screenHome) screenHome.classList.remove('hidden');
+  // Default: Show either Showroom or Brand Home
   if (screenProduct) screenProduct.classList.add('hidden');
+  if (state.hasAttachedCode) {
+    if (screenBrand) screenBrand.classList.add('hidden');
+    if (screenShowroom) screenShowroom.classList.remove('hidden');
+  } else {
+    if (screenBrand) screenBrand.classList.remove('hidden');
+    if (screenShowroom) screenShowroom.classList.add('hidden');
+  }
   state.activePdpCatalog = null;
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
@@ -1477,13 +1599,13 @@ function updatePdpGallery() {
       const borderClass = isSelected ? 'border-amber-600 ring-2 ring-amber-500/40 scale-105 shadow-md' : 'border-amber-200 opacity-75 hover:opacity-100';
 
       return `
-        <div onclick="selectPdpAngle(${i})" class="flex-shrink-0 w-20 h-24 rounded-2xl overflow-hidden cursor-pointer border-2 transition-all relative group bg-white ${borderClass}">
+        <div onclick="selectPdpAngle(${i})" class="flex-shrink-0 w-20 aspect-[3/4] rounded-2xl overflow-hidden cursor-pointer border-2 transition-all relative group bg-white ${borderClass}">
           <img 
             src="${imgUrl}" 
             referrerpolicy="no-referrer"
             alt="View ${i+1}" 
-            class="w-full h-full object-cover"
-            onerror="this.onerror=null; this.src='https://placehold.co/100x120/f8fafc/8b1d40?text=View+${i+1}';"
+            class="w-full h-full object-cover object-top"
+            onerror="this.onerror=null; this.src='assets/saurashtra-sarees-logo.jpg';"
           >
           <span class="absolute bottom-1.5 left-1.5 right-1.5 bg-stone-900/85 backdrop-blur-xs text-[9px] text-white font-mono font-bold text-center rounded py-0.5 truncate px-1">
             View ${i+1}

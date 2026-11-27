@@ -61,6 +61,9 @@ function switchTab(tabId) {
       if (btn) {
         btn.className = 'w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-bold bg-amber-100 text-amber-950 border-l-4 border-amber-600 transition-all text-left shadow-xs';
       }
+      if (tabId === 'sheet') {
+        renderSheetDatabaseTable();
+      }
     } else {
       if (content) content.classList.add('hidden');
       if (btn) {
@@ -720,6 +723,92 @@ function initSheetUI() {
   if (input) {
     input.value = localStorage.getItem('vellum_sheet_id') || '1YcrvrrgwikEFkST8VEPf-XRjj8vWd0F750kauK1PU1o';
   }
+  renderSheetDatabaseTable();
+}
+
+let currentSheetFilter = 'all';
+
+function setSheetFilter(type) {
+  currentSheetFilter = type;
+  ['all', 'model', 'table'].forEach(t => {
+    const btn = document.getElementById(`sheetFilterBtn-${t}`);
+    if (btn) {
+      if (t === type) {
+        btn.className = 'px-2.5 py-1 rounded-lg font-bold bg-white text-stone-900 shadow-xs';
+      } else {
+        btn.className = 'px-2.5 py-1 rounded-lg font-medium text-stone-600 hover:text-stone-900';
+      }
+    }
+  });
+  renderSheetDatabaseTable();
+}
+
+function filterSheetTable() {
+  renderSheetDatabaseTable();
+}
+
+function renderSheetDatabaseTable() {
+  const tbody = document.getElementById('sheetTableBody');
+  const countBadge = document.getElementById('sheetCatalogCountBadge');
+  if (!tbody) return;
+
+  const query = (document.getElementById('sheetSearchInput')?.value || '').toLowerCase().trim();
+  const catalogs = adminCatalogs || [];
+
+  const filtered = catalogs.filter(c => {
+    if (currentSheetFilter === 'model' && c.shootType !== 'model') return false;
+    if (currentSheetFilter === 'table' && c.shootType !== 'table') return false;
+    if (query) {
+      const matchName = (c.name || '').toLowerCase().includes(query);
+      const matchCode = (c.code || '').toLowerCase().includes(query);
+      const matchCat = (c.category || '').toLowerCase().includes(query);
+      if (!matchName && !matchCode && !matchCat) return false;
+    }
+    return true;
+  });
+
+  if (countBadge) countBadge.textContent = `${filtered.length} of ${catalogs.length} Collections`;
+
+  if (filtered.length === 0) {
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="8" class="p-8 text-center text-stone-500 font-medium">
+          No catalog records found matching query.
+        </td>
+      </tr>
+    `;
+    return;
+  }
+
+  tbody.innerHTML = filtered.map(c => {
+    const primeRate = c.resellerRate || (c.retailRate - 150);
+    const wsRate = c.wholesaleRate || (c.retailRate - 100);
+    const retRate = c.retailRate;
+    const shootBadge = c.shootType === 'model'
+      ? `<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-sky-100 text-sky-800 border border-sky-300">Model Shoot</span>`
+      : `<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-900 border border-amber-300">Table Shoot</span>`;
+
+    return `
+      <tr class="hover:bg-amber-50/40 transition-colors">
+        <td class="p-3 font-mono font-bold text-stone-900">${c.code}</td>
+        <td class="p-3 font-serif font-bold text-stone-800">${c.name}</td>
+        <td class="p-3 text-stone-600">${c.category}</td>
+        <td class="p-3">${shootBadge}</td>
+        <td class="p-3 font-mono font-bold text-amber-900">₹${primeRate}</td>
+        <td class="p-3 font-mono font-bold text-emerald-800">₹${wsRate}</td>
+        <td class="p-3 font-mono font-bold text-stone-900">₹${retRate}</td>
+        <td class="p-3">
+          <span class="px-2 py-0.5 rounded-md text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+            ${c.status || 'Ready to dispatch'}
+          </span>
+        </td>
+      </tr>
+    `;
+  }).join('');
+}
+
+function downloadSheetCsv() {
+  window.open('data/google_sheet_vellum_catalogs.csv', '_blank');
 }
 
 function saveSheetSettings() {
