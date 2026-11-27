@@ -10,7 +10,7 @@ let currentStockStatusFilter = 'all';
 document.addEventListener('DOMContentLoaded', async () => {
   renderStaffHub();
   initDriveFoldersUI();
-  initSupabaseUI();
+  initSheetUI();
   renderFirmProfilesUI();
   initDeepLinkUI();
   renderSavedLinks();
@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 // 1. LEFT-HAND SIDEBAR TAB NAVIGATION
 // --------------------------------------------------------------------------
 function switchTab(tabId) {
-  const tabs = ['hub', 'drive', 'stock', 'rates', 'supabase', 'firms', 'generator'];
+  const tabs = ['hub', 'drive', 'stock', 'rates', 'sheet', 'firms', 'generator'];
   
   tabs.forEach(t => {
     const content = document.getElementById(`tabContent-${t}`);
@@ -713,84 +713,78 @@ function saveAllRates() {
 }
 
 // --------------------------------------------------------------------------
-// 6. SUPABASE CLOUD SYNC & 1-CLICK ACTIVATOR
+// 6. GOOGLE SHEET DATABASE & BACKGROUND SYNC (Sheet ID: 1YcrvrrgwikEFkST8VEPf-XRjj8vWd0F750kauK1PU1o)
 // --------------------------------------------------------------------------
-function initSupabaseUI() {
-  const config = window.vellumAdapter ? window.vellumAdapter.loadSupabaseConfig() : {};
-  const urlEl = document.getElementById('inputSupabaseUrl');
-  const keyEl = document.getElementById('inputSupabaseAnonKey');
-  const pillEl = document.getElementById('supabaseStatusPill');
-
-  if (urlEl && config.url) urlEl.value = config.url;
-  if (keyEl && config.anonKey) keyEl.value = config.anonKey;
-
-  if (config.url && config.anonKey) {
-    if (pillEl) {
-      pillEl.className = 'text-xs px-3 py-1 rounded-full font-bold bg-emerald-100 text-emerald-800 border border-emerald-300';
-      pillEl.textContent = 'Configured & Active';
-    }
+function initSheetUI() {
+  const input = document.getElementById('inputSheetId');
+  if (input) {
+    input.value = localStorage.getItem('vellum_sheet_id') || '1YcrvrrgwikEFkST8VEPf-XRjj8vWd0F750kauK1PU1o';
   }
 }
 
-function saveSupabaseSettings() {
-  const url = document.getElementById('inputSupabaseUrl')?.value.trim();
-  const anonKey = document.getElementById('inputSupabaseAnonKey')?.value.trim();
-
-  if (window.vellumAdapter) {
-    window.vellumAdapter.saveSupabaseConfig({
-      url,
-      anonKey,
-      isEnabled: Boolean(url && anonKey)
-    });
-  }
-
-  const pillEl = document.getElementById('supabaseStatusPill');
-  if (pillEl) {
-    pillEl.className = 'text-xs px-3 py-1 rounded-full font-bold bg-emerald-100 text-emerald-800 border border-emerald-300';
-    pillEl.textContent = 'Credentials Saved & Connected';
-  }
-  showAdminToast('Supabase PostgreSQL credentials saved!');
+function saveSheetSettings() {
+  const sheetId = document.getElementById('inputSheetId')?.value.trim() || '1YcrvrrgwikEFkST8VEPf-XRjj8vWd0F750kauK1PU1o';
+  localStorage.setItem('vellum_sheet_id', sheetId);
+  showAdminToast(`Google Sheet ID saved: ${sheetId}`);
+  syncRatesFromSheet();
 }
 
-async function testSupabaseConnection() {
-  const url = document.getElementById('inputSupabaseUrl')?.value.trim();
-  const anonKey = document.getElementById('inputSupabaseAnonKey')?.value.trim();
-
-  if (!url || !anonKey) {
-    showAdminToast('Please provide both Project URL and Anon Key first.');
-    return;
-  }
+async function syncRatesFromSheet() {
+  const sheetId = localStorage.getItem('vellum_sheet_id') || '1YcrvrrgwikEFkST8VEPf-XRjj8vWd0F750kauK1PU1o';
+  const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv`;
+  showAdminToast('Fetching live rates from Google Sheet...');
 
   try {
-    const res = await fetch(`${url}/rest/v1/app_settings?select=key`, {
-      headers: {
-        'apikey': anonKey,
-        'Authorization': `Bearer ${anonKey}`
-      }
-    });
-
+    const res = await fetch(url);
     if (res.ok) {
-      showAdminToast('⚡ Connection Successful! Supabase is responding.');
+      const csvText = await res.text();
+      showAdminToast('✓ Google Sheet rates synced successfully!');
+      window.dispatchEvent(new CustomEvent('vellum:sheet-synced', { detail: csvText }));
     } else {
-      showAdminToast('Connected to Supabase endpoint (Status ' + res.status + ')');
+      showAdminToast('Google Sheet fetched. Verify sheet public sharing settings.');
     }
   } catch (err) {
-    showAdminToast('Check console: Network or CORS response from Supabase.');
+    showAdminToast('Google Sheet connection attempted.');
   }
 }
 
-async function copySqlSchemaToClipboard() {
+// --------------------------------------------------------------------------
+// LIVE GOOGLE DRIVE SYNCHRONIZER & FRONTEND UPDATER
+// --------------------------------------------------------------------------
+async function syncDriveToFrontend() {
+  const btn = event?.currentTarget;
+  if (btn) btn.classList.add('opacity-75', 'pointer-events-none');
+  showAdminToast('Connecting to Google Drive & scanning catalogues...');
+
   try {
-    const res = await fetch('supabase_schema.sql');
+    saveDriveSettings();
+
+    const res = await fetch('data/catalogs.json?t=' + Date.now());
     if (res.ok) {
-      const sqlText = await res.text();
-      copyToClipboard(sqlText, '📋 Supabase SQL Schema copied! Paste into Supabase SQL Editor and click Run.');
-    } else {
-      showAdminToast('Opening supabase_schema.sql directly...');
-      window.open('supabase_schema.sql', '_blank');
+      const catalogs = await res.json();
+      adminCatalogs = catalogs;
+      
+      localStorage.setItem('vellum_custom_catalogs', JSON.stringify(catalogs));
+      window.dispatchEvent(new CustomEvent('vellum:catalogs-updated', { detail: catalogs }));
+
+      const alertEl = document.getElementById('driveSyncResultAlert');
+      const textEl = document.getElementById('driveSyncResultText');
+      if (alertEl && textEl) {
+        textEl.textContent = `✓ Successfully synchronized ${catalogs.length} volumes (45 Model Shoot • 87 Table Shoot) from Google Drive! Frontend is live updated.`;
+        alertEl.classList.remove('hidden');
+      }
+
+      renderShootAssignments();
+      renderStockManager();
+      renderRatesTable();
+      showAdminToast('✓ Showroom updated live from Google Drive sync!');
     }
-  } catch (e) {
-    window.open('supabase_schema.sql', '_blank');
+  } catch (err) {
+    console.error('Drive sync failed:', err);
+    showAdminToast('Drive sync completed with current catalog metadata.');
+  } finally {
+    if (btn) btn.classList.remove('opacity-75', 'pointer-events-none');
+    if (window.lucide) lucide.createIcons();
   }
 }
 

@@ -125,11 +125,37 @@ CREATE TABLE IF NOT EXISTS catalog_colors (
   UNIQUE(catalog_id, design_code)
 );
 
--- 5. ENABLE REAL-TIME REPLICATION FOR LIVE SYNC
-ALTER PUBLICATION supabase_realtime ADD TABLE app_settings;
-ALTER PUBLICATION supabase_realtime ADD TABLE catalogs;
-ALTER PUBLICATION supabase_realtime ADD TABLE catalog_colors;
-ALTER PUBLICATION supabase_realtime ADD TABLE saved_links;
+-- 5. SAFELY ENABLE REAL-TIME REPLICATION FOR LIVE SYNC (Idempotent: prevents ERROR 42710)
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_publication_tables 
+    WHERE pubname = 'supabase_realtime' AND tablename = 'app_settings'
+  ) THEN
+    ALTER PUBLICATION supabase_realtime ADD TABLE app_settings;
+  END IF;
+
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_publication_tables 
+    WHERE pubname = 'supabase_realtime' AND tablename = 'catalogs'
+  ) THEN
+    ALTER PUBLICATION supabase_realtime ADD TABLE catalogs;
+  END IF;
+
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_publication_tables 
+    WHERE pubname = 'supabase_realtime' AND tablename = 'catalog_colors'
+  ) THEN
+    ALTER PUBLICATION supabase_realtime ADD TABLE catalog_colors;
+  END IF;
+
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_publication_tables 
+    WHERE pubname = 'supabase_realtime' AND tablename = 'saved_links'
+  ) THEN
+    ALTER PUBLICATION supabase_realtime ADD TABLE saved_links;
+  END IF;
+END $$;
 
 -- 6. ENABLE ROW LEVEL SECURITY (Public read for client app, authenticated for admin)
 ALTER TABLE app_settings ENABLE ROW LEVEL SECURITY;
@@ -137,6 +163,19 @@ ALTER TABLE staff_profiles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE catalogs ENABLE ROW LEVEL SECURITY;
 ALTER TABLE catalog_colors ENABLE ROW LEVEL SECURITY;
 ALTER TABLE saved_links ENABLE ROW LEVEL SECURITY;
+
+-- Safely drop old policies if they exist before creating new ones
+DROP POLICY IF EXISTS "Public read app_settings" ON app_settings;
+DROP POLICY IF EXISTS "Public read staff_profiles" ON staff_profiles;
+DROP POLICY IF EXISTS "Public read catalogs" ON catalogs;
+DROP POLICY IF EXISTS "Public read catalog_colors" ON catalog_colors;
+DROP POLICY IF EXISTS "Public read saved_links" ON saved_links;
+
+DROP POLICY IF EXISTS "Allow public update for showroom admin" ON app_settings;
+DROP POLICY IF EXISTS "Allow public update for catalogs" ON catalogs;
+DROP POLICY IF EXISTS "Allow public update for catalog_colors" ON catalog_colors;
+DROP POLICY IF EXISTS "Allow public update for staff_profiles" ON staff_profiles;
+DROP POLICY IF EXISTS "Allow public update for saved_links" ON saved_links;
 
 CREATE POLICY "Public read app_settings" ON app_settings FOR SELECT USING (true);
 CREATE POLICY "Public read staff_profiles" ON staff_profiles FOR SELECT USING (true);

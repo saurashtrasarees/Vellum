@@ -4,8 +4,9 @@
 // ==========================================================================
 
 const CONFIG = {
-  sheetId: '1O-F9nVgPdkamtTGDesEcde8PCZSK7pyjUJDi8PrwmaY',
-  sheetUrl: 'https://docs.google.com/spreadsheets/d/1O-F9nVgPdkamtTGDesEcde8PCZSK7pyjUJDi8PrwmaY/gviz/tq?tqx=out:csv&sheet=Catalogs%20%26%20Pricing',
+  sheetId: '1YcrvrrgwikEFkST8VEPf-XRjj8vWd0F750kauK1PU1o',
+  sheetUrl: 'https://docs.google.com/spreadsheets/d/1YcrvrrgwikEFkST8VEPf-XRjj8vWd0F750kauK1PU1o/gviz/tq?tqx=out:csv',
+  sheetExportUrl: 'https://docs.google.com/spreadsheets/d/1YcrvrrgwikEFkST8VEPf-XRjj8vWd0F750kauK1PU1o/export?format=csv'
 };
 
 // --------------------------------------------------------------------------
@@ -159,6 +160,7 @@ const state = {
   catalogs: [],
   filteredCatalogs: [],
   selectedCategory: 'all',
+  selectedPriceRange: 'all',
   searchQuery: '',
   sortBy: 'newest',
   currentRole: 'retail', // 'retail', 'all', 'wholesale', 'reseller'
@@ -327,7 +329,7 @@ function applyFirmTheme() {
   const body = document.getElementById('appBody');
   
   if (body) {
-    body.className = `${firm.themeClass} min-h-screen flex flex-col antialiased selection:bg-white border border-amber-200 text-stone-800 selection:text-white`;
+    body.className = `${firm.themeClass} min-h-screen flex flex-col antialiased selection:bg-amber-200 selection:text-amber-950 text-stone-800`;
   }
 
   // Update Page Title & Firm Logos
@@ -537,7 +539,7 @@ function setShootType(type) {
 }
 
 // --------------------------------------------------------------------------
-// 4. DATA LOADING & GOOGLE SHEET LIVE PRICING
+// 4. DATA LOADING & GOOGLE SHEET LIVE PRICING (Sheet ID: 1YcrvrrgwikEFkST8VEPf-XRjj8vWd0F750kauK1PU1o)
 // --------------------------------------------------------------------------
 async function loadCatalogData() {
   try {
@@ -555,38 +557,57 @@ async function loadCatalogData() {
     if (sheetRes.ok) {
       const csvText = await sheetRes.text();
       mergeSheetPricing(csvText);
-      console.log('✓ Google Sheet Live Pricing successfully synced!');
+      console.log('✓ Google Sheet Live Pricing successfully synced from 1YcrvrrgwikEFkST8VEPf-XRjj8vWd0F750kauK1PU1o!');
     }
   } catch (sheetErr) {
-    console.log('Using local pricing database.');
+    console.log('Using local catalog rates database.');
   }
 
   state.filteredCatalogs = [...state.catalogs];
 }
 
 function mergeSheetPricing(csvText) {
+  if (!csvText || csvText.length < 5) return;
   const lines = csvText.split('\n');
   if (lines.length < 2) return;
+
+  const headerRow = parseCsvRow(lines[0].toLowerCase());
+  let primeIdx = -1, wsIdx = -1, retIdx = -1, statusIdx = -1;
+
+  headerRow.forEach((h, idx) => {
+    if (h.includes('prime')) primeIdx = idx;
+    else if (h.includes('wholesale')) wsIdx = idx;
+    else if (h.includes('retail') || h.includes('mrp')) retIdx = idx;
+    else if (h.includes('status') || h.includes('stock')) statusIdx = idx;
+  });
+
+  // Default positions: 1. Prime, 2. Wholesale, 3. Retail
+  if (primeIdx === -1 && wsIdx === -1 && retIdx === -1) {
+    primeIdx = 3;
+    wsIdx = 4;
+    retIdx = 5;
+    statusIdx = 6;
+  }
 
   const priceMap = {};
   for (let i = 1; i < lines.length; i++) {
     const row = parseCsvRow(lines[i]);
-    if (row.length >= 6) {
+    if (row.length >= 2) {
       const code = row[0].trim().toLowerCase();
-      const wsRate = parseInt(row[3].replace(/[^0-9]/g, '')) || null;
-      const resRate = parseInt(row[4].replace(/[^0-9]/g, '')) || null;
-      const retRate = parseInt(row[5].replace(/[^0-9]/g, '')) || null;
-      const status = row[6] ? row[6].trim() : 'Ready to Dispatch';
+      const primeRate = primeIdx >= 0 && row[primeIdx] ? parseInt(row[primeIdx].replace(/[^0-9]/g, '')) : null;
+      const wsRate = wsIdx >= 0 && row[wsIdx] ? parseInt(row[wsIdx].replace(/[^0-9]/g, '')) : null;
+      const retRate = retIdx >= 0 && row[retIdx] ? parseInt(row[retIdx].replace(/[^0-9]/g, '')) : null;
+      const status = statusIdx >= 0 && row[statusIdx] ? row[statusIdx].trim() : null;
 
-      priceMap[code] = { wholesale: wsRate, reseller: resRate, retail: retRate, status: status };
+      priceMap[code] = { prime: primeRate, wholesale: wsRate, retail: retRate, status: status };
     }
   }
 
   state.catalogs.forEach(cat => {
-    const mapped = priceMap[cat.code.toLowerCase()];
+    const mapped = priceMap[cat.code.toLowerCase()] || priceMap[cat.id.toLowerCase()];
     if (mapped) {
+      if (mapped.prime) cat.resellerRate = mapped.prime;
       if (mapped.wholesale) cat.wholesaleRate = mapped.wholesale;
-      if (mapped.reseller) cat.resellerRate = mapped.reseller;
       if (mapped.retail) cat.retailRate = mapped.retail;
       if (mapped.status) cat.status = mapped.status;
     }
@@ -645,33 +666,80 @@ function getAccurateColor(colorName) {
   return { hex: '#64748b', label: colorName };
 }
 
+// ==========================================================================
+// 000 COVER & DISPLAY IMAGE RESOLUTION
+// Rule: In Surat textile catalogues, '000' (000.jpeg/000.jpg) represents
+// the whole catalogue display cover / all-colors presentation.
+// It represents NO COLOR (must NOT be treated as a saree colorway).
+// ==========================================================================
+function getCatalogCoverHero(cat) {
+  if (cat.zeroCoverUrl) {
+    return { url: cat.zeroCoverUrl, hasZeroCover: true };
+  }
+  if (cat.heroImageUrl && cat.heroImageUrl.includes('000.')) {
+    return { url: cat.heroImageUrl, hasZeroCover: true };
+  }
+  const firstDesign = (cat.designs && cat.designs[0]) || {};
+  return { 
+    url: firstDesign.heroImageUrl || cat.heroImageUrl || 'assets/saurashtra-sarees-logo.jpg', 
+    hasZeroCover: false 
+  };
+}
+
+function getColorwayDesigns(cat) {
+  if (!cat || !cat.designs) return [];
+  // Strictly exclude 000 from color dots (it represents NO COLOR)
+  return cat.designs.filter(d => 
+    String(d.code).trim() !== '000' && 
+    !d.isZeroCover && 
+    !(d.heroImageUrl && d.heroImageUrl.includes('000.'))
+  );
+}
+
 // --------------------------------------------------------------------------
 // 6. SCREEN 1: CATALOGUE COLLECTION & CARDS
 // --------------------------------------------------------------------------
 function renderCategoryPills() {
-  const container = document.getElementById('categoryPills');
-  if (!container) return;
+  const fabricSelect = document.getElementById('fabricSelectFilter');
+  if (!fabricSelect) return;
 
-  const categories = ['All Collections', ...new Set(state.catalogs.map(c => c.category))];
+  const counts = {};
+  state.catalogs.forEach(c => {
+    if (c.category) {
+      counts[c.category] = (counts[c.category] || 0) + 1;
+    }
+  });
 
-  container.innerHTML = categories.map(cat => {
-    const val = cat === 'All Collections' ? 'all' : cat;
-    const isActive = state.selectedCategory === val;
-    const activeClass = isActive 
-      ? 'bg-white border border-amber-200 text-stone-800 text-white font-bold shadow-xs'
-      : 'bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium';
-
-    return `
-      <button onclick="setCategory('${val}')" class="px-3.5 py-1.5 rounded-full whitespace-nowrap text-xs transition-all ${activeClass}">
-        ${cat}
-      </button>
-    `;
-  }).join('');
+  const categories = Object.keys(counts).sort();
+  fabricSelect.innerHTML = `
+    <option value="all">🧵 All Fabrics (${state.catalogs.length})</option>
+    ${categories.map(cat => `
+      <option value="${cat}" ${state.selectedCategory === cat ? 'selected' : ''}>
+        ${cat} (${counts[cat]})
+      </option>
+    `).join('')}
+  `;
 }
 
 function setCategory(cat) {
   state.selectedCategory = cat;
-  renderCategoryPills();
+  const fabricSelect = document.getElementById('fabricSelectFilter');
+  if (fabricSelect) fabricSelect.value = cat;
+  applyFiltersAndRender();
+}
+
+function setShootType(type) {
+  state.currentShoot = type;
+  const shootSelect = document.getElementById('shootSelectFilter');
+  if (shootSelect) shootSelect.value = type;
+  updateShootUI();
+  applyFiltersAndRender();
+}
+
+function setPriceRange(range) {
+  state.selectedPriceRange = range;
+  const priceSelect = document.getElementById('priceRangeFilter');
+  if (priceSelect) priceSelect.value = range;
   applyFiltersAndRender();
 }
 
@@ -698,59 +766,140 @@ function handleSort(sortVal) {
 
 function resetFilters() {
   state.selectedCategory = 'all';
+  state.selectedPriceRange = 'all';
+  state.currentShoot = 'all';
   state.searchQuery = '';
   state.sortBy = 'newest';
-  const input = document.getElementById('searchInput');
-  if (input) input.value = '';
-  renderCategoryPills();
+
+  const searchInput = document.getElementById('searchInput');
+  if (searchInput) searchInput.value = '';
+
+  const shootSelect = document.getElementById('shootSelectFilter');
+  if (shootSelect) shootSelect.value = 'all';
+
+  const priceSelect = document.getElementById('priceRangeFilter');
+  if (priceSelect) priceSelect.value = 'all';
+
+  const fabricSelect = document.getElementById('fabricSelectFilter');
+  if (fabricSelect) fabricSelect.value = 'all';
+
+  const sortSelect = document.getElementById('sortSelect');
+  if (sortSelect) sortSelect.value = 'newest';
+
+  updateShootUI();
   applyFiltersAndRender();
+}
+
+function renderActiveFilterTags() {
+  const container = document.getElementById('activeFilterTagsContainer');
+  const resetBtn = document.getElementById('btnResetFilters');
+  if (!container) return;
+
+  const tags = [];
+
+  if (state.currentShoot !== 'all') {
+    const shootLabel = state.currentShoot === 'model' ? '👗 Model Shoot (45)' : '🪑 Table Shoot (87)';
+    tags.push(`
+      <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-sky-100 text-sky-900 border border-sky-300 shadow-2xs">
+        ${shootLabel}
+        <button onclick="setShootType('all')" class="hover:text-red-600 font-bold ml-1">✕</button>
+      </span>
+    `);
+  }
+
+  if (state.selectedPriceRange && state.selectedPriceRange !== 'all') {
+    const priceLabels = {
+      'under500': '≤ ₹499 (Budget)',
+      '500-999': '₹500–₹999 (Fast Moving)',
+      '1000-1499': '₹1,000–₹1,499 (Festive)',
+      '1500-1999': '₹1,500–₹1,999 (Pure Silk)',
+      'above2000': '≥ ₹2,000 (Bridal Haute)'
+    };
+    tags.push(`
+      <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-100 text-amber-950 border border-amber-300 shadow-2xs">
+        💰 ${priceLabels[state.selectedPriceRange] || state.selectedPriceRange}
+        <button onclick="setPriceRange('all')" class="hover:text-red-600 font-bold ml-1">✕</button>
+      </span>
+    `);
+  }
+
+  if (state.selectedCategory !== 'all') {
+    tags.push(`
+      <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-purple-100 text-purple-900 border border-purple-300 shadow-2xs">
+        🧵 ${state.selectedCategory}
+        <button onclick="setCategory('all')" class="hover:text-red-600 font-bold ml-1">✕</button>
+      </span>
+    `);
+  }
+
+  if (state.searchQuery) {
+    tags.push(`
+      <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-stone-100 text-stone-900 border border-stone-300 shadow-2xs">
+        🔍 "${state.searchQuery}"
+        <button onclick="clearSearch()" class="hover:text-red-600 font-bold ml-1">✕</button>
+      </span>
+    `);
+  }
+
+  container.innerHTML = tags.join('');
+
+  if (resetBtn) {
+    if (tags.length > 0) resetBtn.classList.remove('hidden');
+    else resetBtn.classList.add('hidden');
+  }
 }
 
 function applyFiltersAndRender() {
   let list = [...state.catalogs];
 
-  // Category Filter
+  // 1. Shoot Filter (Distinct Model Shoot vs Table Shoot)
+  if (state.currentShoot === 'model') {
+    list = list.filter(c => c.shootType === 'model' || Boolean(c.has2mb));
+  } else if (state.currentShoot === 'table') {
+    list = list.filter(c => c.shootType === 'table' || !c.has2mb);
+  }
+
+  // 2. Fabric Category Filter
   if (state.selectedCategory !== 'all') {
     list = list.filter(c => c.category === state.selectedCategory);
   }
 
-  // Shoot Filter (Model Shoot vs Table Shoot Dedicated Folders)
-  if (state.currentShoot === 'model') {
+  // 3. Price Range Filter: =<499, 500-999, 1000-1499, 1500-1999, 2000=<
+  if (state.selectedPriceRange !== 'all') {
     list = list.filter(c => {
-      const assigned = window.vellumAdapter ? window.vellumAdapter.getCatalogShoot(c.id) : null;
-      if (assigned) return assigned === 'model' || assigned === 'both';
-      return Boolean(c.has2mb);
-    });
-  } else if (state.currentShoot === 'table') {
-    list = list.filter(c => {
-      const assigned = window.vellumAdapter ? window.vellumAdapter.getCatalogShoot(c.id) : null;
-      if (assigned) return assigned === 'table' || assigned === 'both';
-      return !c.has2mb;
+      const rate = getActiveRate(c);
+      if (state.selectedPriceRange === 'under500') return rate <= 499;
+      if (state.selectedPriceRange === '500-999') return rate >= 500 && rate <= 999;
+      if (state.selectedPriceRange === '1000-1499') return rate >= 1000 && rate <= 1499;
+      if (state.selectedPriceRange === '1500-1999') return rate >= 1500 && rate <= 1999;
+      if (state.selectedPriceRange === 'above2000') return rate >= 2000;
+      return true;
     });
   }
 
-  // Search Filter
+  // 4. Search Filter
   if (state.searchQuery) {
     list = list.filter(c => 
       c.name.toLowerCase().includes(state.searchQuery) ||
       c.code.toLowerCase().includes(state.searchQuery) ||
-      c.category.toLowerCase().includes(state.searchQuery) ||
-      c.fabric.toLowerCase().includes(state.searchQuery)
+      (c.category && c.category.toLowerCase().includes(state.searchQuery)) ||
+      (c.fabric && c.fabric.toLowerCase().includes(state.searchQuery))
     );
   }
 
-  // Sorting
-  if (state.sortBy === 'price-low') {
+  // 5. Sorting
+  if (state.sortBy === 'price-asc') {
     list.sort((a, b) => getActiveRate(a) - getActiveRate(b));
-  } else if (state.sortBy === 'price-high') {
+  } else if (state.sortBy === 'price-desc') {
     list.sort((a, b) => getActiveRate(b) - getActiveRate(a));
-  } else if (state.sortBy === 'colors') {
-    list.sort((a, b) => b.skuCount - a.skuCount);
+  } else if (state.sortBy === 'name-asc') {
+    list.sort((a, b) => a.name.localeCompare(b.name));
   }
 
   state.filteredCatalogs = list;
   renderCatalogGrid();
   renderCatalogCount();
+  renderActiveFilterTags();
 }
 
 function renderCatalogCount() {
@@ -769,10 +918,11 @@ function renderCatalogCount() {
   }
 }
 
+// Commercial Pricing Hierarchy: 1. Prime, 2. Wholesale, 3. Retail
 function getActiveRate(cat) {
-  if (state.currentRole === 'wholesale') return cat.wholesaleRate;
-  if (state.currentRole === 'prime' || state.currentRole === 'reseller') return cat.resellerRate;
-  return cat.retailRate; // Default to retailRate
+  if (state.currentRole === 'prime') return cat.resellerRate; // 1. Prime Rate (lowest)
+  if (state.currentRole === 'wholesale') return cat.wholesaleRate; // 2. Wholesale Rate
+  return cat.retailRate; // 3. Retail Rate (highest, default)
 }
 
 function renderCatalogGrid() {
@@ -795,12 +945,15 @@ function renderCatalogGrid() {
   const isAllRatesUser = (state.activeUser && state.activeUser.rateAccess === 'all') || state.currentRole === 'all';
 
   grid.innerHTML = state.filteredCatalogs.map(cat => {
-    const firstDesign = cat.designs[0] || {};
-    const heroImg = firstDesign.heroImageUrl || cat.heroImageUrl || 'https://placehold.co/600x800/1e293b/d4af37?text=' + encodeURIComponent(cat.name);
+    const coverHero = getCatalogCoverHero(cat);
+    const heroImg = coverHero.url;
+    const colorways = getColorwayDesigns(cat);
+    const firstDesign = colorways[0] || (cat.designs && cat.designs[0]) || {};
     const activeColorObj = getAccurateColor(firstDesign.color);
+
     const retailRate = cat.retailRate;
     const wholesaleRate = cat.wholesaleRate;
-    const resellerRate = cat.resellerRate;
+    const primeRate = cat.resellerRate;
 
     const catStock = window.vellumAdapter ? window.vellumAdapter.getCatalogStock(cat.id) : 'in_stock';
     let stockBadgeHtml = `
@@ -822,27 +975,37 @@ function renderCatalogGrid() {
         </span>`;
     }
 
+    const isModel = cat.shootType === 'model' || Boolean(cat.has2mb);
+    const shootBadgeHtml = isModel
+      ? `<span class="text-[9px] sm:text-[10px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider bg-sky-50 text-sky-900 border-2 border-sky-300 shadow-xs flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-sky-500 animate-pulse"></span>👗 Model Shoot</span>`
+      : `<span class="text-[9px] sm:text-[10px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider bg-amber-50 text-amber-950 border-2 border-amber-300 shadow-xs flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>🪑 Table Shoot</span>`;
+
     return `
       <div class="catalog-card ${catStock === 'temp_out_of_stock' ? 'is-temp-out' : (catStock === 'perm_out_of_stock' ? 'is-perm-out' : '')} bg-white rounded-2xl sm:rounded-3xl border border-amber-200/80 overflow-hidden shadow-xs hover:shadow-xl transition-all duration-300 flex flex-col justify-between group active:scale-[0.99]">
         
         <!-- Top Media Area -->
-        <div class="relative aspect-[3/4] bg-stone-100 overflow-hidden cursor-pointer" onclick="navigateToProduct('${cat.code}')">
+        <div class="relative aspect-[3/4] bg-stone-100 overflow-hidden cursor-pointer" onclick="navigateToProduct('${cat.id}')">
           <img 
-            id="card-hero-${cat.code}" 
+            id="card-hero-${cat.id}" 
             src="${heroImg}" 
             referrerpolicy="no-referrer"
             alt="${cat.name}" 
             class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-106 hero-image-fade"
-            onerror="this.onerror=null; this.src='https://placehold.co/600x800/f8fafc/8b1d40?text=${encodeURIComponent(cat.name)}';"
+            onerror="this.onerror=null; this.src='assets/saurashtra-sarees-logo.jpg';"
           >
 
           <!-- Top Status & Shoot Badges -->
           <div class="absolute top-2 sm:top-3 left-2 sm:left-3 right-2 sm:right-3 flex items-center justify-between pointer-events-none">
-            <span class="text-[9px] sm:text-[10px] font-extrabold px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full uppercase tracking-wider bg-white/95 text-stone-900 shadow-sm backdrop-blur-xs border border-amber-200/60">
-              ${(window.vellumAdapter && window.vellumAdapter.getCatalogShoot(cat.id)) === 'both' ? '🌟 Model + Table' : ((window.vellumAdapter && window.vellumAdapter.getCatalogShoot(cat.id)) === 'table' || !cat.has2mb ? '🪑 Table Shoot' : '👗 Model Shoot')}
-            </span>
+            ${shootBadgeHtml}
             ${stockBadgeHtml}
           </div>
+
+          <!-- 000 Cover Badge Pill (Cover represents No Color) -->
+          ${cat.has000Cover ? `
+            <div class="absolute top-10 sm:top-12 left-2 sm:left-3 bg-amber-900/90 backdrop-blur-xs text-amber-100 text-[9px] font-black px-2 py-0.5 rounded-md flex items-center gap-1 border border-amber-400/40 shadow-xs">
+              <span>🖼️ 000 Cover</span>
+            </div>
+          ` : ''}
 
           <!-- Video Play Icon Pill -->
           ${(cat.hasVideo || firstDesign.video) ? `
@@ -854,7 +1017,7 @@ function renderCatalogGrid() {
 
           <!-- SKU Count Overlay -->
           <div class="absolute bottom-2 sm:bottom-3 right-2 sm:right-3 bg-black/75 backdrop-blur-xs text-white text-[9px] sm:text-[10px] font-extrabold px-2 py-0.5 rounded-full border border-white/10">
-            ${cat.skuCount} Colors
+            ${colorways.length} Colors
           </div>
         </div>
 
@@ -867,14 +1030,14 @@ function renderCatalogGrid() {
               <span class="text-[9px] sm:text-[10px] font-mono text-stone-600 font-bold shrink-0">${cat.code}</span>
             </div>
             
-            <h3 onclick="navigateToProduct('${cat.code}')" class="font-serif text-sm sm:text-lg font-bold text-slate-900 group-hover:text-brand-maroon transition-colors line-clamp-1 cursor-pointer mt-0.5">
+            <h3 onclick="navigateToProduct('${cat.id}')" class="font-serif text-sm sm:text-lg font-bold text-slate-900 group-hover:text-brand-maroon transition-colors line-clamp-1 cursor-pointer mt-0.5">
               ${cat.name}
             </h3>
 
-            <!-- Color Variants Swatches Strip with Tooltips -->
+            <!-- Color Variants Swatches Strip with Tooltips (Excludes 000 cover) -->
             <div class="mt-2 sm:mt-3 pt-2 border-t border-slate-100 flex items-center justify-between">
               <div class="flex items-center gap-1 sm:gap-1.5 flex-wrap">
-                ${cat.designs.slice(0, 5).map((d, dIdx) => {
+                ${colorways.slice(0, 5).map((d, dIdx) => {
                   const dColor = getAccurateColor(d.color);
                   const isColorSold = window.vellumAdapter && window.vellumAdapter.getColorStock(cat.id, d.code) === 'sold_out';
                   return `
@@ -882,48 +1045,52 @@ function renderCatalogGrid() {
                       <span class="swatch-tooltip">Design ${d.code}: ${dColor.label} ${isColorSold ? '(Sold Out)' : ''}</span>
                       <button 
                         type="button"
-                        onclick="event.stopPropagation(); switchCardDesign('${cat.code}', ${dIdx})" 
-                        class="card-dot-${cat.code} ${isColorSold ? 'is-sold-out' : ''} w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full border border-white shadow-xs inline-block transition-transform hover:scale-125 ${dIdx === 0 ? 'ring-2 ring-stone-900 scale-110' : 'opacity-85'}"
+                        onclick="event.stopPropagation(); switchCardDesign('${cat.id}', ${dIdx})" 
+                        class="card-dot-${cat.id} ${isColorSold ? 'is-sold-out' : ''} w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full border border-white shadow-xs inline-block transition-transform hover:scale-125 ${dIdx === 0 ? 'ring-2 ring-stone-900 scale-110' : 'opacity-85'}"
                         style="background-color: ${dColor.hex};"
                       ></button>
                     </div>
                   `;
                 }).join('')}
-                ${cat.designs.length > 5 ? `
-                  <span class="text-[9px] font-bold text-stone-600 ml-0.5">+${cat.designs.length - 5}</span>
+                ${colorways.length > 5 ? `
+                  <span class="text-[9px] font-bold text-stone-600 ml-0.5">+${colorways.length - 5}</span>
                 ` : ''}
               </div>
 
-              <span id="card-design-${cat.code}" class="hidden sm:inline text-[10px] font-semibold text-slate-500 truncate max-w-[100px]">
-                Design ${firstDesign.code || '101'}
+              <span id="card-design-${cat.id}" class="hidden sm:inline text-[10px] font-semibold text-slate-500 truncate max-w-[100px]">
+                ${coverHero.hasZeroCover ? '000 Cover' : `Design ${firstDesign.code || '101'}`}
               </span>
             </div>
           </div>
 
-          <!-- Commercial Pricing Block -->
+          <!-- Commercial Pricing Block (Hierarchy: 1. Prime, 2. Wholesale, 3. Retail) -->
           <div class="pt-2 sm:pt-3 border-t border-slate-100">
             ${isAllRatesUser ? `
-              <!-- Multi-Rate Matrix for No. 3 All-Rate Users -->
+              <!-- Multi-Rate Matrix for Staff / All-Rate Users -->
               <div class="bg-slate-50 rounded-xl sm:rounded-2xl p-2 sm:p-2.5 border border-slate-200/80 space-y-1">
                 <div class="flex items-center justify-between text-[10px] sm:text-[11px]">
-                  <span class="text-slate-500 font-medium">Wholesale:</span>
-                  <span class="font-serif font-bold text-emerald-700">₹${wholesaleRate}</span>
+                  <span class="text-amber-900 font-bold">1. Prime Rate:</span>
+                  <span class="font-serif font-bold text-amber-900">₹${primeRate}</span>
                 </div>
                 <div class="flex items-center justify-between text-[10px] sm:text-[11px]">
-                  <span class="text-slate-500 font-medium">Reseller:</span>
-                  <span class="font-serif font-bold text-blue-700">₹${resellerRate}</span>
+                  <span class="text-emerald-700 font-bold">2. Wholesale Rate:</span>
+                  <span class="font-serif font-bold text-emerald-700">₹${wholesaleRate}</span>
                 </div>
                 <div class="flex items-center justify-between text-[10px] sm:text-[11px] pt-0.5 border-t border-slate-200">
-                  <span class="text-slate-700 font-bold">Catalog MRP:</span>
+                  <span class="text-purple-900 font-bold">3. Retail / MRP:</span>
                   <span class="font-serif font-extrabold text-slate-900">₹${retailRate}</span>
                 </div>
               </div>
             ` : `
-              <!-- Single Retail MRP Rate for No. 1 and No. 2 Users -->
+              <!-- Single Rate Display -->
               <div class="flex items-baseline justify-between">
                 <div>
-                  <span class="text-[9px] sm:text-[10px] text-stone-600 uppercase font-semibold">Catalog MRP</span>
-                  <p class="font-serif text-base sm:text-xl font-extrabold text-slate-900 leading-tight">₹${retailRate}</p>
+                  <span class="text-[9px] sm:text-[10px] text-stone-600 uppercase font-semibold">
+                    ${state.currentRole === 'prime' ? 'Prime Wholesale' : (state.currentRole === 'wholesale' ? 'Wholesale Price' : 'Catalog MRP')}
+                  </span>
+                  <p class="font-serif text-base sm:text-xl font-extrabold text-slate-900 leading-tight">
+                    ₹${getActiveRate(cat)}
+                  </p>
                 </div>
                 <span class="text-[9px] sm:text-[10px] text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded font-bold">✨ In Stock</span>
               </div>
@@ -932,17 +1099,17 @@ function renderCatalogGrid() {
             <!-- 1-Click Action Buttons -->
             <div class="flex items-center gap-1.5 sm:gap-2 mt-2.5 sm:mt-3">
               <button 
-                onclick="navigateToProduct('${cat.code}')" 
-                class="flex-1 py-1.5 sm:py-2 px-2 sm:px-3 rounded-lg sm:rounded-xl bg-white border border-amber-200 text-stone-800 hover:bg-slate-800 text-white text-[11px] sm:text-xs font-bold transition-all text-center flex items-center justify-center gap-1 shadow-xs"
+                onclick="navigateToProduct('${cat.id}')" 
+                class="flex-1 py-1.5 sm:py-2 px-2 sm:px-3 rounded-lg sm:rounded-xl bg-white border border-amber-300 text-stone-800 hover:bg-stone-900 hover:text-white text-[11px] sm:text-xs font-bold transition-all text-center flex items-center justify-center gap-1 shadow-xs"
               >
                 <span>View Details</span>
                 <i data-lucide="arrow-right" class="w-3 h-3 sm:w-3.5 sm:h-3.5"></i>
               </button>
 
               <button 
-                onclick="sendStaffWhatsApp('${cat.code}', 'Design ${firstDesign.code} (${activeColorObj.label})', ${retailRate})" 
+                onclick="sendStaffWhatsApp('${cat.code}', 'Design ${firstDesign.code} (${activeColorObj.label})', ${getActiveRate(cat)})" 
                 title="Inquire on WhatsApp" 
-                class="p-1.5 sm:p-2 rounded-lg sm:rounded-xl bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-700 transition-all flex items-center justify-center shrink-0"
+                class="p-1.5 sm:p-2 rounded-lg sm:rounded-xl bg-emerald-50 hover:bg-emerald-100 border border-emerald-300 text-emerald-700 transition-all flex items-center justify-center shrink-0"
               >
                 <i data-lucide="message-circle" class="w-3.5 h-3.5 sm:w-4 sm:h-4 fill-current"></i>
               </button>
@@ -959,29 +1126,32 @@ function renderCatalogGrid() {
 }
 
 // Switch design/color directly on card
-function switchCardDesign(catCode, designIdx) {
-  const cat = state.catalogs.find(c => c.code.toLowerCase() === catCode.toLowerCase());
-  if (!cat || !cat.designs[designIdx]) return;
+function switchCardDesign(catId, designIdx) {
+  const cat = state.catalogs.find(c => c.id === catId || c.code.toLowerCase() === catId.toLowerCase());
+  if (!cat) return;
 
-  const design = cat.designs[designIdx];
+  const colorways = getColorwayDesigns(cat);
+  if (!colorways[designIdx]) return;
+
+  const design = colorways[designIdx];
   const colorObj = getAccurateColor(design.color);
 
-  const imgEl = document.getElementById(`card-hero-${cat.code}`);
+  const imgEl = document.getElementById(`card-hero-${cat.id}`);
   if (imgEl && design.heroImageUrl) {
     imgEl.src = design.heroImageUrl;
   }
 
-  const labelEl = document.getElementById(`card-design-${cat.code}`);
+  const labelEl = document.getElementById(`card-design-${cat.id}`);
   if (labelEl) {
     labelEl.textContent = `Design ${design.code} — ${colorObj.label}`;
   }
 
-  const dots = document.querySelectorAll(`.card-dot-${cat.code}`);
+  const dots = document.querySelectorAll(`.card-dot-${cat.id}`);
   dots.forEach((dot, idx) => {
     if (idx === designIdx) {
-      dot.className = `card-dot-${cat.code} w-4 h-4 rounded-full border border-white shadow-xs inline-block transition-transform scale-125 ring-2 ring-slate-900`;
+      dot.className = `card-dot-${cat.id} w-4 h-4 rounded-full border border-white shadow-xs inline-block transition-transform scale-125 ring-2 ring-slate-900`;
     } else {
-      dot.className = `card-dot-${cat.code} w-4 h-4 rounded-full border border-white shadow-xs inline-block transition-transform hover:scale-125 opacity-85`;
+      dot.className = `card-dot-${cat.id} w-4 h-4 rounded-full border border-white shadow-xs inline-block transition-transform hover:scale-125 opacity-85`;
     }
   });
 }
@@ -1063,10 +1233,10 @@ function renderPdpScreen() {
       document.getElementById('pdpRateReseller').textContent = `₹${cat.resellerRate}`;
       document.getElementById('pdpRateRetail').textContent = `₹${cat.retailRate}`;
       
-      const resMargin = cat.resellerRate - cat.wholesaleRate;
+      const wsMargin = cat.wholesaleRate - cat.resellerRate;
       const retMargin = cat.retailRate - cat.wholesaleRate;
-      document.getElementById('pdpResellerMargin').textContent = `₹${resMargin}`;
-      document.getElementById('pdpRetailMargin').textContent = `₹${retMargin}`;
+      document.getElementById('pdpResellerMargin').textContent = `+₹${wsMargin}`;
+      document.getElementById('pdpRetailMargin').textContent = `+₹${retMargin}`;
     }
   } else {
     if (allRatesCard) allRatesCard.classList.add('hidden');
@@ -1195,8 +1365,22 @@ function renderPdpColorSwatches() {
   const container = document.getElementById('pdpColorSwatchesContainer');
   if (!container) return;
 
+  const colorways = getColorwayDesigns(cat);
   const catStock = window.vellumAdapter ? window.vellumAdapter.getCatalogStock(cat.id) : 'in_stock';
-  container.innerHTML = cat.designs.map((d, idx) => {
+
+  const coverButtonHtml = cat.has000Cover ? `
+    <div class="w-full pb-2">
+      <button 
+        type="button" 
+        onclick="showPdpZeroCover()" 
+        class="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-amber-50 hover:bg-amber-100 border border-amber-300 text-amber-950 font-bold text-xs shadow-2xs transition-all"
+      >
+        <span>🖼️ View 000 Catalog Poster (All Shades Presentation)</span>
+      </button>
+    </div>
+  ` : '';
+
+  const swatchesHtml = colorways.map((d, idx) => {
     const isSelected = idx === state.activePdpDesignIndex;
     const colorObj = getAccurateColor(d.color);
     const isColorSold = window.vellumAdapter && window.vellumAdapter.getColorStock(cat.id, d.code) === 'sold_out';
@@ -1215,7 +1399,9 @@ function renderPdpColorSwatches() {
     `;
   }).join('');
 
-  const activeDesign = cat.designs[state.activePdpDesignIndex] || {};
+  container.innerHTML = coverButtonHtml + `<div class="flex items-center gap-2 flex-wrap">${swatchesHtml}</div>`;
+
+  const activeDesign = colorways[state.activePdpDesignIndex] || (cat.designs && cat.designs[0]) || {};
   const activeColorObj = getAccurateColor(activeDesign.color);
   const isCurrentColorSold = window.vellumAdapter && window.vellumAdapter.getColorStock(cat.id, activeDesign.code) === 'sold_out';
   
@@ -1231,6 +1417,20 @@ function renderPdpColorSwatches() {
   const labelEl = document.getElementById('pdpSelectedColorLabel');
   if (labelEl) {
     labelEl.innerHTML = `<span class="font-bold text-stone-900">Design ${activeDesign.code || '101'} — ${activeColorObj.label}</span> ${statusBadge}`;
+  }
+}
+
+function showPdpZeroCover() {
+  const cat = state.activePdpCatalog;
+  if (!cat) return;
+  const coverHero = getCatalogCoverHero(cat);
+  const heroImg = document.getElementById('pdpHeroImage');
+  if (heroImg && coverHero.url) {
+    heroImg.src = coverHero.url;
+  }
+  const indicator = document.getElementById('pdpAngleIndicator');
+  if (indicator) {
+    indicator.textContent = '000 Master Catalog Poster (No Color)';
   }
 }
 

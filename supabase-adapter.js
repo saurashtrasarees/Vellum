@@ -432,7 +432,30 @@ class VellumDataAdapter {
     return this.saveSavedLinks(list);
   }
 
-  // 6. Supabase Credentials & Connection
+  // 7. Custom Catalogs (Live Drive Sync & Importer)
+  loadCustomCatalogs() {
+    try {
+      const saved = localStorage.getItem('vellum_custom_catalogs');
+      if (saved) return JSON.parse(saved);
+    } catch (e) {
+      console.warn('Failed to parse custom catalogs from localStorage', e);
+    }
+    return null;
+  }
+
+  saveCustomCatalogs(catalogs) {
+    try {
+      localStorage.setItem('vellum_custom_catalogs', JSON.stringify(catalogs));
+      window.dispatchEvent(new CustomEvent('vellum:catalogs-updated', { detail: catalogs }));
+      this.syncToSupabaseIfConnected('custom_catalogs', { count: catalogs.length, syncedAt: new Date().toISOString() });
+      return true;
+    } catch (e) {
+      console.error('Error saving custom catalogs:', e);
+      return false;
+    }
+  }
+
+  // 8. Supabase Credentials & Connection
   loadSupabaseConfig() {
     try {
       const saved = localStorage.getItem(STORAGE_KEYS.SUPABASE_CONFIG);
