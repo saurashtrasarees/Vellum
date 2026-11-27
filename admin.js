@@ -3,8 +3,6 @@
 // Architecture & Engineering by BinduGrid Studio
 // ==========================================================================
 
-const ADMIN_PINS = ['7401', '9879', '9898', '9898907401'];
-
 const STAFF_PROFILES = [
   // 1. Keya Fashion [All Retail Rate]
   {
@@ -136,57 +134,26 @@ const STAFF_PROFILES = [
 let adminCatalogs = [];
 
 document.addEventListener('DOMContentLoaded', async () => {
-  if (sessionStorage.getItem('vellum_admin_auth') === 'true') {
-    showDashboard();
-  } else {
-    document.getElementById('adminPinInput').focus();
-  }
-
-  await loadAdminCatalogs();
   renderStaffHub();
+  await loadAdminCatalogs();
   initCustomGenerator();
   renderRatesTable();
 
   if (window.lucide) lucide.createIcons();
 });
 
-function unlockAdmin() {
-  const pin = document.getElementById('adminPinInput').value.trim();
-  const errorMsg = document.getElementById('pinErrorMsg');
-
-  if (ADMIN_PINS.includes(pin)) {
-    sessionStorage.setItem('vellum_admin_auth', 'true');
-    showDashboard();
-  } else {
-    if (errorMsg) errorMsg.classList.remove('hidden');
-  }
-}
-
-function lockAdmin() {
-  sessionStorage.removeItem('vellum_admin_auth');
-  location.reload();
-}
-
-function showDashboard() {
-  document.getElementById('adminLockScreen').classList.add('hidden');
-  document.getElementById('adminDashboard').classList.remove('hidden');
-}
-
 function switchTab(tabId) {
   const tabs = ['hub', 'generator', 'rates', 'firms'];
   tabs.forEach(t => {
     const content = document.getElementById(`tabContent-${t}`);
     const btn = document.getElementById(`tabBtn-${t}`);
-    const mBtn = document.getElementById(`mTabBtn-${t}`);
 
     if (t === tabId) {
       if (content) content.classList.remove('hidden');
-      if (btn) btn.className = 'px-4 py-2 rounded-xl font-bold bg-amber-500 text-slate-950 shadow-xs';
-      if (mBtn) mBtn.className = 'px-3 py-1.5 rounded-lg font-bold bg-amber-500 text-slate-950 whitespace-nowrap';
+      if (btn) btn.className = 'px-4 py-2 rounded-xl font-bold bg-amber-500 text-slate-950 shadow-xs whitespace-nowrap';
     } else {
       if (content) content.classList.add('hidden');
-      if (btn) btn.className = 'px-4 py-2 rounded-xl font-medium text-slate-400 hover:text-white';
-      if (mBtn) mBtn.className = 'px-3 py-1.5 rounded-lg font-medium text-slate-400 whitespace-nowrap';
+      if (btn) btn.className = 'px-4 py-2 rounded-xl font-medium text-slate-400 hover:text-white whitespace-nowrap';
     }
   });
 
@@ -214,8 +181,12 @@ function renderStaffHub() {
       ? 'bg-amber-400 text-slate-950' 
       : (staff.firm === 'keya' ? 'bg-sky-500 text-white' : 'bg-rose-500 text-white');
 
+    const whatsappShareUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(
+      `🥻 ${staff.firmName.toUpperCase()} — DIGITAL TEXTILE SHOWROOM 🥻\n\nPlease view our latest saree catalog here:\n${link}\n\nRepresentative: ${staff.name} (${staff.displayPhone})`
+    )}`;
+
     return `
-      <div class="bg-slate-950 border border-slate-800 rounded-3xl p-5 flex flex-col justify-between space-y-4 hover:border-slate-700 transition-all shadow-md group">
+      <div class="bg-slate-900 border border-slate-800 rounded-3xl p-5 flex flex-col justify-between space-y-4 hover:border-slate-700 transition-all shadow-md group">
         <div>
           <div class="flex items-center justify-between mb-3">
             <span class="text-xs font-mono font-extrabold px-3 py-1 rounded-xl shadow-xs ${badgeBg}">
@@ -232,28 +203,31 @@ function renderStaffHub() {
           </p>
           <p class="text-[11px] text-slate-400 mt-1">${staff.rateLabel}</p>
 
-          <!-- Dedicated URL box -->
-          <div class="mt-3 p-2.5 bg-slate-900 rounded-xl border border-slate-800 break-all text-[11px] font-mono text-slate-300 select-all">
-            ${link}
+          <!-- Direct Clickable URL Box -->
+          <div class="mt-3.5 p-3 bg-slate-950 rounded-2xl border border-slate-800 space-y-1">
+            <span class="text-[9px] uppercase tracking-wider text-slate-500 font-bold block">Live Dedicated URL</span>
+            <a href="${link}" target="_blank" class="block text-xs font-mono text-amber-300 hover:underline break-all font-semibold">
+              ${link}
+            </a>
           </div>
         </div>
 
         <div class="space-y-2 pt-2 border-t border-slate-800/80">
-          <div class="flex items-center gap-2">
-            <button onclick="copyToClipboard('${link}', 'Link for ${staff.name} (${staff.code}) copied!')" class="flex-1 py-2 px-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all shadow-xs">
+          <div class="grid grid-cols-2 gap-2">
+            <button onclick="copyToClipboard('${link}', 'Link for ${staff.code} copied!')" class="py-2.5 px-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all shadow-xs">
               <i data-lucide="copy" class="w-3.5 h-3.5"></i>
               <span>Copy Link</span>
             </button>
 
-            <a href="${link}" target="_blank" title="Test Live Showroom" class="p-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-700 flex items-center justify-center">
-              <i data-lucide="external-link" class="w-4 h-4"></i>
+            <a href="${link}" target="_blank" class="py-2.5 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-bold flex items-center justify-center gap-1.5 transition-all text-center">
+              <span>Open ↗</span>
             </a>
           </div>
 
-          <button onclick="copyStaffBroadcast('${staff.code}')" class="w-full py-2 px-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 text-xs font-semibold flex items-center justify-center gap-1.5 transition-all">
-            <i data-lucide="message-circle" class="w-3.5 h-3.5 text-emerald-400"></i>
-            <span>Copy WhatsApp Broadcast</span>
-          </button>
+          <a href="${whatsappShareUrl}" target="_blank" class="w-full py-2 px-3 rounded-xl bg-emerald-950 hover:bg-emerald-900 text-emerald-300 border border-emerald-800 text-xs font-semibold flex items-center justify-center gap-1.5 transition-all">
+            <i data-lucide="send" class="w-3.5 h-3.5"></i>
+            <span>Share directly on WhatsApp</span>
+          </a>
         </div>
       </div>
     `;
@@ -262,36 +236,8 @@ function renderStaffHub() {
   if (keyaGrid) keyaGrid.innerHTML = keyaList.map(renderCard).join('');
   if (saurashtraRetailGrid) saurashtraRetailGrid.innerHTML = saurashtraRetailList.map(renderCard).join('');
   if (saurashtraAllGrid) saurashtraAllGrid.innerHTML = saurashtraAllList.map(renderCard).join('');
-}
 
-function copyStaffBroadcast(userCode) {
-  const staff = STAFF_PROFILES.find(s => s.code === userCode);
-  if (!staff) return;
-
-  const baseOrigin = window.location.origin;
-  const basePath = window.location.pathname.replace('admin.html', '').replace('admin', '');
-  const link = `${baseOrigin}${basePath}?u=${staff.code}`;
-
-  const msg = 
-`🥻 *${staff.firmName.toUpperCase()} — DIGITAL TEXTILE SHOWROOM* 🥻
-
-Namaste! Please explore our complete live saree catalogue directly on your phone/pc:
-
-🔗 *Click to View Live Collections:*
-${link}
-
-✨ *Showroom Features:*
-• 100% High-Definition Model & Table Shoots
-• Multi-Angle Saree Views (Front, Pallu, Border, Pleats & Blouse)
-• Live Color Variants & Accurate Shades
-• Direct 1-Click WhatsApp Booking
-
-📞 *Your Dedicated Representative:*
-*${staff.name}*
-WhatsApp / Call: ${staff.displayPhone}
-Direct Surat Mill Dispatch • Best Quality Guaranteed`;
-
-  copyToClipboard(msg, `WhatsApp Broadcast text for ${staff.name} copied!`);
+  if (window.lucide) lucide.createIcons();
 }
 
 // --------------------------------------------------------------------------
@@ -373,9 +319,9 @@ function renderRatesTable() {
   const tbody = document.getElementById('adminRatesTableBody');
   if (!tbody) return;
 
-  tbody.innerHTML = adminCatalogs.map((cat, i) => {
+  tbody.innerHTML = adminCatalogs.map((cat) => {
     return `
-      <tr class="hover:bg-slate-900/60 transition-colors">
+      <tr class="hover:bg-slate-950/60 transition-colors">
         <td class="py-3 px-4 font-semibold text-white">
           <div class="font-serif">${cat.name}</div>
           <div class="text-[10px] font-mono text-slate-400">${cat.code}</div>
@@ -387,7 +333,7 @@ function renderRatesTable() {
             type="number" 
             id="rate-ws-${cat.code}" 
             value="${cat.wholesaleRate}" 
-            class="w-24 px-2.5 py-1.5 bg-slate-900 border border-slate-700 rounded-lg text-emerald-400 font-mono font-bold focus:border-amber-400 text-xs"
+            class="w-24 px-2.5 py-1.5 bg-slate-950 border border-slate-700 rounded-lg text-emerald-400 font-mono font-bold focus:border-amber-400 text-xs"
           >
         </td>
         <td class="py-3 px-4">
@@ -395,7 +341,7 @@ function renderRatesTable() {
             type="number" 
             id="rate-res-${cat.code}" 
             value="${cat.resellerRate}" 
-            class="w-24 px-2.5 py-1.5 bg-slate-900 border border-slate-700 rounded-lg text-blue-400 font-mono font-bold focus:border-amber-400 text-xs"
+            class="w-24 px-2.5 py-1.5 bg-slate-950 border border-slate-700 rounded-lg text-blue-400 font-mono font-bold focus:border-amber-400 text-xs"
           >
         </td>
         <td class="py-3 px-4">
@@ -403,11 +349,11 @@ function renderRatesTable() {
             type="number" 
             id="rate-ret-${cat.code}" 
             value="${cat.retailRate}" 
-            class="w-24 px-2.5 py-1.5 bg-slate-900 border border-slate-700 rounded-lg text-purple-400 font-mono font-bold focus:border-amber-400 text-xs"
+            class="w-24 px-2.5 py-1.5 bg-slate-950 border border-slate-700 rounded-lg text-purple-400 font-mono font-bold focus:border-amber-400 text-xs"
           >
         </td>
         <td class="py-3 px-4">
-          <select id="status-${cat.code}" class="px-2.5 py-1.5 bg-slate-900 border border-slate-700 rounded-lg text-white text-xs">
+          <select id="status-${cat.code}" class="px-2.5 py-1.5 bg-slate-950 border border-slate-700 rounded-lg text-white text-xs">
             <option value="Ready to Dispatch" ${cat.status === 'Ready to Dispatch' ? 'selected' : ''}>Ready to Dispatch</option>
             <option value="Limited Stock" ${cat.status === 'Limited Stock' ? 'selected' : ''}>Limited Stock</option>
             <option value="Sold Out" ${cat.status === 'Sold Out' ? 'selected' : ''}>Sold Out</option>
@@ -431,17 +377,42 @@ function saveRatesChanges() {
     if (statusSelect) cat.status = statusSelect.value;
   });
 
-  copyToClipboard(JSON.stringify(adminCatalogs, null, 2), 'Catalog rates saved locally!');
   showToast('✓ Pricing and stock status updated successfully!');
 }
 
 // --------------------------------------------------------------------------
-// UTILITIES
+// BULLETPROOF CLIPBOARD COPY (WITH FALLBACK)
 // --------------------------------------------------------------------------
 function copyToClipboard(text, successMsg) {
-  navigator.clipboard.writeText(text).then(() => {
-    showToast(successMsg || 'Copied to clipboard!');
-  });
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(text).then(() => {
+      showToast(successMsg || 'Copied to clipboard! ✓');
+    }).catch(() => fallbackCopy(text, successMsg));
+  } else {
+    fallbackCopy(text, successMsg);
+  }
+}
+
+function fallbackCopy(text, successMsg) {
+  const textArea = document.createElement('textarea');
+  textArea.value = text;
+  textArea.style.position = 'fixed';
+  textArea.style.left = '-9999px';
+  textArea.style.top = '-9999px';
+  document.body.appendChild(textArea);
+  textArea.focus();
+  textArea.select();
+  try {
+    const successful = document.execCommand('copy');
+    if (successful) {
+      showToast(successMsg || 'Copied to clipboard! ✓');
+    } else {
+      prompt('Copy this link manually:', text);
+    }
+  } catch (err) {
+    prompt('Copy this link manually:', text);
+  }
+  document.body.removeChild(textArea);
 }
 
 function showToast(msg) {

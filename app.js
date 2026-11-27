@@ -687,10 +687,13 @@ function getActiveRate(cat) {
 }
 
 function renderCatalogGrid() {
-  const grid = document.getElementById('catalogsGrid');
+  const grid = document.getElementById('catalogGrid') || document.getElementById('catalogsGrid');
   const emptyState = document.getElementById('emptyState');
 
-  if (!grid) return;
+  if (!grid) {
+    console.error('Catalog grid container not found!');
+    return;
+  }
 
   if (state.filteredCatalogs.length === 0) {
     grid.innerHTML = '';
@@ -711,7 +714,7 @@ function renderCatalogGrid() {
     const resellerRate = cat.resellerRate;
 
     return `
-      <div class="catalog-card bg-white rounded-3xl border border-slate-200/90 overflow-hidden shadow-xs hover:shadow-xl transition-all duration-300 flex flex-col justify-between group">
+      <div class="catalog-card bg-white rounded-2xl sm:rounded-3xl border border-slate-200/90 overflow-hidden shadow-xs hover:shadow-xl transition-all duration-300 flex flex-col justify-between group active:scale-[0.99]">
         
         <!-- Top Media Area -->
         <div class="relative aspect-[3/4] bg-slate-900 overflow-hidden cursor-pointer" onclick="navigateToProduct('${cat.code}')">
@@ -725,47 +728,48 @@ function renderCatalogGrid() {
           >
 
           <!-- Top Status & Shoot Badges -->
-          <div class="absolute top-3 left-3 right-3 flex items-center justify-between pointer-events-none">
-            <span class="text-[10px] font-extrabold px-2.5 py-1 rounded-full uppercase tracking-wider bg-white/95 text-slate-900 shadow-sm backdrop-blur-xs">
-              ${cat.has2mb ? '👗 Model Shoot' : '🪑 Table Shoot'}
+          <div class="absolute top-2 sm:top-3 left-2 sm:left-3 right-2 sm:right-3 flex items-center justify-between pointer-events-none">
+            <span class="text-[9px] sm:text-[10px] font-extrabold px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full uppercase tracking-wider bg-white/95 text-slate-900 shadow-sm backdrop-blur-xs">
+              ${cat.has2mb ? '👗 Model' : '🪑 Table'}
             </span>
-            <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500 text-white shadow-sm flex items-center gap-1">
+            <span class="text-[9px] sm:text-[10px] font-bold px-1.5 sm:px-2 py-0.5 rounded-full bg-emerald-500 text-white shadow-sm flex items-center gap-1">
               <span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
-              ${cat.status}
+              <span class="hidden sm:inline">${cat.status}</span>
+              <span class="sm:hidden">Ready</span>
             </span>
           </div>
 
           <!-- Video Play Icon Pill -->
           ${(cat.hasVideo || firstDesign.video) ? `
-            <div class="absolute bottom-3 left-3 bg-black/70 hover:bg-black/90 backdrop-blur-xs text-white text-[11px] font-semibold px-2.5 py-1 rounded-full flex items-center gap-1.5 border border-white/20 transition-all">
+            <div class="absolute bottom-2 sm:bottom-3 left-2 sm:left-3 bg-black/75 backdrop-blur-xs text-white text-[10px] font-semibold px-2 py-0.5 rounded-full flex items-center gap-1 border border-white/20">
               <i data-lucide="play" class="w-3 h-3 fill-current text-amber-400"></i>
-              <span>Reel Available</span>
+              <span class="hidden sm:inline">Reel</span>
             </div>
           ` : ''}
 
           <!-- SKU Count Overlay -->
-          <div class="absolute bottom-3 right-3 bg-black/75 backdrop-blur-xs text-white text-[10px] font-extrabold px-2.5 py-1 rounded-full border border-white/10">
+          <div class="absolute bottom-2 sm:bottom-3 right-2 sm:right-3 bg-black/75 backdrop-blur-xs text-white text-[9px] sm:text-[10px] font-extrabold px-2 py-0.5 rounded-full border border-white/10">
             ${cat.skuCount} Colors
           </div>
         </div>
 
         <!-- Content Area -->
-        <div class="p-5 flex-1 flex flex-col justify-between space-y-3.5">
+        <div class="p-3 sm:p-5 flex-1 flex flex-col justify-between space-y-2 sm:space-y-3.5">
           
           <div>
-            <div class="flex items-center justify-between gap-2">
-              <span class="text-[10px] font-extrabold tracking-wider text-slate-400 uppercase">${cat.category}</span>
-              <span class="text-[10px] font-mono text-slate-400 font-bold">${cat.code}</span>
+            <div class="flex items-center justify-between gap-1">
+              <span class="text-[9px] sm:text-[10px] font-extrabold tracking-wider text-slate-400 uppercase truncate">${cat.category}</span>
+              <span class="text-[9px] sm:text-[10px] font-mono text-slate-400 font-bold shrink-0">${cat.code}</span>
             </div>
             
-            <h3 onclick="navigateToProduct('${cat.code}')" class="font-serif text-lg font-bold text-slate-900 group-hover:text-brand-maroon transition-colors line-clamp-1 cursor-pointer mt-0.5">
+            <h3 onclick="navigateToProduct('${cat.code}')" class="font-serif text-sm sm:text-lg font-bold text-slate-900 group-hover:text-brand-maroon transition-colors line-clamp-1 cursor-pointer mt-0.5">
               ${cat.name}
             </h3>
 
             <!-- Color Variants Swatches Strip with Tooltips -->
-            <div class="mt-3 pt-2.5 border-t border-slate-100 flex items-center justify-between">
-              <div class="flex items-center gap-1.5 flex-wrap">
-                ${cat.designs.slice(0, 7).map((d, dIdx) => {
+            <div class="mt-2 sm:mt-3 pt-2 border-t border-slate-100 flex items-center justify-between">
+              <div class="flex items-center gap-1 sm:gap-1.5 flex-wrap">
+                ${cat.designs.slice(0, 5).map((d, dIdx) => {
                   const dColor = getAccurateColor(d.color);
                   return `
                     <div class="swatch-wrapper">
@@ -773,37 +777,37 @@ function renderCatalogGrid() {
                       <button 
                         type="button"
                         onclick="event.stopPropagation(); switchCardDesign('${cat.code}', ${dIdx})" 
-                        class="card-dot-${cat.code} w-4 h-4 rounded-full border border-white shadow-xs inline-block transition-transform hover:scale-125 ${dIdx === 0 ? 'ring-2 ring-slate-900 scale-110' : 'opacity-85'}"
+                        class="card-dot-${cat.code} w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full border border-white shadow-xs inline-block transition-transform hover:scale-125 ${dIdx === 0 ? 'ring-2 ring-slate-900 scale-110' : 'opacity-85'}"
                         style="background-color: ${dColor.hex};"
                       ></button>
                     </div>
                   `;
                 }).join('')}
-                ${cat.designs.length > 7 ? `
-                  <span class="text-[10px] font-bold text-slate-400 ml-0.5">+${cat.designs.length - 7}</span>
+                ${cat.designs.length > 5 ? `
+                  <span class="text-[9px] font-bold text-slate-400 ml-0.5">+${cat.designs.length - 5}</span>
                 ` : ''}
               </div>
 
-              <span id="card-design-${cat.code}" class="text-[10px] font-semibold text-slate-500 truncate max-w-[110px]">
+              <span id="card-design-${cat.code}" class="hidden sm:inline text-[10px] font-semibold text-slate-500 truncate max-w-[100px]">
                 Design ${firstDesign.code || '101'}
               </span>
             </div>
           </div>
 
           <!-- Commercial Pricing Block -->
-          <div class="pt-3 border-t border-slate-100">
+          <div class="pt-2 sm:pt-3 border-t border-slate-100">
             ${isAllRatesUser ? `
               <!-- Multi-Rate Matrix for No. 3 All-Rate Users -->
-              <div class="bg-slate-50 rounded-2xl p-2.5 border border-slate-200/80 space-y-1.5">
-                <div class="flex items-center justify-between text-[11px]">
+              <div class="bg-slate-50 rounded-xl sm:rounded-2xl p-2 sm:p-2.5 border border-slate-200/80 space-y-1">
+                <div class="flex items-center justify-between text-[10px] sm:text-[11px]">
                   <span class="text-slate-500 font-medium">Wholesale:</span>
                   <span class="font-serif font-bold text-emerald-700">₹${wholesaleRate}</span>
                 </div>
-                <div class="flex items-center justify-between text-[11px]">
+                <div class="flex items-center justify-between text-[10px] sm:text-[11px]">
                   <span class="text-slate-500 font-medium">Reseller:</span>
                   <span class="font-serif font-bold text-blue-700">₹${resellerRate}</span>
                 </div>
-                <div class="flex items-center justify-between text-[11px] pt-1 border-t border-slate-200">
+                <div class="flex items-center justify-between text-[10px] sm:text-[11px] pt-0.5 border-t border-slate-200">
                   <span class="text-slate-700 font-bold">Catalog MRP:</span>
                   <span class="font-serif font-extrabold text-slate-900">₹${retailRate}</span>
                 </div>
@@ -812,29 +816,29 @@ function renderCatalogGrid() {
               <!-- Single Retail MRP Rate for No. 1 and No. 2 Users -->
               <div class="flex items-baseline justify-between">
                 <div>
-                  <span class="text-[10px] text-slate-400 uppercase font-semibold">Catalog MRP</span>
-                  <p class="font-serif text-xl font-extrabold text-slate-900">₹${retailRate}</p>
+                  <span class="text-[9px] sm:text-[10px] text-slate-400 uppercase font-semibold">Catalog MRP</span>
+                  <p class="font-serif text-base sm:text-xl font-extrabold text-slate-900 leading-tight">₹${retailRate}</p>
                 </div>
-                <span class="text-[10px] text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md font-bold">Direct Dispatch</span>
+                <span class="text-[9px] sm:text-[10px] text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded font-bold">✨ In Stock</span>
               </div>
             `}
 
             <!-- 1-Click Action Buttons -->
-            <div class="flex items-center gap-2 mt-3">
+            <div class="flex items-center gap-1.5 sm:gap-2 mt-2.5 sm:mt-3">
               <button 
                 onclick="navigateToProduct('${cat.code}')" 
-                class="flex-1 py-2 px-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold transition-all text-center flex items-center justify-center gap-1.5 shadow-xs"
+                class="flex-1 py-1.5 sm:py-2 px-2 sm:px-3 rounded-lg sm:rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-[11px] sm:text-xs font-bold transition-all text-center flex items-center justify-center gap-1 shadow-xs"
               >
-                <span>View Catalogue</span>
-                <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+                <span>View Details</span>
+                <i data-lucide="arrow-right" class="w-3 h-3 sm:w-3.5 sm:h-3.5"></i>
               </button>
 
               <button 
                 onclick="sendStaffWhatsApp('${cat.code}', 'Design ${firstDesign.code} (${activeColorObj.label})', ${retailRate})" 
                 title="Inquire on WhatsApp" 
-                class="p-2 rounded-xl bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-700 transition-all flex items-center justify-center"
+                class="p-1.5 sm:p-2 rounded-lg sm:rounded-xl bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-700 transition-all flex items-center justify-center shrink-0"
               >
-                <i data-lucide="message-circle" class="w-4 h-4 fill-current"></i>
+                <i data-lucide="message-circle" class="w-3.5 h-3.5 sm:w-4 sm:h-4 fill-current"></i>
               </button>
             </div>
           </div>
@@ -984,6 +988,14 @@ function renderPdpScreen() {
   document.getElementById('pdpStaffFirm').textContent = `${firm.name} • ${user.title}`;
   document.getElementById('pdpStaffCallBtn').href = `tel:+91${user.phone}`;
   document.getElementById('pdpWhatsAppBtnText').textContent = `Inquire & Order via WhatsApp with ${user.name}`;
+
+  // Mobile Sticky Bottom Bar (Fixed on mobile devices)
+  const mobPrice = document.getElementById('pdpMobilePrice');
+  if (mobPrice) mobPrice.textContent = `₹${cat.retailRate}`;
+  const mobCall = document.getElementById('pdpMobileCallBtn');
+  if (mobCall) mobCall.href = `tel:+91${user.phone}`;
+  const mobWa = document.getElementById('pdpMobileWhatsAppText');
+  if (mobWa) mobWa.textContent = `Order with ${user.name}`;
 
   // Swatches, Gallery, Shoot & Related
   renderPdpColorSwatches();

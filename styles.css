@@ -14,7 +14,7 @@
   --border: #e2e8f0;
 }
 
-/* Keya Fashion Theme (Sky Blue, Sun Gold & Fresh Green) */
+/* Keya Fashion Theme (Vibrant Sky Blue, Sun Gold & Fresh Modern Accents) */
 body.theme-keya {
   --theme-primary: #0284c7;
   --theme-primary-dark: #0369a1;
@@ -23,9 +23,14 @@ body.theme-keya {
   --theme-accent-light: #fef3c7;
   --theme-surface: #ffffff;
   --theme-bg: #f8fafc;
+  background-image: 
+    radial-gradient(rgba(2, 132, 199, 0.05) 1px, transparent 1px),
+    radial-gradient(rgba(245, 158, 11, 0.04) 1px, transparent 1px);
+  background-size: 24px 24px, 48px 48px;
+  background-position: 0 0, 12px 12px;
 }
 
-/* Saurashtra Sarees Theme (Deep Heritage Crimson & Antique Gold) */
+/* Saurashtra Sarees Theme (Deep Heritage Crimson Maroon & Antique Gold) */
 body.theme-saurashtra {
   --theme-primary: #8b1d40;
   --theme-primary-dark: #5e0f28;
@@ -33,7 +38,12 @@ body.theme-saurashtra {
   --theme-accent: #d4af37;
   --theme-accent-light: #fcf8e8;
   --theme-surface: #ffffff;
-  --theme-bg: #f8fafc;
+  --theme-bg: #faf7f5;
+  background-image: 
+    radial-gradient(rgba(139, 29, 64, 0.05) 1px, transparent 1px),
+    radial-gradient(rgba(212, 175, 55, 0.06) 1px, transparent 1px);
+  background-size: 24px 24px, 48px 48px;
+  background-position: 0 0, 12px 12px;
 }
 
 body {
@@ -186,4 +196,50 @@ body {
 }
 .pdp-tab-inactive:hover {
   color: #1e293b;
+}
+
+/* Mobile-First Sticky Action Bar on PDP */
+.mobile-sticky-action-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  background: rgba(15, 23, 42, 0.95);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 10px 16px;
+  box-shadow: 0 -10px 25px -5px rgba(0, 0, 0, 0.25);
+}
+
+/* Micro Animations & Emojis Bounce */
+@keyframes bounceSubtle {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+.animate-bounce-subtle {
+  animation: bounceSubtle 2.5s infinite ease-in-out;
+}
+
+@keyframes pulseGlow {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.85; transform: scale(1.04); }
+}
+.animate-pulse-glow {
+  animation: pulseGlow 3s infinite ease-in-out;
+}
+
+/* BinduGrid Studio [ØG] Monogram */
+.monogram-og {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  letter-spacing: -0.05em;
+  font-weight: 900;
+}
+.monogram-zero {
+  color: #00f0ff;
+  text-shadow: 0 0 12px rgba(0, 240, 255, 0.6);
+}
+.monogram-g {
+  color: #ffffff;
 }

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Vellum Super-Admin | Superior Access</title>
+  <title>Super-Admin Control Center | BinduGrid Studio</title>
   
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -12,96 +12,84 @@
   <!-- Custom Styles -->
   <link rel="stylesheet" href="styles.css">
 </head>
-<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col antialiased">
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col antialiased">
 
   <!-- ====================================================================== -->
-  <!-- PIN LOCK SCREEN                                                        -->
+  <!-- SUPER-ADMIN MAIN DASHBOARD (NO LOCKOUT BARRIER)                         -->
   <!-- ====================================================================== -->
-  <div id="adminLockScreen" class="fixed inset-0 z-50 bg-slate-950 flex items-center justify-center p-4">
-    <div class="max-w-sm w-full bg-slate-900 border border-slate-800 rounded-3xl p-8 shadow-2xl text-center space-y-6">
-      <div class="w-16 h-16 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-400 mx-auto flex items-center justify-center">
-        <i data-lucide="shield-alert" class="w-8 h-8"></i>
-      </div>
-      <div>
-        <h2 class="font-serif text-2xl font-bold text-white">Super-Admin Access</h2>
-        <p class="text-xs text-amber-400 font-semibold mt-1">Master Representative: +91 98989 07401</p>
-        <p class="text-[11px] text-slate-400 mt-0.5">Superior Privileges Across All Firms & Staff</p>
-      </div>
-
-      <div class="space-y-3">
-        <input 
-          type="password" 
-          id="adminPinInput" 
-          placeholder="Enter Master PIN (7401)" 
-          maxlength="10"
-          class="w-full text-center text-lg tracking-widest px-4 py-3 bg-slate-950 border border-slate-700 rounded-xl text-white focus:outline-none focus:border-amber-400 transition-all font-mono"
-          onkeydown="if(event.key === 'Enter') unlockAdmin()"
-        >
-        <p id="pinErrorMsg" class="hidden text-xs text-rose-400 font-semibold">Incorrect PIN. Please try again.</p>
-        <button onclick="unlockAdmin()" class="w-full py-3.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs uppercase tracking-wider transition-all shadow-lg shadow-amber-500/20">
-          Unlock Master Dashboard
-        </button>
-      </div>
-      <p class="text-[10px] text-slate-500">Security PIN: 7401 (Last 4 digits of +91 98989 07401)</p>
-    </div>
-  </div>
-
-  <!-- ====================================================================== -->
-  <!-- SUPER-ADMIN MAIN DASHBOARD                                             -->
-  <!-- ====================================================================== -->
-  <div id="adminDashboard" class="hidden flex-1 flex flex-col">
+  <div id="adminDashboard" class="flex-1 flex flex-col">
     
     <!-- Top Admin Header -->
-    <header class="bg-slate-950 border-b border-slate-800 sticky top-0 z-40">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+    <header class="bg-slate-900 border-b border-slate-800 sticky top-0 z-40 shadow-xl">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col md:flex-row items-center justify-between gap-4">
         
         <div class="flex items-center gap-3.5">
-          <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center font-bold text-slate-950 text-lg shadow-md shadow-amber-500/20">
+          <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center font-bold text-slate-950 text-xl shadow-lg shadow-amber-500/20">
             <i data-lucide="shield-check" class="w-6 h-6"></i>
           </div>
           <div>
             <div class="flex items-center gap-2">
-              <h1 class="font-serif text-lg font-bold text-white tracking-wide">Vellum Super-Admin</h1>
-              <span class="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30">Superior Master</span>
+              <h1 class="font-serif text-lg font-bold text-white tracking-wide">Super-Admin Control Center</h1>
+              <span class="text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40">
+                Superior Access
+              </span>
             </div>
-            <p class="text-[11px] text-slate-400 font-mono">Master Contact: <strong class="text-white">+91 98989 07401</strong></p>
+            <p class="text-xs text-slate-400 mt-0.5 flex items-center gap-2">
+              <span>Master Admin: <strong class="text-white">+91 98989 07401</strong></span>
+              <span class="text-slate-600">•</span>
+              <span class="text-emerald-400 font-semibold">Active & Authenticated</span>
+            </p>
           </div>
         </div>
 
         <!-- Navigation Tabs -->
-        <nav class="hidden lg:flex items-center gap-1 bg-slate-900 p-1.5 rounded-2xl border border-slate-800 text-xs font-semibold">
-          <button onclick="switchTab('hub')" id="tabBtn-hub" class="px-4 py-2 rounded-xl font-bold bg-amber-500 text-slate-950 shadow-xs">
+        <nav class="flex items-center gap-1.5 bg-slate-950 p-1.5 rounded-2xl border border-slate-800 text-xs font-semibold overflow-x-auto max-w-full">
+          <button onclick="switchTab('hub')" id="tabBtn-hub" class="px-4 py-2 rounded-xl font-bold bg-amber-500 text-slate-950 shadow-xs whitespace-nowrap">
             👥 Staff Links Hub (1-3)
           </button>
-          <button onclick="switchTab('generator')" id="tabBtn-generator" class="px-4 py-2 rounded-xl font-medium text-slate-400 hover:text-white">
+          <button onclick="switchTab('generator')" id="tabBtn-generator" class="px-4 py-2 rounded-xl font-medium text-slate-400 hover:text-white whitespace-nowrap">
             🔗 Deep-Link Generator
           </button>
-          <button onclick="switchTab('rates')" id="tabBtn-rates" class="px-4 py-2 rounded-xl font-medium text-slate-400 hover:text-white">
+          <button onclick="switchTab('rates')" id="tabBtn-rates" class="px-4 py-2 rounded-xl font-medium text-slate-400 hover:text-white whitespace-nowrap">
             💰 Rates & Stock Editor
           </button>
-          <button onclick="switchTab('firms')" id="tabBtn-firms" class="px-4 py-2 rounded-xl font-medium text-slate-400 hover:text-white">
+          <button onclick="switchTab('firms')" id="tabBtn-firms" class="px-4 py-2 rounded-xl font-medium text-slate-400 hover:text-white whitespace-nowrap">
             🏢 Firms & Themes
           </button>
         </nav>
 
-        <div class="flex items-center gap-3">
-          <a href="index.html" target="_blank" class="px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-xs font-bold text-slate-200 flex items-center gap-2 shadow-xs">
+        <div class="flex items-center gap-2.5">
+          <a href="index.html" target="_blank" class="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs font-bold text-slate-200 flex items-center gap-2 shadow-xs transition-all">
             <span>Live Showroom</span>
             <i data-lucide="external-link" class="w-3.5 h-3.5 text-amber-400"></i>
           </a>
-          <button onclick="lockAdmin()" class="p-2 rounded-xl text-slate-400 hover:text-rose-400 hover:bg-slate-800 transition-colors" title="Lock Admin">
-            <i data-lucide="log-out" class="w-5 h-5"></i>
-          </button>
         </div>
 
       </div>
 
-      <!-- Mobile Tab Bar -->
-      <div class="lg:hidden flex items-center overflow-x-auto border-t border-slate-800 px-4 py-2.5 gap-2 text-xs">
-        <button onclick="switchTab('hub')" id="mTabBtn-hub" class="px-3 py-1.5 rounded-lg font-bold bg-amber-500 text-slate-950 whitespace-nowrap">Staff Hub</button>
-        <button onclick="switchTab('generator')" id="mTabBtn-generator" class="px-3 py-1.5 rounded-lg font-medium text-slate-400 whitespace-nowrap">Deep-Links</button>
-        <button onclick="switchTab('rates')" id="mTabBtn-rates" class="px-3 py-1.5 rounded-lg font-medium text-slate-400 whitespace-nowrap">Rates</button>
-        <button onclick="switchTab('firms')" id="mTabBtn-firms" class="px-3 py-1.5 rounded-lg font-medium text-slate-400 whitespace-nowrap">Firms</button>
+      <!-- Quick 1-Click Live Simulator Bar -->
+      <div class="bg-slate-950 border-t border-slate-800/80 px-4 sm:px-8 py-2.5 flex items-center gap-2 overflow-x-auto text-xs">
+        <span class="text-[10px] uppercase font-bold text-amber-400 whitespace-nowrap flex items-center gap-1">
+          <i data-lucide="play" class="w-3 h-3 fill-current"></i> Quick Test:
+        </span>
+        <a href="index.html?u=KH28" target="_blank" class="px-2.5 py-1 rounded-lg bg-sky-950 hover:bg-sky-900 border border-sky-800 text-sky-200 font-mono text-[11px] whitespace-nowrap">
+          KH28 (Khushi - Keya) ↗
+        </a>
+        <a href="index.html?u=AN26" target="_blank" class="px-2.5 py-1 rounded-lg bg-sky-950 hover:bg-sky-900 border border-sky-800 text-sky-200 font-mono text-[11px] whitespace-nowrap">
+          AN26 (Anshika - Keya) ↗
+        </a>
+        <a href="index.html?u=AR38" target="_blank" class="px-2.5 py-1 rounded-lg bg-rose-950 hover:bg-rose-900 border border-rose-800 text-rose-200 font-mono text-[11px] whitespace-nowrap">
+          AR38 (Arvind - Saurashtra) ↗
+        </a>
+        <a href="index.html?u=NA39" target="_blank" class="px-2.5 py-1 rounded-lg bg-rose-950 hover:bg-rose-900 border border-rose-800 text-rose-200 font-mono text-[11px] whitespace-nowrap">
+          NA39 (Nayan - Saurashtra) ↗
+        </a>
+        <a href="index.html?u=NA39ALL" target="_blank" class="px-2.5 py-1 rounded-lg bg-amber-950 hover:bg-amber-900 border border-amber-700 text-amber-300 font-mono text-[11px] font-bold whitespace-nowrap">
+          NA39ALL (All Rates) ↗
+        </a>
+        <a href="index.html?u=CH33ALL" target="_blank" class="px-2.5 py-1 rounded-lg bg-amber-950 hover:bg-amber-900 border border-amber-700 text-amber-300 font-mono text-[11px] font-bold whitespace-nowrap">
+          CH33ALL (All Rates) ↗
+        </a>
       </div>
     </header>
 
@@ -114,14 +102,17 @@
         
         <div class="border-b border-slate-800 pb-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <h2 class="font-serif text-2xl font-bold text-white">Staff-Wise Dedicated Links Matrix</h2>
+            <h2 class="font-serif text-2xl font-bold text-white flex items-center gap-2">
+              <span>Staff Dedicated Smart Links Matrix</span>
+              <span class="text-xs bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 font-sans px-2.5 py-0.5 rounded-full font-bold">10 Active Links</span>
+            </h2>
             <p class="text-xs text-slate-400 mt-1">
-              Every staff member has their dedicated locked URL. All firm brands, pricing access, and contact details are pre-selected and locked.
+              Click any link to test directly in a new tab, or click "Copy Link" to share. All firm brands and staff contacts are permanently locked!
             </p>
           </div>
           <div class="flex items-center gap-2">
-            <span class="text-xs bg-slate-800 text-amber-300 font-mono px-3 py-1 rounded-xl border border-slate-700">
-              Host: http://localhost:8080/
+            <span class="text-xs bg-slate-900 text-amber-300 font-mono px-3.5 py-1.5 rounded-xl border border-slate-800">
+              Showroom Host: http://localhost:8080/
             </span>
           </div>
         </div>
@@ -130,11 +121,11 @@
         <div class="space-y-4">
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-2.5">
-              <span class="w-3 h-3 rounded-full bg-brand-sky"></span>
+              <span class="w-3.5 h-3.5 rounded-full bg-brand-sky"></span>
               <h3 class="font-serif text-lg font-bold text-white">1. Keya Fashion — Retail Rate Showroom</h3>
             </div>
-            <span class="text-xs font-bold text-sky-400 bg-sky-950 border border-sky-800 px-3 py-0.5 rounded-full">
-              5 Dedicated Representatives (Retail Rate Only)
+            <span class="text-xs font-bold text-sky-400 bg-sky-950 border border-sky-800 px-3 py-1 rounded-full">
+              5 Staff Members (Retail Rate Only)
             </span>
           </div>
 
@@ -144,14 +135,14 @@
         </div>
 
         <!-- 2. SAURASHTRA SAREES [ALL RETAIL RATE] (F to H) -->
-        <div class="space-y-4 pt-4 border-t border-slate-800">
+        <div class="space-y-4 pt-6 border-t border-slate-800">
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-2.5">
-              <span class="w-3 h-3 rounded-full bg-brand-maroon"></span>
+              <span class="w-3.5 h-3.5 rounded-full bg-brand-maroon"></span>
               <h3 class="font-serif text-lg font-bold text-white">2. Saurashtra Sarees — Retail Rate Showroom</h3>
             </div>
-            <span class="text-xs font-bold text-rose-400 bg-rose-950 border border-rose-800 px-3 py-0.5 rounded-full">
-              3 Senior Representatives (Retail Rate Only)
+            <span class="text-xs font-bold text-rose-400 bg-rose-950 border border-rose-800 px-3 py-1 rounded-full">
+              3 Senior Staff Members (Retail Rate Only)
             </span>
           </div>
 
@@ -161,13 +152,13 @@
         </div>
 
         <!-- 3. SAURASHTRA SAREES [ALL RATE] (Nayan Sir & Chetan Sir) -->
-        <div class="space-y-4 pt-4 border-t border-slate-800">
+        <div class="space-y-4 pt-6 border-t border-slate-800">
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-2.5">
-              <span class="w-3 h-3 rounded-full bg-amber-400 animate-pulse"></span>
-              <h3 class="font-serif text-lg font-bold text-white">3. Saurashtra Sarees — Full Commercial [All Rate]</h3>
+              <span class="w-3.5 h-3.5 rounded-full bg-amber-400 animate-pulse"></span>
+              <h3 class="font-serif text-lg font-bold text-white">3. Saurashtra Sarees — Master [All Rates Active]</h3>
             </div>
-            <span class="text-xs font-bold text-amber-300 bg-amber-950 border border-amber-700 px-3 py-0.5 rounded-full">
+            <span class="text-xs font-bold text-amber-300 bg-amber-950 border border-amber-700 px-3 py-1 rounded-full">
               Super Wholesale + Reseller + Retail All Rates Active
             </span>
           </div>
@@ -185,7 +176,7 @@
       <div id="tabContent-generator" class="hidden space-y-8">
         
         <div class="border-b border-slate-800 pb-5">
-          <h2 class="font-serif text-2xl font-bold text-white">Custom Deep-Link Generator</h2>
+          <h2 class="font-serif text-2xl font-bold text-white">Catalog Deep-Link Generator</h2>
           <p class="text-xs text-slate-400 mt-1">
             Generate direct links to specific catalog collections for any staff member.
           </p>
@@ -193,20 +184,20 @@
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
           
-          <div class="lg:col-span-7 bg-slate-950 border border-slate-800 rounded-3xl p-6 sm:p-7 space-y-5">
+          <div class="lg:col-span-7 bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-7 space-y-5">
             
             <!-- Select Representative -->
             <div>
-              <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">1. Select Staff Profile</label>
-              <select id="genStaffSelect" onchange="updateCustomLink()" class="w-full px-4 py-3 bg-slate-900 border border-slate-700 rounded-xl text-xs text-white font-semibold focus:outline-none focus:border-amber-400">
+              <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">1. Select Staff Representative</label>
+              <select id="genStaffSelect" onchange="updateCustomLink()" class="w-full px-4 py-3 bg-slate-950 border border-slate-700 rounded-xl text-xs text-white font-semibold focus:outline-none focus:border-amber-400">
                 <!-- Populated by JS -->
               </select>
             </div>
 
             <!-- Select Catalog -->
             <div>
-              <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">2. Direct Catalog Landing (Optional)</label>
-              <select id="genCatalogSelect" onchange="updateCustomLink()" class="w-full px-4 py-3 bg-slate-900 border border-slate-700 rounded-xl text-xs text-white font-semibold focus:outline-none focus:border-amber-400">
+              <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">2. Direct Catalog Target (Optional)</label>
+              <select id="genCatalogSelect" onchange="updateCustomLink()" class="w-full px-4 py-3 bg-slate-950 border border-slate-700 rounded-xl text-xs text-white font-semibold focus:outline-none focus:border-amber-400">
                 <!-- Populated by JS -->
               </select>
             </div>
@@ -215,15 +206,15 @@
             <div>
               <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">3. Shoot Mode Default</label>
               <div class="grid grid-cols-3 gap-3">
-                <label class="flex items-center gap-2 p-3 rounded-xl border border-slate-700 bg-slate-900 cursor-pointer text-xs">
+                <label class="flex items-center gap-2 p-3 rounded-xl border border-slate-700 bg-slate-950 cursor-pointer text-xs">
                   <input type="radio" name="genShoot" value="all" checked onchange="updateCustomLink()" class="text-amber-500">
                   <span>🌟 All Shoots</span>
                 </label>
-                <label class="flex items-center gap-2 p-3 rounded-xl border border-slate-700 bg-slate-900 cursor-pointer text-xs">
+                <label class="flex items-center gap-2 p-3 rounded-xl border border-slate-700 bg-slate-950 cursor-pointer text-xs">
                   <input type="radio" name="genShoot" value="model" onchange="updateCustomLink()" class="text-amber-500">
                   <span>👗 Model Shoot</span>
                 </label>
-                <label class="flex items-center gap-2 p-3 rounded-xl border border-slate-700 bg-slate-900 cursor-pointer text-xs">
+                <label class="flex items-center gap-2 p-3 rounded-xl border border-slate-700 bg-slate-950 cursor-pointer text-xs">
                   <input type="radio" name="genShoot" value="table" onchange="updateCustomLink()" class="text-amber-500">
                   <span>🪑 Table Shoot</span>
                 </label>
@@ -233,12 +224,12 @@
           </div>
 
           <!-- Preview & Action Box -->
-          <div class="lg:col-span-5 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 border border-amber-500/30 rounded-3xl p-6 sm:p-7 flex flex-col justify-between space-y-6 shadow-2xl">
+          <div class="lg:col-span-5 bg-gradient-to-br from-slate-900 to-slate-950 border border-amber-500/30 rounded-3xl p-6 sm:p-7 flex flex-col justify-between space-y-6 shadow-2xl">
             
             <div class="space-y-4">
               <div class="flex items-center justify-between">
                 <span class="text-xs font-extrabold text-amber-400 uppercase tracking-widest flex items-center gap-1.5">
-                  <i data-lucide="check-circle" class="w-4 h-4"></i> Generated Smart Link
+                  <i data-lucide="check-circle" class="w-4 h-4"></i> Generated Ready Link
                 </span>
                 <span id="genPreviewFirmBadge" class="text-[10px] font-bold px-2 py-0.5 rounded bg-brand-maroon text-white">Saurashtra</span>
               </div>
@@ -249,7 +240,7 @@
 
               <div class="p-4 rounded-2xl bg-slate-900/80 border border-slate-800 text-xs space-y-2 text-slate-300">
                 <div class="flex justify-between">
-                  <span class="text-slate-500">Staff Assigned:</span>
+                  <span class="text-slate-500">Representative:</span>
                   <strong id="genPreviewStaff" class="text-white">Khushi (+91 98254 52528)</strong>
                 </div>
                 <div class="flex justify-between">
@@ -257,21 +248,21 @@
                   <strong id="genPreviewFirm" class="text-white">Keya Fashion</strong>
                 </div>
                 <div class="flex justify-between">
-                  <span class="text-slate-500">Pricing Access:</span>
+                  <span class="text-slate-500">Pricing Tier:</span>
                   <strong id="genPreviewRate" class="text-purple-400">Retail Rate Only</strong>
                 </div>
               </div>
             </div>
 
             <div class="space-y-2.5">
-              <button onclick="copyCustomLink()" class="w-full py-3.5 px-4 rounded-2xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all">
+              <button onclick="copyCustomLink()" class="w-full py-3.5 px-4 rounded-2xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-md shadow-amber-500/20">
                 <i data-lucide="copy" class="w-4 h-4"></i>
                 <span>Copy Link to Clipboard</span>
               </button>
 
               <a id="customTestLinkBtn" href="#" target="_blank" class="w-full py-3 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-xs flex items-center justify-center gap-2 transition-all border border-slate-700">
-                <i data-lucide="external-link" class="w-4 h-4"></i>
-                <span>Test & Preview Live Showroom ↗</span>
+                <i data-lucide="external-link" class="w-4 h-4 text-amber-400"></i>
+                <span>Test Live Showroom ↗</span>
               </a>
             </div>
 
@@ -299,10 +290,10 @@
           </div>
         </div>
 
-        <div class="bg-slate-950 border border-slate-800 rounded-3xl overflow-hidden shadow-xl">
+        <div class="bg-slate-900 border border-slate-800 rounded-3xl overflow-hidden shadow-xl">
           <div class="overflow-x-auto">
             <table class="w-full text-left text-xs text-slate-300">
-              <thead class="bg-slate-900 border-b border-slate-800 text-[10px] uppercase font-bold text-slate-400 tracking-wider">
+              <thead class="bg-slate-950 border-b border-slate-800 text-[10px] uppercase font-bold text-slate-400 tracking-wider">
                 <tr>
                   <th class="py-3.5 px-4">Catalogue</th>
                   <th class="py-3.5 px-4">Category</th>
@@ -333,7 +324,7 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
           
-          <div class="bg-slate-950 border border-slate-800 rounded-3xl p-6 space-y-4">
+          <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 space-y-4">
             <div class="flex items-center gap-4">
               <img src="assets/saurashtra-sarees-logo.jpg" alt="Saurashtra Logo" class="h-14 w-auto object-contain bg-white p-1 rounded-xl">
               <div>
@@ -346,7 +337,7 @@
             </p>
           </div>
 
-          <div class="bg-slate-950 border border-slate-800 rounded-3xl p-6 space-y-4">
+          <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 space-y-4">
             <div class="flex items-center gap-4">
               <img src="assets/keya-fashion-logo.jpg" alt="Keya Logo" class="h-14 w-auto object-contain bg-white p-1 rounded-xl">
               <div>
@@ -367,7 +358,7 @@
   </div>
 
   <!-- Toast -->
-  <div id="adminToast" class="hidden fixed bottom-6 right-6 z-50 bg-slate-950 text-white px-5 py-3.5 rounded-2xl shadow-2xl text-xs font-semibold flex items-center gap-2.5 border border-amber-500/40">
+  <div id="adminToast" class="hidden fixed bottom-6 right-6 z-50 bg-slate-900 text-white px-5 py-3.5 rounded-2xl shadow-2xl text-xs font-semibold flex items-center gap-2.5 border border-amber-500/40">
     <i data-lucide="check-circle" class="w-4 h-4 text-emerald-400"></i>
     <span id="adminToastMsg">Copied successfully!</span>
   </div>

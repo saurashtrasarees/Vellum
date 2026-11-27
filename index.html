@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="referrer" content="no-referrer">
-  <title id="pageTitle">Vellum | Digital Textile Showroom</title>
+  <title id="pageTitle">Saurashtra Sarees | Digital Textile Showroom</title>
   
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -272,8 +272,8 @@
         </button>
       </div>
 
-      <!-- Cards Grid -->
-      <div id="catalogGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 sm:gap-7">
+      <!-- Cards Grid (2 Columns on Mobile for app-like luxury feel) -->
+      <div id="catalogGrid" class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-6">
         <!-- Rendered by JS -->
       </div>
 
@@ -607,12 +607,29 @@
           </button>
         </div>
 
-        <div id="pdpRelatedGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div id="pdpRelatedGrid" class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
           <!-- Rendered by JS -->
         </div>
       </section>
 
     </main>
+
+    <!-- Mobile Sticky Bottom Action Bar (Fixed on mobile phones for 80% mobile shoppers) -->
+    <div id="pdpMobileStickyBar" class="lg:hidden mobile-sticky-action-bar flex items-center justify-between gap-3">
+      <div class="flex flex-col">
+        <span class="text-[9px] uppercase tracking-wider text-slate-400 font-bold">Catalog Price</span>
+        <span id="pdpMobilePrice" class="font-serif text-lg font-bold text-white leading-tight">₹1,849</span>
+      </div>
+      <div class="flex items-center gap-2 flex-1 justify-end">
+        <a id="pdpMobileCallBtn" href="tel:+919879471039" class="p-2.5 rounded-xl bg-slate-800 text-slate-200 border border-slate-700 flex items-center justify-center">
+          <i data-lucide="phone" class="w-4 h-4"></i>
+        </a>
+        <button onclick="sendPdpWhatsApp()" class="py-2.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-lg shadow-emerald-600/30">
+          <i data-lucide="message-circle" class="w-4 h-4 fill-current"></i>
+          <span id="pdpMobileWhatsAppText">Order on WhatsApp</span>
+        </button>
+      </div>
+    </div>
 
   </div>
 
@@ -647,60 +664,107 @@
   </div>
 
   <!-- Luxury Developer & Technology Footer -->
-  <footer class="bg-slate-900 text-slate-400 text-xs py-12 px-4 sm:px-6 lg:px-8 mt-20 border-t border-slate-800">
-    <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-8 pb-8 border-b border-slate-800">
+  <footer class="bg-slate-950 text-slate-400 text-xs py-14 px-4 sm:px-6 lg:px-8 mt-24 border-t border-slate-800">
+    <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-10 pb-10 border-b border-slate-800/90">
       
-      <!-- Firm Brand & Contacts (6 cols) -->
-      <div class="md:col-span-6 space-y-3">
+      <!-- Firm Brand & Direct Contacts (4 cols) -->
+      <div class="md:col-span-4 space-y-3.5">
         <div class="flex items-center gap-3">
-          <img id="footerFirmLogo" src="assets/saurashtra-sarees-logo.jpg" alt="Firm Logo" class="h-9 w-auto object-contain bg-white p-1 rounded-lg">
+          <img id="footerFirmLogo" src="assets/saurashtra-sarees-logo.jpg" alt="Firm Logo" class="h-10 w-auto object-contain bg-white p-1 rounded-xl">
           <div>
             <h4 id="footerFirmName" class="font-serif text-base font-bold text-white">Saurashtra Sarees</h4>
-            <p id="footerFirmTagline" class="text-[11px] text-slate-400">Make Occasion Better</p>
+            <p id="footerFirmTagline" class="text-[11px] text-amber-400 font-medium">Make Occasion Better</p>
           </div>
         </div>
-        <p class="text-slate-400 text-xs leading-relaxed max-w-md">
-          Leading Indian saree manufacturer and wholesale supplier based in Surat, Gujarat. Serving bulk dealers, portal sellers, and boutique owners nationwide.
+        <p class="text-slate-400 text-xs leading-relaxed">
+          Premier Indian textile manufacturer and bulk showroom in Surat, Gujarat. Serving wholesale dealers, portal sellers, and independent boutiques nationwide.
         </p>
-        <div class="flex items-center gap-4 pt-1 text-slate-300">
-          <span class="flex items-center gap-1.5"><i data-lucide="phone" class="w-3.5 h-3.5 text-amber-400"></i> +91 9879471039</span>
-          <span class="flex items-center gap-1.5"><i data-lucide="phone" class="w-3.5 h-3.5 text-amber-400"></i> +91 9913643433</span>
+        <div class="space-y-1.5 pt-1 text-slate-300">
+          <p class="flex items-center gap-2"><i data-lucide="phone" class="w-3.5 h-3.5 text-amber-400"></i> +91 98794 71039 (Saurashtra Sarees)</p>
+          <p class="flex items-center gap-2"><i data-lucide="phone" class="w-3.5 h-3.5 text-sky-400"></i> +91 99136 43433 (Keya Fashion)</p>
         </div>
       </div>
 
-      <!-- Quick Showroom Links (3 cols) -->
-      <div class="md:col-span-3 space-y-2.5">
-        <h5 class="text-xs font-bold text-white uppercase tracking-wider">Showroom Links</h5>
-        <ul class="space-y-1.5 text-slate-400">
-          <li><a href="#" onclick="navigateToHome(); return false;" class="hover:text-white transition-colors">All Catalogues</a></li>
-          <li><a href="admin.html" class="hover:text-white transition-colors">Super-Admin Panel</a></li>
-          <li><a href="https://docs.google.com/spreadsheets/d/1O-F9nVgPdkamtTGDesEcde8PCZSK7pyjUJDi8PrwmaY/edit" target="_blank" class="hover:text-white transition-colors">Master Google Sheet ↗</a></li>
+      <!-- Quick Showroom Links (2 cols) -->
+      <div class="md:col-span-2 space-y-2.5">
+        <h5 class="text-xs font-bold text-white uppercase tracking-wider">Showroom</h5>
+        <ul class="space-y-2 text-slate-400">
+          <li><a href="#" onclick="navigateToHome(); return false;" class="hover:text-white transition-colors">🌟 All Collections</a></li>
+          <li><a href="#" onclick="setShootType('model'); return false;" class="hover:text-white transition-colors">👗 Model Shoots</a></li>
+          <li><a href="#" onclick="setShootType('table'); return false;" class="hover:text-white transition-colors">🪑 Table Shoots</a></li>
+          <li><a href="admin.html" class="hover:text-amber-400 transition-colors font-semibold flex items-center gap-1"><span>Super-Admin</span> ↗</a></li>
         </ul>
       </div>
 
-      <!-- Developer Info (Requirement 1: Vellum & BinduGrid in Footer) (3 cols) -->
-      <div class="md:col-span-3 space-y-2.5">
-        <h5 class="text-xs font-bold text-white uppercase tracking-wider">Technology Partner</h5>
-        <p class="text-slate-400 text-[11px] leading-relaxed">
-          Powered by <strong>Vellum</strong><br>
-          Engineered by <strong>BinduGrid Studio</strong>
-        </p>
-        <p class="text-[11px]">
-          Email: <a href="mailto:contact@bindugrid.com" class="text-amber-400 hover:underline">contact@bindugrid.com</a>
-        </p>
-        <div class="flex items-center gap-2 pt-1 text-slate-400">
-          <a href="https://github.com/shaktidevelops/Vellum" target="_blank" title="GitHub Repository" class="hover:text-white p-1.5 rounded-lg bg-slate-800">
-            <i data-lucide="github" class="w-3.5 h-3.5"></i>
+      <!-- Official BinduGrid Studio [ØG] Section (6 cols) -->
+      <div class="md:col-span-6 bg-slate-900/60 border border-slate-800 rounded-3xl p-6 space-y-4">
+        
+        <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+          <div class="flex items-center gap-3">
+            <!-- Emblem / Monogram: ØG (Cyber Cyan Slashed Zero Ø + Pure White G) -->
+            <div class="w-10 h-10 rounded-2xl bg-slate-950 border border-slate-800 flex items-center justify-center font-mono font-black text-xl shadow-inner">
+              <span class="text-cyan-400">Ø</span><span class="text-white">G</span>
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <h4 class="font-serif text-sm font-bold text-white tracking-wide">BinduGrid Studio</h4>
+                <span class="text-[10px] bg-cyan-950/80 text-cyan-300 border border-cyan-800/80 px-2 py-0.5 rounded-full font-mono font-bold">ØG</span>
+              </div>
+              <p class="text-[10px] tracking-widest uppercase font-extrabold text-cyan-400">FROM THE ORIGIN TO THE GRID</p>
+            </div>
+          </div>
+          
+          <a href="mailto:bindugrid@gmail.com" class="hidden sm:flex items-center gap-1.5 text-xs text-slate-300 hover:text-cyan-400 bg-slate-800/80 px-3 py-1.5 rounded-xl border border-slate-700/80 transition-all font-mono">
+            <i data-lucide="mail" class="w-3.5 h-3.5 text-cyan-400"></i>
+            <span>bindugrid@gmail.com</span>
           </a>
-          <span class="text-[11px] text-slate-500">@bindugrid</span>
         </div>
+
+        <p class="text-slate-300 text-xs leading-relaxed">
+          Digital product studio & creative engineering hub bridging low-level computation, scalable architecture, and foundational algorithms (the <em>Bindu</em> / Origin) with high-precision UI/UX craft, design systems, and frontend performance (the <em>Grid</em>).
+        </p>
+
+        <!-- Core Focus Pills -->
+        <div class="flex flex-wrap gap-1.5 text-[10px] font-semibold text-slate-400">
+          <span class="px-2.5 py-1 rounded-lg bg-slate-950 border border-slate-800 text-slate-300">⚡ Digital Product Dev</span>
+          <span class="px-2.5 py-1 rounded-lg bg-slate-950 border border-slate-800 text-slate-300">🛠️ Creative Web Engineering</span>
+          <span class="px-2.5 py-1 rounded-lg bg-slate-950 border border-slate-800 text-slate-300">🎨 UI/UX Design Systems</span>
+        </div>
+
+        <!-- Official Social Directory Handles -->
+        <div class="pt-2 flex flex-wrap items-center justify-between gap-3 text-xs border-t border-slate-800/80">
+          <div class="flex items-center gap-2">
+            <span class="text-[11px] text-slate-400 font-semibold">Universal:</span>
+            <span class="text-[11px] font-mono text-cyan-400 font-bold">@bindugrid</span>
+          </div>
+
+          <div class="flex items-center gap-2.5 text-slate-400">
+            <a href="https://youtube.com/@bindugrid" target="_blank" title="YouTube: @bindugrid" class="p-2 rounded-xl bg-slate-950 hover:bg-slate-800 hover:text-rose-400 border border-slate-800 transition-all">
+              <i data-lucide="youtube" class="w-4 h-4"></i>
+            </a>
+            <a href="https://x.com/bindugrid" target="_blank" title="X (Twitter): @bindugrid" class="p-2 rounded-xl bg-slate-950 hover:bg-slate-800 hover:text-sky-400 border border-slate-800 transition-all">
+              <i data-lucide="twitter" class="w-4 h-4"></i>
+            </a>
+            <a href="https://instagram.com/bindugrid" target="_blank" title="Instagram: @bindugrid" class="p-2 rounded-xl bg-slate-950 hover:bg-slate-800 hover:text-pink-400 border border-slate-800 transition-all">
+              <i data-lucide="instagram" class="w-4 h-4"></i>
+            </a>
+            <a href="mailto:bindugrid@gmail.com" title="Email: bindugrid@gmail.com" class="p-2 rounded-xl bg-slate-950 hover:bg-slate-800 hover:text-cyan-400 border border-slate-800 transition-all sm:hidden">
+              <i data-lucide="mail" class="w-4 h-4"></i>
+            </a>
+          </div>
+        </div>
+
       </div>
 
     </div>
 
+    <!-- Copyright -->
     <div class="max-w-7xl mx-auto pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px] text-slate-500">
       <p>© 2026 Saurashtra Sarees & Keya Fashion. All rights reserved.</p>
-      <p>Showroom Architecture by BinduGrid Studio</p>
+      <p class="flex items-center gap-1.5 font-mono">
+        <span>Engineered by</span>
+        <strong class="text-slate-300">BinduGrid Studio [ØG]</strong>
+      </p>
     </div>
   </footer>
 
