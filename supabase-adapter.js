@@ -72,6 +72,40 @@ class VellumDataAdapter {
     return { catalogs: {}, colors: {} };
   }
 
+  // Shoot Assignments: { [catalogId]: 'model' | 'table' | 'both' }
+  loadShootAssignments() {
+    try {
+      const saved = localStorage.getItem('vellum_shoot_assignments');
+      if (saved) return JSON.parse(saved);
+    } catch (e) {
+      console.warn('Failed to parse shoot assignments', e);
+    }
+    return {};
+  }
+
+  saveShootAssignments(assignments) {
+    try {
+      localStorage.setItem('vellum_shoot_assignments', JSON.stringify(assignments));
+      window.dispatchEvent(new CustomEvent('vellum:shoot-updated', { detail: assignments }));
+      this.syncToSupabaseIfConnected('shoot_assignments', assignments);
+      return true;
+    } catch (e) {
+      console.error('Error saving shoot assignments:', e);
+      return false;
+    }
+  }
+
+  setCatalogShoot(catalogId, shootType) {
+    const assignments = this.loadShootAssignments();
+    assignments[catalogId] = shootType;
+    return this.saveShootAssignments(assignments);
+  }
+
+  getCatalogShoot(catalogId, fallback = null) {
+    const assignments = this.loadShootAssignments();
+    return assignments[catalogId] || fallback;
+  }
+
   saveStockOverrides(overrides) {
     this.stockOverrides = overrides;
     try {

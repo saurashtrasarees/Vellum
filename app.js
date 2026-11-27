@@ -647,11 +647,19 @@ function applyFiltersAndRender() {
     list = list.filter(c => c.category === state.selectedCategory);
   }
 
-  // Shoot Filter
+  // Shoot Filter (Model Shoot vs Table Shoot Dedicated Folders)
   if (state.currentShoot === 'model') {
-    list = list.filter(c => c.has2mb);
+    list = list.filter(c => {
+      const assigned = window.vellumAdapter ? window.vellumAdapter.getCatalogShoot(c.id) : null;
+      if (assigned) return assigned === 'model' || assigned === 'both';
+      return Boolean(c.has2mb);
+    });
   } else if (state.currentShoot === 'table') {
-    list = list.filter(c => !c.has2mb);
+    list = list.filter(c => {
+      const assigned = window.vellumAdapter ? window.vellumAdapter.getCatalogShoot(c.id) : null;
+      if (assigned) return assigned === 'table' || assigned === 'both';
+      return !c.has2mb;
+    });
   }
 
   // Search Filter
@@ -753,7 +761,7 @@ function renderCatalogGrid() {
           <!-- Top Status & Shoot Badges -->
           <div class="absolute top-2 sm:top-3 left-2 sm:left-3 right-2 sm:right-3 flex items-center justify-between pointer-events-none">
             <span class="text-[9px] sm:text-[10px] font-extrabold px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full uppercase tracking-wider bg-white/95 text-stone-900 shadow-sm backdrop-blur-xs border border-amber-200/60">
-              ${cat.has2mb ? '👗 Model' : '🪑 Table'}
+              ${(window.vellumAdapter && window.vellumAdapter.getCatalogShoot(cat.id)) === 'both' ? '🌟 Model + Table' : ((window.vellumAdapter && window.vellumAdapter.getCatalogShoot(cat.id)) === 'table' || !cat.has2mb ? '🪑 Table Shoot' : '👗 Model Shoot')}
             </span>
             ${stockBadgeHtml}
           </div>
@@ -1068,14 +1076,34 @@ function updatePdpShootUI() {
   const btnModel = document.getElementById('pdpBtnShootModel');
   const btnTable = document.getElementById('pdpBtnShootTable');
 
-  const activeClass = 'flex-1 py-1.5 rounded-xl text-xs font-bold transition-all shadow-xs bg-white text-slate-900';
-  const inactiveClass = 'flex-1 py-1.5 rounded-xl text-xs font-medium text-slate-600 hover:text-slate-900 transition-all';
+  const activeClass = 'flex-1 py-1.5 rounded-xl text-xs font-bold transition-all shadow-xs bg-white text-stone-900 border border-amber-300';
+  const inactiveClass = 'flex-1 py-1.5 rounded-xl text-xs font-medium text-stone-600 hover:text-stone-900 transition-all';
 
   if (btnAll && btnModel && btnTable) {
     btnAll.className = (state.activePdpShoot === 'all') ? activeClass : inactiveClass;
     btnModel.className = (state.activePdpShoot === 'model') ? activeClass : inactiveClass;
     btnTable.className = (state.activePdpShoot === 'table') ? activeClass : inactiveClass;
   }
+
+  // Synchronize Google Drive Shoot Folder Button
+  const cat = state.activePdpCatalog;
+  if (cat) {
+    const shootType = (window.vellumAdapter && window.vellumAdapter.getCatalogShoot(cat.id)) || (cat.has2mb ? 'model' : 'table');
+    const driveConfig = window.vellumAdapter ? window.vellumAdapter.loadDriveConfig() : {};
+    const isModel = state.activePdpShoot === 'model' || (state.activePdpShoot === 'all' && shootType === 'model');
+    const targetUrl = isModel ? driveConfig.modelShootFolderUrl : driveConfig.tableShootFolderUrl;
+    
+    const driveLink = document.getElementById('pdpShootDriveLink');
+    const driveText = document.getElementById('pdpShootDriveText');
+    if (driveLink && targetUrl) {
+      driveLink.href = targetUrl;
+      if (driveText) {
+        driveText.textContent = isModel ? 'Open Model Shoot Drive Folder ↗' : 'Open Table Shoot Drive Folder ↗';
+      }
+    }
+  }
+
+  if (window.lucide) lucide.createIcons();
 }
 
 function renderPdpColorSwatches() {
@@ -1157,27 +1185,26 @@ function updatePdpGallery() {
     }
   }
 
-  // Thumbnails Strip
+  // Thumbnails Strip (No Saree Pose Names - Clean Visual Numbering)
   const thumbStrip = document.getElementById('pdpThumbStrip');
   if (thumbStrip) {
-    document.getElementById('pdpAngleCount').textContent = `${realUrls.length} Multi-Angle Views`;
+    document.getElementById('pdpAngleCount').textContent = `${realUrls.length} HD Photos Available`;
     
     thumbStrip.innerHTML = realUrls.map((imgUrl, i) => {
       const isSelected = i === state.activePdpImageIndex;
-      const borderClass = isSelected ? 'border-slate-900 ring-2 ring-slate-900/30 scale-105' : 'border-slate-200 opacity-70 hover:opacity-100';
-      const angleLabel = i === 0 ? 'Front Drape' : i === 1 ? 'Pallu Weave' : i === 2 ? 'Border Zari' : i === 3 ? 'Pleats' : 'Blouse Piece';
+      const borderClass = isSelected ? 'border-amber-600 ring-2 ring-amber-500/40 scale-105 shadow-md' : 'border-amber-200 opacity-75 hover:opacity-100';
 
       return `
-        <div onclick="selectPdpAngle(${i})" class="flex-shrink-0 w-20 h-24 rounded-2xl overflow-hidden cursor-pointer border-2 transition-all relative group bg-white border border-amber-200 text-stone-800 ${borderClass}">
+        <div onclick="selectPdpAngle(${i})" class="flex-shrink-0 w-20 h-24 rounded-2xl overflow-hidden cursor-pointer border-2 transition-all relative group bg-white ${borderClass}">
           <img 
             src="${imgUrl}" 
             referrerpolicy="no-referrer"
-            alt="Angle ${i+1}" 
+            alt="View ${i+1}" 
             class="w-full h-full object-cover"
-            onerror="this.onerror=null; this.src='https://placehold.co/100x120/1e293b/ffffff?text=${i+1}';"
+            onerror="this.onerror=null; this.src='https://placehold.co/100x120/f8fafc/8b1d40?text=View+${i+1}';"
           >
-          <span class="absolute bottom-1.5 left-1.5 right-1.5 bg-black/80 backdrop-blur-xs text-[9px] text-white font-bold text-center rounded py-0.5 truncate px-1">
-            ${angleLabel}
+          <span class="absolute bottom-1.5 left-1.5 right-1.5 bg-stone-900/85 backdrop-blur-xs text-[9px] text-white font-mono font-bold text-center rounded py-0.5 truncate px-1">
+            View ${i+1}
           </span>
         </div>
       `;
@@ -1189,8 +1216,13 @@ function selectPdpAngle(angleIdx) {
   state.activePdpImageIndex = angleIdx;
   updatePdpGallery();
   
-  const angleLabel = angleIdx === 0 ? 'Front Drape Angle' : angleIdx === 1 ? 'Pallu Detail Angle' : angleIdx === 2 ? 'Border Zari Angle' : 'Pleats & Blouse Detail';
-  document.getElementById('pdpAngleIndicator').textContent = angleLabel;
+  const cat = state.activePdpCatalog;
+  const activeDesign = cat ? (cat.designs[state.activePdpDesignIndex] || {}) : {};
+  const total = (activeDesign.imageUrls && activeDesign.imageUrls.length) || 1;
+  const indicator = document.getElementById('pdpAngleIndicator');
+  if (indicator) {
+    indicator.textContent = `View ${angleIdx + 1} of ${total}`;
+  }
 }
 
 // --------------------------------------------------------------------------

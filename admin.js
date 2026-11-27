@@ -139,15 +139,20 @@ document.addEventListener('DOMContentLoaded', async () => {
   initDriveFoldersUI();
   initSupabaseUI();
   await loadAdminCatalogs();
+  renderShootAssignments();
   renderStockManager();
   renderRatesTable();
 
   // Listen for realtime updates from VellumDataAdapter
   window.addEventListener('vellum:drive-updated', (e) => {
     initDriveFoldersUI();
+    renderShootAssignments();
   });
   window.addEventListener('vellum:stock-updated', (e) => {
     renderStockManager();
+  });
+  window.addEventListener('vellum:shoot-updated', (e) => {
+    renderShootAssignments();
   });
 
   if (window.lucide) lucide.createIcons();
@@ -315,6 +320,57 @@ function saveDriveSettings() {
     setTimeout(() => statusEl.classList.add('hidden'), 3500);
   }
   showAdminToast('Google Drive shoot folders updated and synced!');
+}
+
+function renderShootAssignments() {
+  const container = document.getElementById('shootAssignmentContainer');
+  if (!container || adminCatalogs.length === 0) return;
+
+  container.innerHTML = adminCatalogs.map(c => {
+    const currentShoot = (window.vellumAdapter && window.vellumAdapter.getCatalogShoot(c.id)) || (c.has2mb ? 'model' : 'table');
+    return `
+      <div class="flex items-center justify-between p-2.5 rounded-xl border border-stone-200 bg-stone-50/70 hover:bg-white transition-all text-xs">
+        <div class="flex items-center gap-2.5">
+          <span class="font-mono font-bold text-stone-700 bg-stone-200 px-2 py-0.5 rounded text-[10px]">${c.code}</span>
+          <div>
+            <strong class="text-stone-900">${c.name}</strong>
+            <span class="text-[10px] text-stone-500 block sm:inline sm:ml-2">${c.category}</span>
+          </div>
+        </div>
+        <div class="flex items-center gap-1.5 shrink-0">
+          <button 
+            type="button" 
+            onclick="updateCatalogShootAssignment('${c.id}', 'model')" 
+            class="px-2.5 py-1 rounded-lg font-bold text-[11px] transition-all ${currentShoot === 'model' ? 'bg-sky-600 text-white shadow-xs' : 'bg-white text-stone-600 border border-stone-300 hover:bg-stone-100'}"
+          >
+            👗 Model Shoot
+          </button>
+          <button 
+            type="button" 
+            onclick="updateCatalogShootAssignment('${c.id}', 'table')" 
+            class="px-2.5 py-1 rounded-lg font-bold text-[11px] transition-all ${currentShoot === 'table' ? 'bg-amber-600 text-white shadow-xs' : 'bg-white text-stone-600 border border-stone-300 hover:bg-stone-100'}"
+          >
+            🪑 Table Shoot
+          </button>
+          <button 
+            type="button" 
+            onclick="updateCatalogShootAssignment('${c.id}', 'both')" 
+            class="px-2.5 py-1 rounded-lg font-bold text-[11px] transition-all ${currentShoot === 'both' ? 'bg-emerald-600 text-white shadow-xs' : 'bg-white text-stone-600 border border-stone-300 hover:bg-stone-100'}"
+          >
+            🌟 Both
+          </button>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function updateCatalogShootAssignment(catId, shootType) {
+  if (window.vellumAdapter) {
+    window.vellumAdapter.setCatalogShoot(catId, shootType);
+  }
+  renderShootAssignments();
+  showAdminToast(`Assigned ${catId} to: ${shootType.toUpperCase()} SHOOT`);
 }
 
 // --------------------------------------------------------------------------
