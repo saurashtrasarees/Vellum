@@ -1487,39 +1487,20 @@ function renderPdpScreen() {
   const singlePriceCard = document.getElementById('pdpSinglePriceCard');
   const allRatesCard = document.getElementById('pdpAllRatesCard');
 
-  if (isAllRatesUser) {
-    if (singlePriceCard) singlePriceCard.classList.add('hidden');
-    if (allRatesCard) {
-      allRatesCard.classList.remove('hidden');
-      document.getElementById('pdpRateWholesale').textContent = `₹${cat.wholesaleRate}`;
-      document.getElementById('pdpRateReseller').textContent = `₹${cat.resellerRate}`;
-      document.getElementById('pdpRateRetail').textContent = `₹${cat.retailRate}`;
-      
-      const wsMargin = cat.wholesaleRate - cat.resellerRate;
-      const retMargin = cat.retailRate - cat.wholesaleRate;
-      document.getElementById('pdpResellerMargin').textContent = `+₹${wsMargin}`;
-      document.getElementById('pdpRetailMargin').textContent = `+₹${retMargin}`;
-    }
-  } else {
-    if (allRatesCard) allRatesCard.classList.add('hidden');
-    if (singlePriceCard) {
-      singlePriceCard.classList.remove('hidden');
-      const activeRate = getActiveRate(cat);
-      const pdpPriceEl = document.getElementById('pdpPrice') || document.getElementById('pdpPriceDisplay');
-      if (pdpPriceEl) pdpPriceEl.textContent = `₹${activeRate}`;
-      let roleLabel = 'Catalog MRP / Retail Rate';
-      if (state.currentRole === 'wholesale') roleLabel = 'Wholesale Price (Direct Mill)';
-      else if (state.currentRole === 'prime') roleLabel = 'Prime Wholesale Rate';
-      const roleNameEl = document.getElementById('pdpRoleName') || document.getElementById('pdpRoleBadge');
-      if (roleNameEl) roleNameEl.textContent = roleLabel;
-
-      const ratePrimeEl = document.getElementById('ratePrimeDisplay');
-      const rateWsEl = document.getElementById('rateWholesaleDisplay');
-      const rateRetEl = document.getElementById('rateRetailDisplay');
-      if (ratePrimeEl) ratePrimeEl.textContent = `₹${cat.resellerRate}`;
-      if (rateWsEl) rateWsEl.textContent = `₹${cat.wholesaleRate}`;
-      if (rateRetEl) rateRetEl.textContent = `₹${cat.retailRate}`;
-    }
+  // User mandate: NEVER show 3 rates together on PDP. ONLY show the single authorized rate by link!
+  if (allRatesCard) allRatesCard.classList.add('hidden');
+  if (singlePriceCard) {
+    singlePriceCard.classList.remove('hidden');
+    const activeRate = getActiveRate(cat);
+    const pdpPriceEl = document.getElementById('pdpPrice');
+    if (pdpPriceEl) pdpPriceEl.textContent = `₹${activeRate}`;
+    
+    let roleLabel = 'Catalog MRP / Retail Rate';
+    if (state.currentRole === 'wholesale') roleLabel = 'Wholesale Price (Direct Mill)';
+    else if (state.currentRole === 'prime') roleLabel = 'Prime Wholesale Rate';
+    
+    const roleNameEl = document.getElementById('pdpRoleName');
+    if (roleNameEl) roleNameEl.textContent = roleLabel;
   }
 
   // Specifications & Story Tab Content
