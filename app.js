@@ -444,7 +444,7 @@ function updateStaffUI() {
     document.getElementById('badgeStaffActive')
   ];
   staffNameEls.forEach(el => {
-    if (el) el.textContent = `${user.name} (${user.code})`;
+    if (el) el.textContent = user.name;
   });
 
   const phoneEl = document.getElementById('staffPhoneDisplay');
@@ -459,10 +459,10 @@ function updateStaffUI() {
   if (footerRepRow) footerRepRow.classList.remove('hidden');
 
   const footerRepName = document.getElementById('footerRepName');
-  if (footerRepName) footerRepName.textContent = `${user.name} (${user.code})`;
+  if (footerRepName) footerRepName.textContent = user.name;
 
   const footerRepBadge = document.getElementById('footerRepBadge');
-  if (footerRepBadge) footerRepBadge.textContent = user.initials || user.code;
+  if (footerRepBadge) footerRepBadge.textContent = user.initials || user.name.slice(0, 2).toUpperCase();
 
   const footerDirectPhone = document.getElementById('footerDirectPhone');
   if (footerDirectPhone) footerDirectPhone.textContent = user.displayPhone || ('+91 ' + user.phone);
@@ -1289,17 +1289,17 @@ function renderCatalogGrid() {
                 </div>
               </div>
             ` : `
-              <!-- Single Rate Display -->
-              <div class="flex items-baseline justify-between">
+              <!-- Single Rate Display (Luxury Gold Jewel Badge) -->
+              <div class="flex items-center justify-between p-2.5 rounded-xl bg-gradient-to-r from-amber-50/90 via-white to-amber-50/50 border border-amber-300/80 shadow-xs">
                 <div>
-                  <span class="text-[9px] sm:text-[10px] text-stone-600 uppercase font-semibold">
-                    ${state.currentRole === 'prime' ? 'Prime Wholesale' : (state.currentRole === 'wholesale' ? 'Wholesale Price' : 'Catalog MRP')}
+                  <span class="text-[9px] sm:text-[10px] text-amber-900 font-extrabold uppercase tracking-wide block">
+                    ${state.currentRole === 'prime' ? '👑 Prime Wholesale' : (state.currentRole === 'wholesale' ? '🏢 Mill Wholesale' : '🏷️ Catalog MRP')}
                   </span>
-                  <p class="font-price text-base sm:text-xl font-black text-stone-900 leading-tight">
-                    ₹${getActiveRate(cat)}
+                  <p class="font-price text-base sm:text-xl font-black text-stone-900 leading-tight mt-0.5">
+                    ₹${getActiveRate(cat)} <span class="text-[10px] font-sans font-bold text-stone-500">/ saree</span>
                   </p>
                 </div>
-                <span class="text-[9px] sm:text-[10px] text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded font-bold">✨ In Stock</span>
+                <span class="text-[9px] sm:text-[10px] text-emerald-800 bg-emerald-50 border border-emerald-300 px-2 py-0.5 rounded-full font-bold shadow-xs">🟢 In Stock</span>
               </div>
             `}
 
@@ -1712,26 +1712,38 @@ function renderPdpColorSwatches() {
     const isSelected = idx === state.activePdpDesignIndex;
     const colorObj = getAccurateColor(d.color);
     const isColorSold = window.vellumAdapter && window.vellumAdapter.getColorStock(cat.id, d.code) === 'sold_out';
-    const activeClass = isSelected ? 'ring-3 ring-offset-2 ring-amber-600 scale-120 shadow-md is-selected' : 'opacity-85 hover:opacity-100 hover:scale-110';
+    const numPhotos = (d.imageUrls && d.imageUrls.length) || 1;
+    
+    const activeClass = isSelected 
+      ? 'border-amber-600 bg-amber-50/90 shadow-md ring-2 ring-amber-500/50 scale-102 font-bold text-stone-900' 
+      : 'border-stone-200 bg-white text-stone-600 hover:border-amber-300 hover:bg-stone-50';
 
     return `
-      <div class="swatch-wrapper">
-        <span class="swatch-tooltip">Design ${d.code}: ${colorObj.label} ${isColorSold ? '(SOLD OUT 🚫)' : '🟢'}</span>
-        <button 
-          type="button"
-          onclick="selectPdpDesign(${idx})" 
-          class="swatch-btn ${isColorSold ? 'is-sold-out' : ''} w-7 h-7 rounded-full border-2 border-white shadow-xs transition-all ${activeClass}"
+      <button 
+        type="button"
+        onclick="selectPdpDesign(${idx})" 
+        class="swatch-btn ${isColorSold ? 'is-sold-out' : ''} inline-flex items-center gap-2 px-3 py-1.5 rounded-2xl border-2 transition-all ${activeClass}"
+        title="Design ${d.code} — ${colorObj.label} (${numPhotos} angle photos)"
+      >
+        <span 
+          class="w-4 h-4 rounded-full border border-black/15 shadow-xs shrink-0 flex items-center justify-center"
           style="background-color: ${colorObj.hex};"
-        ></button>
-      </div>
+        >
+          ${isSelected ? '<span class="w-1.5 h-1.5 rounded-full bg-white shadow-xs"></span>' : ''}
+        </span>
+        <span class="text-xs font-mono font-bold">${d.code}</span>
+        <span class="text-[11px] font-medium truncate max-w-[85px]">${colorObj.label}</span>
+        <span class="text-[9px] px-1.5 py-0.5 rounded-full bg-stone-100 text-stone-500 font-bold shrink-0">${numPhotos}📷</span>
+      </button>
     `;
   }).join('');
 
-  container.innerHTML = coverButtonHtml + `<div class="flex items-center gap-2 flex-wrap">${swatchesHtml}</div>`;
+  container.innerHTML = `<div class="flex items-center gap-2 flex-wrap pt-1">${swatchesHtml}</div>`;
 
   const activeDesign = colorways[state.activePdpDesignIndex] || (cat.designs && cat.designs[0]) || {};
   const activeColorObj = getAccurateColor(activeDesign.color);
   const isCurrentColorSold = window.vellumAdapter && window.vellumAdapter.getColorStock(cat.id, activeDesign.code) === 'sold_out';
+  const numCurrentPhotos = (activeDesign.imageUrls && activeDesign.imageUrls.length) || 1;
   
   let statusBadge = '<span class="text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full font-bold border border-emerald-200">🟢 In Stock</span>';
   if (catStock === 'temp_out_of_stock') {
@@ -1744,7 +1756,7 @@ function renderPdpColorSwatches() {
 
   const labelEl = document.getElementById('pdpSelectedColorLabel');
   if (labelEl) {
-    labelEl.innerHTML = `<span class="font-bold text-stone-900">Design ${activeDesign.code || '101'} — ${activeColorObj.label}</span> ${statusBadge}`;
+    labelEl.innerHTML = `<span class="font-bold text-stone-900">Design ${activeDesign.code || '101'} — ${activeColorObj.label} (${numCurrentPhotos} HD Angle Photos Loaded)</span> ${statusBadge}`;
   }
 }
 

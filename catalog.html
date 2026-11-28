@@ -25,7 +25,7 @@
   <script src="data-adapter.js"></script>
   
   <!-- Custom Styles -->
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css?v=20261128-02">
   
   <script>
     tailwind.config = {
@@ -367,11 +367,8 @@
       </div>
     </section>
 
-      </div>
-    </section>
-
     <!-- Catalog Showcase Grid -->
-    <main class="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+    <div id="catalogShowroomGridWrapper" class="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
       
       <!-- Empty State -->
       <div id="emptyState" class="hidden text-center py-20">
@@ -390,7 +387,7 @@
         <!-- Rendered dynamically by app.js -->
       </div>
 
-    </main>
+    </div>
 
   </div>
 
@@ -418,7 +415,7 @@
     </div>
 
     <!-- Product Layout (Shopify 2-Column Grid) -->
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+    <div id="pdpLayoutWrapper" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
         
         <!-- Left: Media Showcase (7 Columns) -->
@@ -798,7 +795,7 @@
         </div>
       </section>
 
-    </main>
+    </div>
 
     <!-- Mobile Sticky Bottom Action Bar (100% Light Luxury Glassmorphism) -->
     <div id="pdpMobileStickyBar" class="lg:hidden mobile-sticky-action-bar flex items-center justify-between gap-2.5">
@@ -998,7 +995,12 @@
 
   <!-- Hidden Luxury Order PDF Template (For High-Fidelity Canvas/PDF Export) -->
   <div id="orderPdfContainerWrapper" class="fixed left-[-9999px] top-[-9999px] z-[-1] pointer-events-none opacity-0">
-    <div id="orderPdfPrintTemplate" style="width: 794px; min-height: 1123px; background: #ffffff; color: #1c1917; font-family: 'Plus Jakarta Sans', system-ui, sans-serif; padding: 40px; box-sizing: border-box; border: 4px solid #8b1d40; position: relative;">
+    <div id="orderPdfPrintTemplate" style="width: 794px; min-height: 1123px; background: #ffffff; color: #1c1917; font-family: 'Plus Jakarta Sans', system-ui, sans-serif; padding: 40px; box-sizing: border-box; border: 4px solid #8b1d40; position: relative; overflow: hidden;">
+      
+      <!-- Regal Diagonal Watermark Across Entire Order Invoice -->
+      <div style="position: absolute; top: 45%; left: 5%; width: 90%; text-align: center; transform: rotate(-28deg); font-size: 60px; font-weight: 900; color: rgba(139, 29, 64, 0.035); text-transform: uppercase; letter-spacing: 14px; pointer-events: none; z-index: 0; user-select: none;">
+        SURAT MILL DIRECT • VERIFIED WEAVE
+      </div>
       
       <!-- Regal Gold Accent Border Header -->
       <div style="border-bottom: 3px double #d4af37; padding-bottom: 20px; display: flex; justify-content: space-between; align-items: flex-start;">
@@ -1074,16 +1076,25 @@
         <span><strong>Dispatch Hub:</strong> Magob Mill Facility (24–48h Dispatch)</span>
       </div>
 
-      <!-- Executive Footer & Signature Blocks -->
+      <!-- Executive Footer, Official Embossed Seal & Signature Blocks -->
       <div style="position: absolute; bottom: 35px; left: 40px; right: 40px; border-top: 2px solid #d4af37; padding-top: 15px; display: flex; justify-content: space-between; align-items: flex-end; font-size: 10px; color: #57534e;">
         <div>
           <strong style="color: #8b1d40; font-size: 11px;">Saurashtra Sarees • Surat Mill Direct</strong><br>
           Nayan Patel [Founder] • Chetan Patel [Co-Founder]<br>
           A-1001, Rajhans Fabrizo, Near Polaris Textile City, Magob, Surat – 395010
         </div>
+        
+        <!-- Official Red & Gold Circular Embossed Mill Seal -->
+        <div style="border: 2.5px double #b45309; border-radius: 50%; width: 84px; height: 84px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; background: radial-gradient(circle, #fffdfa 0%, #fef3c7 100%); box-shadow: inset 0 0 8px rgba(180, 83, 9, 0.2); transform: rotate(-6deg);">
+          <span style="font-size: 7.5px; font-weight: 900; color: #8b1d40; text-transform: uppercase; letter-spacing: 0.5px;">AUTHENTIC</span>
+          <span style="font-size: 16px; margin: -2px 0;">👑</span>
+          <span style="font-size: 6.5px; font-weight: 800; color: #b45309; text-transform: uppercase; letter-spacing: 0.5px;">MILL DIRECT</span>
+          <span style="font-size: 6px; font-weight: 700; color: #78716c;">SURAT • EST 2014</span>
+        </div>
+
         <div style="text-align: right;">
-          <p style="margin: 0 0 20px 0; color: #a8a29e;">Authorized Mill Allocation Stamp</p>
-          <p style="font-size: 9px; color: #78716c; margin: 0;">Generated digitally via Vellum Engine</p>
+          <p style="margin: 0 0 15px 0; color: #a8a29e; font-weight: bold;">Authorized Allocation Stamp</p>
+          <p style="font-size: 9px; color: #78716c; margin: 0;">Digitally Certified via Vellum Engine</p>
         </div>
       </div>
 
@@ -1204,6 +1215,6 @@
   </footer>
 
   <!-- Main Application Script -->
-  <script src="app.js"></script>
+  <script src="app.js?v=20261128-02"></script>
 </body>
 </html>

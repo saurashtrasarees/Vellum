@@ -102,10 +102,29 @@ body.theme-saurashtra {
 
 body {
   font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  background-color: var(--theme-bg);
-  color: var(--text-main);
+  background-color: #fbf9f5 !important;
+  background-image: 
+    radial-gradient(circle at 100% 0%, rgba(212, 175, 55, 0.09) 0%, transparent 45%),
+    radial-gradient(circle at 0% 100%, rgba(139, 29, 64, 0.07) 0%, transparent 45%),
+    radial-gradient(circle at 50% 50%, rgba(212, 175, 55, 0.05) 0%, transparent 60%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.85) 0%, rgba(253, 248, 240, 0.95) 100%),
+    radial-gradient(#d4af37 0.75px, transparent 0.75px);
+  background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 28px 28px;
+  background-attachment: fixed;
+  color: #1c1917;
   -webkit-font-smoothing: antialiased;
   min-height: 100vh;
+}
+
+body.theme-keya {
+  background-color: #f6fafe !important;
+  background-image: 
+    radial-gradient(circle at 100% 0%, rgba(2, 132, 199, 0.09) 0%, transparent 45%),
+    radial-gradient(circle at 0% 100%, rgba(245, 158, 11, 0.07) 0%, transparent 45%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.85) 0%, rgba(240, 249, 255, 0.95) 100%),
+    radial-gradient(#0284c7 0.75px, transparent 0.75px);
+  background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 28px 28px;
+  background-attachment: fixed;
 }
 
 .font-serif {
@@ -141,19 +160,34 @@ body {
 }
 
 /* ==============================================================================
-   SHOPIFY-GRADE LUXURY CATALOG CARDS
+   EMBOSSED ROYAL HAUTE COUTURE CATALOG CARDS (HOLDERS)
    ============================================================================== */
 .catalog-card {
   transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
   background: #ffffff;
-  border: 1px solid var(--border);
-  box-shadow: 0 4px 15px -3px rgba(0, 0, 0, 0.04);
+  border-radius: 1.5rem;
+  border: 1.5px solid rgba(212, 175, 55, 0.35);
+  box-shadow: 0 6px 20px -3px rgba(139, 29, 64, 0.07), 0 2px 6px -1px rgba(0, 0, 0, 0.04);
+  position: relative;
+  overflow: hidden;
+}
+
+.catalog-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3.5px;
+  background: linear-gradient(90deg, #d4af37, #8b1d40, #d4af37);
+  opacity: 0.9;
+  z-index: 10;
 }
 
 .catalog-card:hover {
   transform: translateY(-6px);
-  border-color: var(--border-gold);
-  box-shadow: var(--shadow-luxury), 0 0 0 1px var(--border-gold);
+  border-color: rgba(212, 175, 55, 0.85);
+  box-shadow: 0 20px 35px -8px rgba(139, 29, 64, 0.16), 0 0 0 1px rgba(212, 175, 55, 0.6);
 }
 
 /* Out of Stock Card Overlay / Treatment */
