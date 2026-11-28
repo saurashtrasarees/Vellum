@@ -13,11 +13,14 @@ Analyzes every colorway hero image in data/catalogs.json using:
 
 import os
 import io
+import re
 import csv
 import json
 import math
 import time
+import argparse
 import colorsys
+import subprocess
 import urllib.request
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from PIL import Image
@@ -185,7 +188,7 @@ def extract_saree_color_from_image_bytes(img_bytes, shoot_type='model'):
     roi = img.crop((left, top, max(left + 10, right), max(top + 10, bottom)))
     # Resize ROI to ~80x100 for fast, crisp clustering
     roi = roi.resize((80, 100), Image.Resampling.BILINEAR)
-    raw_pixels = list(roi.getdata())
+    raw_pixels = list(roi.get_flattened_data()) if hasattr(roi, 'get_flattened_data') else list(roi.getdata())
 
     # 2. HSV Masking (strip studio whites, deep blacks, neutral greys)
     filtered = []
@@ -331,5 +334,89 @@ def main():
     print(f'✓ CV Color Extraction Complete in {elapsed}s! Updated {updated_designs} colorways across {len(catalogs)} catalogs.')
 
 
+def analyze_local_catalog_folder(folder_path, shoot_type='auto'):
+    """Scan a single local catalog folder for 1xx/2xx/3xx images (ignoring 000)."""
+    if shoot_type == 'auto':
+        st = 'table' if 'table' in folder_path.lower() else 'model'
+    else:
+        st = shoot_type
+
+    series_first_img = {}
+    for fname in sorted(os.listdir(folder_path)):
+        lower = fname.lower()
+        if not lower.endswith(('.jpg', '.jpeg', '.png', '.webp')):
+            continue
+        base = os.path.splitext(lower)[0]
+        if base.startswith('000'):
+            continue
+        m = re.match(r'^([1-9])\d{2}', base)
+        series_key = m.group(1) if m else base
+        if series_key not in series_first_img:
+            series_first_img[series_key] = os.path.join(folder_path, fname)
+
+    results = []
+    for s_key in sorted(series_first_img.keys(), key=lambda x: (0, int(x)) if x.isdigit() else (1, x)):
+        fpath = series_first_img[s_key]
+        with open(fpath, 'rb') as f:
+            c_name, c_hex = extract_saree_color_from_image_bytes(f.read(), shoot_type=st)
+        design_code = f'{s_key}01' if s_key.isdigit() else s_key
+        results.append((design_code, os.path.basename(fpath), c_name, c_hex))
+    return results
+
+
+def run_local_dir(local_dir, shoot_type='auto'):
+    """Scan a local disk folder (single catalog or parent of multiple catalog folders)."""
+    local_dir = os.path.abspath(local_dir)
+    if not os.path.isdir(local_dir):
+        print(f'Error: Directory not found -> {local_dir}')
+        return
+
+    print(f'Scanning local disk directory: {local_dir}')
+    catalog_folders = []
+
+    # Check if local_dir itself contains saree images directly
+    direct_imgs = [f for f in os.listdir(local_dir) if f.lower().endswith(('.jpg', '.jpeg', '.png', '.webp'))]
+    if direct_imgs:
+        catalog_folders.append(local_dir)
+    else:
+        for root, dirs, files in os.walk(local_dir):
+            imgs = [f for f in files if f.lower().endswith(('.jpg', '.jpeg', '.png', '.webp'))]
+            if imgs:
+                catalog_folders.append(root)
+
+    if not catalog_folders:
+        print('No saree images (.jpg, .jpeg, .png, .webp) found in that folder.')
+        return
+
+    out_csv = os.path.join(local_dir, 'extracted_colors.csv')
+    csv_rows = [['Catalog Folder', 'Design Code', 'Sample Image', 'Detected Color', 'HEX Code']]
+
+    for folder in catalog_folders:
+        folder_name = os.path.basename(folder)
+        res = analyze_local_catalog_folder(folder, shoot_type=shoot_type)
+        if not res:
+            continue
+        print(f'\n[{folder_name}] ({len(res)} colorways):')
+        for design_code, fname, c_name, c_hex in res:
+            print(f'  Design {design_code:<5} | {fname:<20} -> {c_name:<18} ({c_hex})')
+            csv_rows.append([folder_name, design_code, fname, c_name, c_hex])
+
+    with open(out_csv, 'w', encoding='utf-8', newline='') as f:
+        csv.writer(f).writerows(csv_rows)
+    print(f'\n✓ Saved local color report to: {out_csv}')
+
+
 if __name__ == '__main__':
-    main()
+    parser = argparse.ArgumentParser(description='Vellum K-Means + HSV Masking Saree Color Extractor')
+    parser.add_argument('--local-dir', type=str, help='Path to local disk folder containing saree photos or catalog subfolders')
+    parser.add_argument('--shoot-type', type=str, default='auto', choices=['auto', 'model', 'table'], help='Shoot type for ROI crop (default: auto)')
+    parser.add_argument('--force', action='store_true', help='Ignore cache and re-analyze all Drive images')
+    args = parser.parse_args()
+
+    if args.force and os.path.exists(CACHE_FILE):
+        os.remove(CACHE_FILE)
+
+    if args.local_dir:
+        run_local_dir(args.local_dir, shoot_type=args.shoot_type)
+    else:
+        main()
