@@ -5,7 +5,11 @@
 
 const CONFIG = {
   sheetId: '1YcrvrrgwikEFkST8VEPf-XRjj8vWd0F750kauK1PU1o',
-  sheetUrl: 'https://docs.google.com/spreadsheets/d/1YcrvrrgwikEFkST8VEPf-XRjj8vWd0F750kauK1PU1o/gviz/tq?tqx=out:csv',
+  catalogSheetUrl: 'https://docs.google.com/spreadsheets/d/1YcrvrrgwikEFkST8VEPf-XRjj8vWd0F750kauK1PU1o/gviz/tq?tqx=out:csv&sheet=Catalog_Master',
+  staffSheetUrl: 'https://docs.google.com/spreadsheets/d/1YcrvrrgwikEFkST8VEPf-XRjj8vWd0F750kauK1PU1o/gviz/tq?tqx=out:csv&sheet=Staff_Master',
+  firmSheetUrl: 'https://docs.google.com/spreadsheets/d/1YcrvrrgwikEFkST8VEPf-XRjj8vWd0F750kauK1PU1o/gviz/tq?tqx=out:csv&sheet=Firm_Master',
+  securitySheetUrl: 'https://docs.google.com/spreadsheets/d/1YcrvrrgwikEFkST8VEPf-XRjj8vWd0F750kauK1PU1o/gviz/tq?tqx=out:csv&sheet=Security_Settings',
+  sheetUrl: 'https://docs.google.com/spreadsheets/d/1YcrvrrgwikEFkST8VEPf-XRjj8vWd0F750kauK1PU1o/gviz/tq?tqx=out:csv&sheet=Catalog_Master',
   sheetExportUrl: 'https://docs.google.com/spreadsheets/d/1YcrvrrgwikEFkST8VEPf-XRjj8vWd0F750kauK1PU1o/export?format=csv'
 };
 
@@ -119,6 +123,18 @@ const USER_PROFILES = {
     firm: 'keya',
     rateAccess: 'retail'
   },
+  'AR38': {
+    code: 'AR38',
+    slug: 'arvind-patel',
+    name: 'Arvind Patel',
+    initials: 'AP',
+    title: 'Dedicated Representative',
+    phone: '9824982338',
+    whatsapp: '919824982338',
+    displayPhone: '+91 98249 82338',
+    firm: 'keya',
+    rateAccess: 'retail'
+  },
 
   // ------------------------------------------------------------------------
   // 2. Saurashtra Sarees [All Retail Rate]
@@ -183,66 +199,136 @@ const state = {
 };
 
 // --------------------------------------------------------------------------
+// 2B. LIVE GOOGLE SHEET DATABASE SYNC ENGINE (Staff_Master, Firm_Master, Security_Settings)
+// --------------------------------------------------------------------------
+async function syncLiveGoogleSheetDatabase() {
+  const promises = [];
+
+  // 1. Staff Master Sync
+  promises.push(
+    fetch(CONFIG.staffSheetUrl)
+      .then(r => r.ok ? r.text() : null)
+      .then(csv => {
+        if (!csv) return;
+        const lines = csv.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+        if (lines.length < 2) return;
+        const headers = parseCsvRow(lines[0].toLowerCase());
+        const codeIdx = headers.findIndex(h => h.includes('code'));
+        const nameIdx = headers.findIndex(h => h.includes('name') || h.includes('rep'));
+        const firmIdx = headers.findIndex(h => h.includes('firm'));
+        const phoneIdx = headers.findIndex(h => h.includes('direct') || h.includes('phone'));
+        const waIdx = headers.findIndex(h => h.includes('whatsapp'));
+        const titleIdx = headers.findIndex(h => h.includes('role') || h.includes('title'));
+        const rateIdx = headers.findIndex(h => h.includes('rate') || h.includes('tier') || h.includes('access'));
+
+        for (let i = 1; i < lines.length; i++) {
+          const row = parseCsvRow(lines[i]);
+          const code = (row[codeIdx] || '').trim().toUpperCase();
+          if (!code) continue;
+
+          const name = (row[nameIdx] || code).trim();
+          const firmText = (row[firmIdx] || '').trim().toLowerCase();
+          const isKeya = firmText.includes('keya') || code === 'KH28' || code === 'AN26' || code === 'PR28' || code === 'PA28' || code === 'AR38' || code === 'JE04';
+          const cleanPhone = (row[phoneIdx] || '').trim().replace(/[^0-9]/g, '');
+          const cleanWa = (row[waIdx] || '').trim().replace(/[^0-9]/g, '');
+          const wa = cleanWa ? (cleanWa.startsWith('91') ? cleanWa : '91' + cleanWa) : ('91' + cleanPhone);
+          const title = (row[titleIdx] || 'Dedicated Representative').trim();
+          const rateVal = (row[rateIdx] || '').trim().toLowerCase();
+          const rateAccess = rateVal.includes('all') ? 'all' : 'retail';
+
+          USER_PROFILES[code] = {
+            code,
+            slug: name.toLowerCase().replace(/[^a-z0-9]/g, '-'),
+            name,
+            initials: name.slice(0, 2).toUpperCase(),
+            title,
+            phone: cleanPhone,
+            whatsapp: wa,
+            displayPhone: cleanPhone.length === 10 ? `+91 ${cleanPhone.slice(0, 5)} ${cleanPhone.slice(5)}` : `+91 ${cleanPhone}`,
+            firm: isKeya ? 'keya' : 'saurashtra',
+            rateAccess
+          };
+        }
+        console.log('✓ Successfully synced', Object.keys(USER_PROFILES).length, 'staff profiles live from Google Sheet Staff_Master!');
+      })
+      .catch(err => console.warn('Staff sync error:', err))
+  );
+
+  // 2. Firm Master Sync
+  promises.push(
+    fetch(CONFIG.firmSheetUrl)
+      .then(r => r.ok ? r.text() : null)
+      .then(csv => {
+        if (!csv) return;
+        const lines = csv.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+        if (lines.length < 2) return;
+        const headers = parseCsvRow(lines[0].toLowerCase());
+        const idIdx = headers.findIndex(h => h.includes('id') || h.includes('firm'));
+        const nameIdx = headers.findIndex(h => h.includes('brand') || h.includes('name'));
+        const tagIdx = headers.findIndex(h => h.includes('tagline'));
+        const yearIdx = headers.findIndex(h => h.includes('year') || h.includes('est'));
+        const addrIdx = headers.findIndex(h => h.includes('coord') || h.includes('address'));
+        const phoneIdx = headers.findIndex(h => h.includes('phone'));
+
+        for (let i = 1; i < lines.length; i++) {
+          const row = parseCsvRow(lines[i]);
+          let fId = (row[idIdx] || '').trim().toLowerCase();
+          if (!fId) continue;
+          if (fId.includes('keya')) fId = 'keya';
+          else if (fId.includes('saurashtra')) fId = 'saurashtra';
+
+          if (FIRMS[fId]) {
+            if (row[nameIdx]) FIRMS[fId].name = row[nameIdx].trim();
+            if (row[tagIdx]) FIRMS[fId].tagline = row[tagIdx].trim();
+            if (row[addrIdx]) FIRMS[fId].address = row[addrIdx].trim();
+            if (row[yearIdx]) FIRMS[fId].estYear = row[yearIdx].trim();
+            if (row[phoneIdx]) FIRMS[fId].primaryPhone = '+91 ' + row[phoneIdx].trim().replace(/[^0-9]/g, '');
+          }
+        }
+        console.log('✓ Successfully synced firm details live from Google Sheet Firm_Master!');
+      })
+      .catch(err => console.warn('Firm sync error:', err))
+  );
+
+  // 3. Security Settings Sync
+  promises.push(
+    fetch(CONFIG.securitySheetUrl)
+      .then(r => r.ok ? r.text() : null)
+      .then(csv => {
+        if (!csv) return;
+        const lines = csv.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+        for (let i = 1; i < lines.length; i++) {
+          const row = parseCsvRow(lines[i]);
+          const key = (row[0] || '').trim();
+          const val = (row[1] || '').trim();
+          if (key === 'ADMIN_ACCESS_PIN' && val) {
+            window.LIVE_ADMIN_PIN = val;
+            sessionStorage.setItem('vellum_admin_pin', val);
+          }
+        }
+        console.log('✓ Successfully synced security settings live from Google Sheet Security_Settings!');
+      })
+      .catch(err => console.warn('Security sync error:', err))
+  );
+
+  await Promise.allSettled(promises);
+}
+
+// --------------------------------------------------------------------------
 // 3. INITIALIZATION & ROUTING
 // --------------------------------------------------------------------------
 document.addEventListener('DOMContentLoaded', async () => {
-  // Sync custom firm profiles from local adapter & Google Sheet Master
-  if (window.vellumAdapter) {
-    const savedProfiles = window.vellumAdapter.loadFirmProfiles();
-    Object.keys(savedProfiles).forEach(k => {
-      FIRMS[k] = { ...(FIRMS[k] || {}), ...savedProfiles[k] };
-    });
-
-    // Sync dynamic staff profiles from adapter
-    const savedStaff = window.vellumAdapter.loadStaffProfiles();
-    savedStaff.forEach(s => {
-      const codeKey = s.code.toUpperCase();
-      const isKeya = s.firm === 'keya' || codeKey === 'KH28' || codeKey === 'AN26' || codeKey === 'PR28' || codeKey === 'PA28' || (s.firmName && s.firmName.toLowerCase().includes('keya'));
-      USER_PROFILES[codeKey] = {
-        code: codeKey,
-        slug: s.name.toLowerCase().replace(/[^a-z0-9]/g, '-'),
-        name: s.name,
-        initials: s.name.slice(0, 2).toUpperCase(),
-        title: s.title || 'Dedicated Representative',
-        phone: s.phone,
-        whatsapp: s.whatsapp || ('91' + s.phone),
-        displayPhone: s.displayPhone || ('+91 ' + s.phone),
-        firm: isKeya ? 'keya' : (s.firm || 'saurashtra'),
-        rateAccess: (s.rateAccess && s.rateAccess.toLowerCase().includes('all')) ? 'all' : 'retail'
-      };
-    });
-
-    window.addEventListener('vellum:firm-updated', (e) => {
-      const updated = e.detail;
-      Object.keys(updated).forEach(k => {
-        FIRMS[k] = { ...(FIRMS[k] || {}), ...updated[k] };
-      });
-      applyFirmTheme();
-    });
-
-    window.addEventListener('vellum:staff-updated', (e) => {
-      const updatedStaff = e.detail || [];
-      updatedStaff.forEach(s => {
-        const codeKey = s.code.toUpperCase();
-        USER_PROFILES[codeKey] = {
-          code: codeKey,
-          slug: s.name.toLowerCase().replace(/[^a-z0-9]/g, '-'),
-          name: s.name,
-          initials: s.name.slice(0, 2).toUpperCase(),
-          title: s.title || 'Dedicated Representative',
-          phone: s.phone,
-          whatsapp: s.whatsapp || ('91' + s.phone),
-          displayPhone: s.displayPhone || ('+91 ' + s.phone),
-          firm: s.firm || 'saurashtra',
-          rateAccess: 'retail'
-        };
-      });
-      resolveUrlContext();
-    });
-  }
-
+  // 1. Initial immediate resolution with baseline profiles
   resolveUrlContext();
   initCart();
+
+  // 2. Fetch live database from Google Sheet Master (Staff_Master, Firm_Master, Security_Settings)
+  await syncLiveGoogleSheetDatabase();
+
+  // 3. Re-resolve URL context with freshly synced staff and firms from Google Sheet
+  resolveUrlContext();
+
+  // 4. Load catalog data and render
   await loadCatalogData();
   renderCategoryPills();
   applyFiltersAndRender();

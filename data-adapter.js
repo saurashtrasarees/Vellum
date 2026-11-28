@@ -167,6 +167,21 @@ const DEFAULT_STAFF_PROFILES = [
     title: 'Digital Sales Executive',
     hasWholesaleLink: false,
     hasPrimeLink: false
+  },
+  {
+    code: 'AR38',
+    name: 'Arvind Patel',
+    shortName: 'Arvind Patel',
+    letter: 'F',
+    phone: '9824982338',
+    displayPhone: '+91 98249 82338',
+    whatsapp: '919824982338',
+    firm: 'keya',
+    firmName: 'Keya Fashion',
+    title: 'Dedicated Representative',
+    rateAccess: 'retail',
+    hasWholesaleLink: false,
+    hasPrimeLink: false
   }
 ];
 
