@@ -208,7 +208,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         whatsapp: s.whatsapp || ('91' + s.phone),
         displayPhone: s.displayPhone || ('+91 ' + s.phone),
         firm: isKeya ? 'keya' : (s.firm || 'saurashtra'),
-        rateAccess: s.rateAccess || (isKeya ? 'retail' : 'all')
+        rateAccess: (s.rateAccess && s.rateAccess.toLowerCase().includes('all')) ? 'all' : 'retail'
       };
     });
 
@@ -1154,11 +1154,10 @@ function renderCatalogGrid() {
 
   if (emptyState) emptyState.classList.add('hidden');
 
-  // Only Founders / authorized executives with explicit all-rate access see the 3-rate matrix.
-  // Anonymous / code-less visitors strictly see only the single retail rate!
+  // Only explicitly authorized accounts with 'all' rate access see the 3-rate breakdown.
+  // All staff (including Founders NA39 & CH33 who are set to Retail Only) and showroom visitors strictly see the single retail rate!
   const isAllRatesUser = Boolean(
-    state.isSuperAdmin || 
-    (state.hasAttachedCode && state.activeUser && state.activeUser.rateAccess === 'all')
+    state.hasAttachedCode && state.activeUser && state.activeUser.rateAccess === 'all'
   );
 
   grid.innerHTML = state.filteredCatalogs.map(cat => {
@@ -1558,7 +1557,9 @@ function renderPdpScreen() {
 
   const firm = FIRMS[state.activeFirm] || FIRMS.saurashtra;
   const user = state.activeUser || USER_PROFILES['NA39'];
-  const isAllRatesUser = user.rateAccess === 'all' || state.currentRole === 'all';
+  const isAllRatesUser = Boolean(
+    state.hasAttachedCode && state.activeUser && state.activeUser.rateAccess === 'all'
+  );
 
   // Breadcrumbs
   document.getElementById('pdpBreadcrumbCategory').textContent = cat.category;
@@ -1871,11 +1872,10 @@ function renderRelatedCatalogs() {
   }
   related = related.slice(0, 4);
 
-  // Only Founders / authorized executives with explicit all-rate access see the 3-rate matrix.
-  // Anonymous / code-less visitors strictly see only the single retail rate!
+  // Only explicitly authorized accounts with 'all' rate access see the 3-rate breakdown.
+  // All staff (including Founders NA39 & CH33 who are set to Retail Only) and showroom visitors strictly see the single retail rate!
   const isAllRatesUser = Boolean(
-    state.isSuperAdmin || 
-    (state.hasAttachedCode && state.activeUser && state.activeUser.rateAccess === 'all')
+    state.hasAttachedCode && state.activeUser && state.activeUser.rateAccess === 'all'
   );
 
   container.innerHTML = related.map(item => {
@@ -1945,7 +1945,9 @@ function copyPdpSpecs() {
   if (!cat) return;
   const firm = FIRMS[state.activeFirm] || FIRMS.saurashtra;
   const user = state.activeUser || USER_PROFILES['NA39'];
-  const isAllRatesUser = user.rateAccess === 'all' || state.currentRole === 'all';
+  const isAllRatesUser = Boolean(
+    state.hasAttachedCode && state.activeUser && state.activeUser.rateAccess === 'all'
+  );
 
   let priceText = `₹${cat.retailRate}/- (Catalog MRP)`;
   if (state.currentRole === 'wholesale') {

@@ -82,8 +82,9 @@ const DEFAULT_STAFF_PROFILES = [
     firm: 'saurashtra',
     firmName: 'Saurashtra Sarees',
     title: 'Founder',
-    hasWholesaleLink: true,
-    hasPrimeLink: true
+    rateAccess: 'retail',
+    hasWholesaleLink: false,
+    hasPrimeLink: false
   },
   {
     code: 'CH33',
@@ -96,8 +97,9 @@ const DEFAULT_STAFF_PROFILES = [
     firm: 'saurashtra',
     firmName: 'Saurashtra Sarees',
     title: 'Co-Founder',
-    hasWholesaleLink: true,
-    hasPrimeLink: true
+    rateAccess: 'retail',
+    hasWholesaleLink: false,
+    hasPrimeLink: false
   },
 
   // 2. Keya Fashion Representatives
@@ -407,7 +409,16 @@ class VellumDataAdapter {
   loadStaffProfiles() {
     try {
       const saved = localStorage.getItem(STORAGE_KEYS.STAFF_PROFILES);
-      if (saved) return JSON.parse(saved);
+      if (saved) {
+        const list = JSON.parse(saved);
+        // Ensure rateAccess strictly defaults to 'retail' (Retail Only) as set in Google Sheet
+        return list.map(s => ({
+          ...s,
+          rateAccess: (s.rateAccess && s.rateAccess.toLowerCase().includes('all')) ? 'all' : 'retail',
+          hasWholesaleLink: (s.rateAccess && s.rateAccess.toLowerCase().includes('all')) ? Boolean(s.hasWholesaleLink) : false,
+          hasPrimeLink: (s.rateAccess && s.rateAccess.toLowerCase().includes('all')) ? Boolean(s.hasPrimeLink) : false
+        }));
+      }
     } catch (e) {
       console.warn('Failed to parse staff profiles', e);
     }
