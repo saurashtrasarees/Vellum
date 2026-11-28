@@ -1425,9 +1425,16 @@ function showBrandLanding() {
   const screenProduct = document.getElementById('screenProduct');
   if (screenBrand) {
     screenBrand.classList.remove('hidden');
-    if (screenShowroom) screenShowroom.classList.add('hidden');
-    if (screenProduct) screenProduct.classList.add('hidden');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    screenBrand.style.setProperty('display', 'block', 'important');
+    if (screenShowroom) {
+      screenShowroom.classList.add('hidden');
+      screenShowroom.style.setProperty('display', 'none', 'important');
+    }
+    if (screenProduct) {
+      screenProduct.classList.add('hidden');
+      screenProduct.style.setProperty('display', 'none', 'important');
+    }
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
   } else if (screenShowroom) {
     showCatalogShowroom();
   }
@@ -1437,11 +1444,20 @@ function showCatalogShowroom() {
   const screenBrand = document.getElementById('screenBrandHome');
   const screenShowroom = document.getElementById('screenCatalogShowroom');
   const screenProduct = document.getElementById('screenProduct');
-  if (screenBrand) screenBrand.classList.add('hidden');
-  if (screenShowroom) screenShowroom.classList.remove('hidden');
-  if (screenProduct) screenProduct.classList.add('hidden');
+  if (screenBrand) {
+    screenBrand.classList.add('hidden');
+    screenBrand.style.setProperty('display', 'none', 'important');
+  }
+  if (screenProduct) {
+    screenProduct.classList.add('hidden');
+    screenProduct.style.setProperty('display', 'none', 'important');
+  }
+  if (screenShowroom) {
+    screenShowroom.classList.remove('hidden');
+    screenShowroom.style.setProperty('display', 'flex', 'important');
+  }
   applyFiltersAndRender();
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
   if (window.lucide) lucide.createIcons();
 }
 
@@ -1489,14 +1505,20 @@ function handleHashRoute() {
       state.activePdpShoot = state.currentShoot;
       state.activePdpTab = 'specs';
 
-      if (screenBrand) screenBrand.classList.add('hidden');
-      if (screenShowroom) screenShowroom.classList.add('hidden');
+      if (screenBrand) {
+        screenBrand.classList.add('hidden');
+        screenBrand.style.setProperty('display', 'none', 'important');
+      }
+      if (screenShowroom) {
+        screenShowroom.classList.add('hidden');
+        screenShowroom.style.setProperty('display', 'none', 'important');
+      }
       if (screenProduct) {
         screenProduct.classList.remove('hidden');
-        screenProduct.style.display = 'flex';
+        screenProduct.style.setProperty('display', 'flex', 'important');
       }
       renderPdpScreen();
-      window.scrollTo(0, 0);
+      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
       return;
     }
   }
@@ -1504,18 +1526,27 @@ function handleHashRoute() {
   // Default: Show either Showroom (on catalog.html) or Brand Home (on index.html)
   if (screenProduct) {
     screenProduct.classList.add('hidden');
-    screenProduct.style.display = 'none';
+    screenProduct.style.setProperty('display', 'none', 'important');
   }
   if (screenBrand) {
     if (state.hasAttachedCode) {
       screenBrand.classList.add('hidden');
-      if (screenShowroom) screenShowroom.classList.remove('hidden');
+      screenBrand.style.setProperty('display', 'none', 'important');
+      if (screenShowroom) {
+        screenShowroom.classList.remove('hidden');
+        screenShowroom.style.setProperty('display', 'flex', 'important');
+      }
     } else {
       screenBrand.classList.remove('hidden');
-      if (screenShowroom) screenShowroom.classList.add('hidden');
+      screenBrand.style.setProperty('display', 'block', 'important');
+      if (screenShowroom) {
+        screenShowroom.classList.add('hidden');
+        screenShowroom.style.setProperty('display', 'none', 'important');
+      }
     }
   } else if (screenShowroom) {
     screenShowroom.classList.remove('hidden');
+    screenShowroom.style.setProperty('display', 'flex', 'important');
   }
   state.activePdpCatalog = null;
   window.scrollTo(0, 0);

@@ -335,9 +335,25 @@ body {
   color: #8b1d40;
 }
 
-/* View Screen Transition */
+/* View Screen Transition & Dedicated Screen Specificity Isolation */
 .view-screen {
   animation: screenFadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+#screenCatalogShowroom.hidden,
+#screenProduct.hidden,
+#screenBrandHome.hidden,
+.view-screen.hidden {
+  display: none !important;
+}
+
+#screenCatalogShowroom:not(.hidden) {
+  display: flex !important;
+}
+
+#screenProduct:not(.hidden) {
+  display: flex !important;
+  min-height: 100vh;
 }
 
 @keyframes screenFadeIn {
@@ -629,7 +645,7 @@ p, span, li, label {
     border-radius: 1.25rem !important;
   }
 
-  /* 6. Executive Leadership Desks (Nayan Sir & Chetan Sir) */
+  /* 6. Executive Leadership Desks (Nayan Patel [Founder] & Chetan Patel [Co-Founder]) */
   .desk-btn {
     width: 100% !important;
     min-height: 44px !important;
