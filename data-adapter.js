@@ -73,7 +73,7 @@ const DEFAULT_STAFF_PROFILES = [
   // 1. Saurashtra Sarees Leadership & Direct Inquiries
   {
     code: 'NA39',
-    name: 'Nayan Patel [Founder & CEO]',
+    name: 'Nayan Patel [Founder]',
     shortName: 'Nayan Patel',
     letter: 'G',
     phone: '9879471039',
@@ -81,13 +81,13 @@ const DEFAULT_STAFF_PROFILES = [
     whatsapp: '919879471039',
     firm: 'saurashtra',
     firmName: 'Saurashtra Sarees',
-    title: 'Founder & CEO',
+    title: 'Founder',
     hasWholesaleLink: true,
     hasPrimeLink: true
   },
   {
     code: 'CH33',
-    name: 'Chetan Patel [Co-Founder & COO]',
+    name: 'Chetan Patel [Co-Founder]',
     shortName: 'Chetan Patel',
     letter: 'H',
     phone: '9913643433',
@@ -95,7 +95,7 @@ const DEFAULT_STAFF_PROFILES = [
     whatsapp: '919913643433',
     firm: 'saurashtra',
     firmName: 'Saurashtra Sarees',
-    title: 'Co-Founder & COO',
+    title: 'Co-Founder',
     hasWholesaleLink: true,
     hasPrimeLink: true
   },

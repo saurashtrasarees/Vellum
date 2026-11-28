@@ -17,6 +17,10 @@
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
   
+  <!-- PDF & Canvas Export Engine (Offline-First Vendor Libraries) -->
+  <script src="assets/vendor/jspdf.umd.min.js"></script>
+  <script src="assets/vendor/html2canvas.min.js"></script>
+  
   <!-- Vellum Data Engine (Master Profiles) -->
   <script src="data-adapter.js"></script>
   
@@ -82,11 +86,11 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
       
       <!-- Brand Logo & Firm Selector -->
-      <div class="flex items-center gap-3.5 cursor-pointer" onclick="navigateToHome()">
-        <img id="firmLogoImg" src="assets/saurashtra-sarees-logo.jpg" alt="Firm Logo" class="h-12 w-auto object-contain max-w-[140px] sm:max-w-[180px] transition-transform hover:scale-102">
-        <div class="hidden md:block border-l border-amber-300/80 pl-3">
-          <h1 id="headerFirmName" class="font-serif text-lg font-extrabold tracking-tight text-stone-900 leading-tight">Saurashtra Sarees</h1>
-          <p id="headerFirmTagline" class="text-[10px] uppercase tracking-widest text-amber-800 font-bold -mt-0.5">Wholesale Showroom</p>
+      <div class="flex items-center gap-2.5 sm:gap-3.5 cursor-pointer shrink-0" onclick="navigateToHome()">
+        <img id="firmLogoImg" src="assets/saurashtra-sarees-logo.jpg" alt="Firm Logo" class="h-10 sm:h-12 w-auto object-contain max-w-[110px] sm:max-w-[180px] transition-transform hover:scale-102">
+        <div class="flex flex-col border-l border-amber-300/80 pl-2 sm:pl-3">
+          <h1 id="headerFirmName" class="font-serif text-sm sm:text-lg font-extrabold tracking-tight text-stone-900 leading-tight">Saurashtra Sarees</h1>
+          <p id="headerFirmTagline" class="text-[9px] sm:text-[10px] uppercase tracking-wider sm:tracking-widest text-amber-800 font-bold -mt-0.5">Wholesale Showroom</p>
         </div>
       </div>
 
@@ -166,21 +170,15 @@
           </div>
         </div>
 
+        <!-- Order Selection Cart Button -->
+        <button id="headerCartBtn" onclick="toggleCartModal()" class="relative flex items-center gap-1.5 px-3 py-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white rounded-xl text-xs font-bold transition-all shadow-md shadow-amber-500/20 shrink-0">
+          <i data-lucide="shopping-bag" class="w-4 h-4"></i>
+          <span class="hidden sm:inline">Order Cart</span>
+          <span id="headerCartCountBadge" class="bg-white text-amber-950 font-black text-[10px] w-5 h-5 rounded-full flex items-center justify-center shadow-xs">0</span>
+        </button>
+
       </div>
 
-    </div>
-
-    <!-- Mobile Shoot Switcher -->
-    <div class="lg:hidden px-4 py-2 bg-stone-100/90 border-t border-stone-200 flex items-center justify-center gap-1.5">
-      <button onclick="setShootType('all')" id="mobileBtnAll" class="flex-1 py-1.5 rounded-lg text-xs font-bold bg-white text-stone-900 shadow-xs text-center">
-        🌟 All (132)
-      </button>
-      <button onclick="setShootType('model')" id="mobileBtnModel" class="flex-1 py-1.5 rounded-lg text-xs font-medium text-stone-600 hover:text-stone-900 text-center">
-        👗 Model (45)
-      </button>
-      <button onclick="setShootType('table')" id="mobileBtnTable" class="flex-1 py-1.5 rounded-lg text-xs font-medium text-stone-600 hover:text-stone-900 text-center">
-        🪑 Table (87)
-      </button>
     </div>
   </header>
 
@@ -189,8 +187,8 @@
   <!-- ====================================================================== -->
   <div id="screenCatalogShowroom" class="view-screen flex-1 flex flex-col">
     
-    <!-- Imperial Haute Couture Ethnic Wear Header -->
-    <section class="cloud-hero-wrap py-8 sm:py-12 px-4 sm:px-6 lg:px-8 border-b-2 border-amber-300/80 shadow-xs">
+    <!-- Imperial Haute Couture Ethnic Wear Header (Ultra Compact on Mobile) -->
+    <section class="cloud-hero-wrap py-3 sm:py-6 lg:py-8 px-4 sm:px-6 lg:px-8 border-b border-amber-300/60 shadow-xs">
       
       <!-- Floating Colorful Atmospheric Cloud Orbs -->
       <div class="cloud-orb cloud-orb-peach"></div>
@@ -198,31 +196,31 @@
       <div class="cloud-orb cloud-orb-rose"></div>
       <div class="cloud-orb cloud-orb-gold"></div>
 
-      <div class="relative max-w-4xl mx-auto text-center space-y-4 z-10">
+      <div class="relative max-w-4xl mx-auto text-center space-y-2 sm:space-y-3 z-10">
         
         <!-- Imperial Crest / Atelier Badge -->
-        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/95 backdrop-blur-md border border-amber-300 shadow-xs text-stone-800 text-xs font-black">
+        <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/95 backdrop-blur-md border border-amber-300 shadow-xs text-stone-800 text-[10px] sm:text-xs font-black">
           <span class="text-amber-600 text-sm">👑</span>
-          <span id="heroFirmTag" class="text-amber-950 font-black tracking-wide uppercase text-[11px]">Saurashtra Sarees Atelier</span>
+          <span id="heroFirmTag" class="text-amber-950 font-black tracking-wide uppercase text-[10px] sm:text-[11px]">Saurashtra Sarees Atelier</span>
           <span class="text-amber-300">•</span>
-          <span class="text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-300 font-bold text-[10px] flex items-center gap-1">
+          <span class="text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-300 font-bold text-[9px] sm:text-[10px] flex items-center gap-1">
             <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping"></span>
             Direct Surat Mill
           </span>
         </div>
 
         <!-- Imperial Main Title & Craft Subtitle -->
-        <div class="space-y-1.5">
-          <h1 class="font-serif text-2xl sm:text-4xl lg:text-5xl font-black text-stone-900 tracking-tight leading-tight">
+        <div>
+          <h1 class="font-serif text-lg sm:text-3xl lg:text-4xl font-black text-stone-900 tracking-tight leading-tight">
             Curated Imperial Saree Collections
           </h1>
-          <p class="text-xs sm:text-sm text-stone-700 max-w-2xl mx-auto leading-relaxed font-medium">
+          <p class="hidden sm:block text-xs sm:text-sm text-stone-700 max-w-2xl mx-auto leading-relaxed font-medium mt-1">
             Surat mill direct wholesale lookbook. Featuring haute couture model runway drapes and authentic flat-lay table weaves for boutiques, stockists, and global connoisseurs.
           </p>
         </div>
 
-        <!-- Trust & Mill Direct Assurances -->
-        <div class="pt-2 flex flex-wrap items-center justify-center gap-2 text-[11px] font-semibold text-stone-700">
+        <!-- Trust & Mill Direct Assurances (Hidden on Mobile to Maximize Viewing Area) -->
+        <div class="hidden sm:flex pt-1 flex-wrap items-center justify-center gap-2 text-[11px] font-semibold text-stone-700">
           <span class="px-3 py-1 rounded-full bg-white/90 border border-stone-200 shadow-xs">🏛️ Magob, Surat Direct Mill</span>
           <span class="px-3 py-1 rounded-full bg-white/90 border border-stone-200 shadow-xs">📦 100% Verified Handloom Lots</span>
           <span class="px-3 py-1 rounded-full bg-white/90 border border-stone-200 shadow-xs">📷 Model & Table Shoot HD Visuals</span>
@@ -231,21 +229,76 @@
       </div>
     </section>
 
-    <!-- Advanced Multi-Filter & Search Bar (With Multi-Select Fabric Dropdown) -->
-    <section class="sticky top-20 z-30 bg-white/95 backdrop-blur-md border-b border-amber-200/90 py-3 px-4 sm:px-6 lg:px-8 shadow-xs">
-      <div class="max-w-7xl mx-auto space-y-2.5">
+    <!-- Sleek & Space-Efficient Multi-Filter Bar -->
+    <section class="sticky top-16 sm:top-20 z-30 bg-white/95 backdrop-blur-md border-b border-amber-200/90 py-2 sm:py-3 px-3 sm:px-6 lg:px-8 shadow-xs">
+      <div class="max-w-7xl mx-auto space-y-2">
         
-        <!-- Controls Grid: Search, Shoot, Price, Multi-Select Fabric, Sort -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-2.5 items-center text-xs">
+        <!-- Mobile Main Compact Filter Row (Visible only on < lg screens: takes < 44px total!) -->
+        <div class="flex lg:hidden items-center gap-2 text-xs">
+          <!-- Search Input -->
+          <div class="relative flex-1">
+            <i data-lucide="search" class="w-3.5 h-3.5 text-stone-400 absolute left-2.5 top-1/2 -translate-y-1/2"></i>
+            <input 
+              type="text" 
+              id="mobileSearchInput" 
+              oninput="handleSearch(this.value)" 
+              placeholder="Search 132 collections..." 
+              class="w-full pl-8 pr-7 py-2 text-xs bg-stone-50 border border-stone-300 rounded-xl focus:outline-none focus:border-amber-600 font-medium text-stone-800"
+            >
+            <button id="btnClearSearchMobile" onclick="clearSearch()" class="hidden absolute right-2 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-700 p-0.5">
+              <i data-lucide="x" class="w-3 h-3"></i>
+            </button>
+          </div>
+
+          <!-- Filter Drawer Toggle Button -->
+          <button 
+            id="mobileFilterToggleBtn" 
+            type="button" 
+            onclick="toggleMobileFilterPanel()" 
+            class="flex items-center gap-1.5 px-3 py-2 bg-stone-100 hover:bg-stone-200 text-stone-800 border border-stone-300 rounded-xl font-bold shrink-0 transition-colors shadow-xs"
+          >
+            <i data-lucide="sliders-horizontal" class="w-3.5 h-3.5 text-amber-700"></i>
+            <span>Filters</span>
+            <span id="mobileActiveFilterBadge" class="hidden bg-amber-600 text-white text-[9px] px-1.5 py-0.2 rounded-full font-black">0</span>
+          </button>
+
+          <!-- Quick Mobile Cart Button -->
+          <button 
+            type="button" 
+            onclick="toggleCartModal()" 
+            class="flex items-center gap-1 px-3 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-xl font-bold shrink-0 transition-colors shadow-xs"
+            title="Open Order Cart"
+          >
+            <i data-lucide="shopping-bag" class="w-3.5 h-3.5"></i>
+            <span id="mobileCartCountBadge" class="font-black text-xs">0</span>
+          </button>
+        </div>
+
+        <!-- Horizontal Quick Pill Strip on Mobile (Shoot & Active Tags) -->
+        <div class="flex lg:hidden items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5 text-xs">
+          <button onclick="setShootType('all')" id="mobilePillAll" class="px-2.5 py-1 rounded-lg font-bold bg-amber-600 text-white shrink-0 shadow-xs text-[11px]">
+            🌟 All (132)
+          </button>
+          <button onclick="setShootType('model')" id="mobilePillModel" class="px-2.5 py-1 rounded-lg font-medium bg-stone-100 text-stone-700 border border-stone-200 shrink-0 text-[11px]">
+            👗 Model (45)
+          </button>
+          <button onclick="setShootType('table')" id="mobilePillTable" class="px-2.5 py-1 rounded-lg font-medium bg-stone-100 text-stone-700 border border-stone-200 shrink-0 text-[11px]">
+            🪑 Table (87)
+          </button>
+          <div id="mobileActiveTagsList" class="flex items-center gap-1 shrink-0"></div>
+        </div>
+
+        <!-- Filter Controls Wrap (Collapsible on Mobile; Permanent 12-Col Grid on Desktop) -->
+        <div id="filterControlsWrap" class="hidden lg:grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-2.5 items-center text-xs pt-2 lg:pt-0 border-t lg:border-t-0 border-stone-100">
           
-          <!-- Search Input (lg:col-span-3) -->
-          <div class="relative lg:col-span-3">
+          <!-- Search Input on Desktop (lg:col-span-3) -->
+          <div class="hidden lg:block relative lg:col-span-3">
             <i data-lucide="search" class="w-4 h-4 text-stone-400 absolute left-3 top-1/2 -translate-y-1/2"></i>
             <input 
               type="text" 
               id="searchInput" 
               oninput="handleSearch(this.value)" 
-              placeholder="Search catalog, color, design code..." 
+              placeholder="Search catalog, color, code..." 
               class="w-full pl-9 pr-8 py-2 text-xs bg-stone-50 border border-stone-300 rounded-xl focus:outline-none focus:border-amber-600 transition-all font-medium text-stone-800"
             >
             <button id="btnClearSearch" onclick="clearSearch()" class="hidden absolute right-2.5 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-700">
@@ -255,6 +308,7 @@
 
           <!-- Shoot Type Filter (lg:col-span-2) -->
           <div class="relative lg:col-span-2">
+            <label class="block lg:hidden text-[10px] font-bold text-stone-500 uppercase mb-1">Shoot Category</label>
             <select id="shootSelectFilter" onchange="setShootType(this.value)" class="w-full bg-stone-50 border border-stone-300 rounded-xl px-2.5 py-2 text-xs font-bold text-stone-800 focus:outline-none focus:border-amber-600">
               <option value="all">🌟 All Shoots (132)</option>
               <option value="model">👗 Model Shoot (45)</option>
@@ -264,6 +318,7 @@
 
           <!-- Price Range Filter: =<499, 500-999, 1000-1499, 1500-1999, 2000=< (lg:col-span-2) -->
           <div class="relative lg:col-span-2">
+            <label class="block lg:hidden text-[10px] font-bold text-stone-500 uppercase mb-1">Price Range</label>
             <select id="priceRangeFilter" onchange="setPriceRange(this.value)" class="w-full bg-stone-50 border border-stone-300 rounded-xl px-2.5 py-2 text-xs font-bold text-amber-900 focus:outline-none focus:border-amber-600">
               <option value="all">💰 All Price Ranges</option>
               <option value="under500">≤ ₹499 (Budget)</option>
@@ -276,6 +331,7 @@
 
           <!-- MULTI-SELECT FABRIC CATEGORY DROPDOWN (lg:col-span-3) -->
           <div id="fabricDropdownContainer" class="relative lg:col-span-3">
+            <label class="block lg:hidden text-[10px] font-bold text-stone-500 uppercase mb-1">Fabric & Weave</label>
             <button 
               id="fabricDropdownBtn" 
               type="button" 
@@ -333,6 +389,7 @@
 
           <!-- Sort Select (lg:col-span-2) -->
           <div class="relative lg:col-span-2">
+            <label class="block lg:hidden text-[10px] font-bold text-stone-500 uppercase mb-1">Sort By</label>
             <select id="sortSelect" onchange="handleSort(this.value)" class="w-full bg-stone-50 border border-stone-300 rounded-xl px-2.5 py-2 text-xs font-bold text-stone-700 focus:outline-none focus:border-amber-600">
               <option value="newest">Featured / Newest</option>
               <option value="price-asc">Price: Low to High</option>
@@ -341,10 +398,16 @@
             </select>
           </div>
 
+          <!-- Mobile Close & Reset Actions inside expanded panel -->
+          <div class="lg:hidden col-span-1 sm:col-span-2 flex items-center gap-2 pt-2 border-t border-stone-200">
+            <button type="button" onclick="resetFilters()" class="flex-1 py-2 rounded-xl bg-stone-100 hover:bg-stone-200 text-stone-700 font-bold text-xs transition-colors">Reset Filters</button>
+            <button type="button" onclick="toggleMobileFilterPanel()" class="flex-1 py-2 rounded-xl bg-[#8b1d40] hover:bg-[#721533] text-white font-bold text-xs transition-colors">Apply & Close</button>
+          </div>
+
         </div>
 
-        <!-- Active Filters Bar & Live Count Status -->
-        <div class="flex flex-wrap items-center justify-between gap-2 pt-1 border-t border-stone-100 text-xs">
+        <!-- Active Filters Bar & Live Count Status (Desktop) -->
+        <div class="hidden lg:flex flex-wrap items-center justify-between gap-2 pt-1 border-t border-stone-100 text-xs">
           <div class="flex items-center gap-2">
             <span id="catalogCountLabel" class="font-extrabold text-stone-800">Showing 132 Collections (45 Model • 87 Table)</span>
             <div id="activeFilterTagsContainer" class="flex flex-wrap items-center gap-1.5">
@@ -357,6 +420,9 @@
             <span>Reset All Filters</span>
           </button>
         </div>
+
+      </div>
+    </section>
 
       </div>
     </section>
@@ -444,6 +510,7 @@
               referrerpolicy="no-referrer" 
               alt="Saree View" 
               class="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-108"
+              onerror="this.onerror=null; this.src='assets/saurashtra-sarees-logo.jpg';"
             >
 
             <!-- Floating Video Button -->
@@ -744,14 +811,20 @@
               </a>
             </div>
 
-            <!-- 5. Primary 1-Click WhatsApp Booking & Social Copy -->
+            <!-- 5. Add to Cart & Primary 1-Click WhatsApp Booking -->
             <div class="space-y-2.5 pt-1">
-              <button id="pdpWhatsAppBtn" onclick="sendPdpWhatsApp()" class="w-full py-4 px-5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm flex items-center justify-center gap-2.5 shadow-xl shadow-emerald-600/20 transition-all hover:scale-[1.01]">
+              <!-- Add to Order Selection Cart Button -->
+              <button id="pdpAddToCartBtn" onclick="addCurrentPdpToCart()" class="w-full py-4 px-5 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-bold text-sm flex items-center justify-center gap-2.5 shadow-xl shadow-amber-500/25 transition-all hover:scale-[1.01]">
+                <i data-lucide="shopping-bag" class="w-5 h-5"></i>
+                <span id="pdpAddToCartBtnText">🛍️ Add Selected Saree to Order Cart</span>
+              </button>
+
+              <button id="pdpWhatsAppBtn" onclick="sendPdpWhatsApp()" class="w-full py-3.5 px-5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm flex items-center justify-center gap-2.5 shadow-md shadow-emerald-600/20 transition-all hover:scale-[1.01]">
                 <i data-lucide="message-circle" class="w-5 h-5 fill-current"></i>
                 <span id="pdpWhatsAppBtnText">Inquire & Order via WhatsApp</span>
               </button>
 
-              <button onclick="copyPdpSpecs()" class="w-full py-3 px-4 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-semibold text-xs flex items-center justify-center gap-2 transition-all">
+              <button onclick="copyPdpSpecs()" class="w-full py-2.5 px-4 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-semibold text-xs flex items-center justify-center gap-2 transition-all">
                 <i data-lucide="copy" class="w-3.5 h-3.5 text-slate-500"></i>
                 <span>Copy Saree Details for WhatsApp / Telegram</span>
               </button>
@@ -785,18 +858,19 @@
     </main>
 
     <!-- Mobile Sticky Bottom Action Bar (100% Light Luxury Glassmorphism) -->
-    <div id="pdpMobileStickyBar" class="lg:hidden mobile-sticky-action-bar flex items-center justify-between gap-3">
+    <div id="pdpMobileStickyBar" class="lg:hidden mobile-sticky-action-bar flex items-center justify-between gap-2.5">
       <div class="flex flex-col">
-        <span class="text-[9px] uppercase tracking-wider text-stone-500 font-extrabold">Catalog Rate</span>
+        <span class="text-[9px] uppercase tracking-wider text-stone-500 font-extrabold">Price Rate</span>
         <span id="pdpMobilePrice" class="font-price text-xl font-black text-stone-900 leading-tight">₹1,849</span>
       </div>
-      <div class="flex items-center gap-2 flex-1 justify-end">
-        <a id="pdpMobileCallBtn" href="tel:+919879471039" class="p-2.5 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 flex items-center justify-center shadow-xs">
-          <i data-lucide="phone" class="w-4 h-4"></i>
-        </a>
-        <button onclick="sendPdpWhatsApp()" class="py-2.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-md shadow-emerald-600/25">
+      <div class="flex items-center gap-1.5 flex-1 justify-end">
+        <button onclick="addCurrentPdpToCart()" class="py-2.5 px-3 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs flex items-center justify-center gap-1 shadow-md shadow-amber-500/20">
+          <i data-lucide="shopping-bag" class="w-4 h-4"></i>
+          <span>+ Cart</span>
+        </button>
+        <button onclick="sendPdpWhatsApp()" class="py-2.5 px-3.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-md shadow-emerald-600/25">
           <i data-lucide="message-circle" class="w-4 h-4 fill-current"></i>
-          <span id="pdpMobileWhatsAppText">Order on WhatsApp</span>
+          <span id="pdpMobileWhatsAppText">Order</span>
         </button>
       </div>
     </div>
@@ -834,6 +908,240 @@
         <button onclick="closeInfoModal()" class="px-4 py-2 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs transition-all shadow-xs">
           Close Window
         </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ====================================================================== -->
+  <!-- MODAL: B2B WHOLESALE SELECTION CART & LUXURY ORDER PDF GENERATOR       -->
+  <!-- ====================================================================== -->
+  <div id="orderCartModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-stone-950/60 backdrop-blur-md overflow-y-auto animate-fadeIn">
+    <div class="relative w-full max-w-2xl bg-white border-2 border-amber-300 rounded-3xl overflow-hidden shadow-2xl my-4 text-stone-800 flex flex-col max-h-[92vh]">
+      
+      <!-- Cart Header -->
+      <div class="p-4 sm:p-5 border-b border-amber-200/90 flex items-center justify-between bg-gradient-to-r from-amber-50 via-white to-orange-50 shrink-0">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-amber-500 to-amber-700 text-white flex items-center justify-center shadow-md shadow-amber-500/20">
+            <i data-lucide="shopping-bag" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h3 class="font-serif text-lg sm:text-xl font-bold text-stone-900 flex items-center gap-2">
+              <span>B2B Wholesale Order Cart</span>
+              <span id="cartCountBadgeModal" class="text-xs bg-amber-100 text-amber-950 font-sans px-2 py-0.5 rounded-full font-bold border border-amber-300">0 Items</span>
+            </h3>
+            <p id="cartFirmSubhead" class="text-[11px] text-amber-900/80 font-medium">Saurashtra Sarees • Surat Mill Direct Wholesale</p>
+          </div>
+        </div>
+
+        <button onclick="toggleCartModal(false)" class="w-8 h-8 rounded-full bg-stone-100 hover:bg-stone-200 flex items-center justify-center text-stone-600 transition-colors">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <!-- Dedicated Sales Desk Banner in Cart -->
+      <div class="px-4 py-2.5 bg-amber-50/80 border-b border-amber-200/70 flex items-center justify-between text-xs shrink-0">
+        <div class="flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span class="text-stone-600 font-medium">Assigned Representative:</span>
+          <strong id="cartAssignedStaffName" class="text-stone-900 font-bold">Nayan Patel [Founder]</strong>
+        </div>
+        <a id="cartAssignedStaffPhoneLink" href="tel:+919879471039" class="text-amber-800 font-bold hover:underline flex items-center gap-1 font-mono text-[11px]">
+          <i data-lucide="phone" class="w-3 h-3 text-amber-600"></i>
+          <span id="cartAssignedStaffPhoneText">+91 98794 71039</span>
+        </a>
+      </div>
+
+      <!-- Scrollable Cart Content -->
+      <div class="p-4 sm:p-6 overflow-y-auto space-y-4 flex-1">
+        
+        <!-- Cart Items List Container -->
+        <div id="cartItemsContainer" class="space-y-3">
+          <!-- Rendered dynamically by app.js -->
+        </div>
+
+        <!-- Empty Cart Notice -->
+        <div id="cartEmptyState" class="hidden text-center py-12 space-y-3">
+          <div class="w-16 h-16 mx-auto rounded-full bg-amber-50 border border-amber-200 flex items-center justify-center text-amber-700">
+            <i data-lucide="shopping-bag" class="w-7 h-7"></i>
+          </div>
+          <h4 class="font-serif text-lg font-bold text-stone-800">Your Order Cart is Empty</h4>
+          <p class="text-xs text-stone-500 max-w-sm mx-auto">Browse our 132 curated collections, pick your favorite saree colors, and tap "Add to Order Cart".</p>
+          <button onclick="toggleCartModal(false)" class="px-4 py-2 bg-[#8b1d40] text-white rounded-xl text-xs font-bold hover:bg-[#721533] transition-colors">
+            Browse Saree Lookbook
+          </button>
+        </div>
+
+        <!-- Order Summary & Buyer Input Details (Shown when cart has items) -->
+        <div id="cartOrderDetailsBox" class="space-y-4 pt-3 border-t border-stone-200">
+          
+          <!-- Pure Price Summary (NO GST, NO Extra Charges) -->
+          <div class="p-4 rounded-2xl bg-amber-50/70 border border-amber-200/90 space-y-2">
+            <div class="flex items-center justify-between text-xs text-stone-600">
+              <span>Total Saree Quantity:</span>
+              <strong id="cartSummaryTotalQty" class="font-mono text-stone-900 font-bold text-sm">0 Sarees</strong>
+            </div>
+            <div class="flex items-baseline justify-between pt-1 border-t border-amber-200/80">
+              <div>
+                <span class="text-xs font-bold text-stone-900 uppercase tracking-wide">Total Commercial Amount:</span>
+                <p class="text-[10px] text-amber-800/80 font-bold mt-0.5">Strict Direct Mill Commercial Pricing • NO GST & NO Extra Charges Included</p>
+              </div>
+              <span id="cartSummaryTotalPrice" class="font-price text-2xl font-black text-stone-900">₹0</span>
+            </div>
+          </div>
+
+          <!-- Buyer Information (Optional, reflected in Order PDF and WhatsApp) -->
+          <div class="space-y-2">
+            <label class="block text-[11px] font-bold text-stone-700 uppercase">Buyer & Boutique Information (Optional for PDF & Dispatch)</label>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+              <input 
+                type="text" 
+                id="cartBuyerName" 
+                placeholder="Boutique / Buyer Name" 
+                class="px-3 py-2 bg-stone-50 border border-stone-300 rounded-xl focus:outline-none focus:border-amber-600 font-medium text-stone-800"
+              >
+              <input 
+                type="text" 
+                id="cartBuyerCity" 
+                placeholder="City & State (e.g. Jaipur, Surat)" 
+                class="px-3 py-2 bg-stone-50 border border-stone-300 rounded-xl focus:outline-none focus:border-amber-600 font-medium text-stone-800"
+              >
+            </div>
+            <textarea 
+              id="cartBuyerNotes" 
+              rows="1" 
+              placeholder="Order notes / specific packaging instructions (optional)..." 
+              class="w-full px-3 py-2 bg-stone-50 border border-stone-300 rounded-xl text-xs focus:outline-none focus:border-amber-600 text-stone-800"
+            ></textarea>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- Cart Action Footer -->
+      <div id="cartModalFooter" class="p-4 sm:p-5 bg-stone-50 border-t border-amber-200/90 flex flex-col sm:flex-row items-center justify-between gap-3 shrink-0">
+        <button onclick="clearCart()" class="text-xs text-rose-700 hover:text-rose-900 font-bold hover:underline flex items-center gap-1">
+          <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+          <span>Clear Cart</span>
+        </button>
+
+        <div class="flex items-center gap-2.5 w-full sm:w-auto">
+          <!-- 1. Download PDF Button -->
+          <button 
+            type="button" 
+            onclick="downloadOrderPdf()" 
+            id="btnDownloadOrderPdf" 
+            class="flex-1 sm:flex-none px-4 py-2.5 rounded-xl bg-white hover:bg-stone-100 text-stone-800 border-2 border-amber-300 font-bold text-xs flex items-center justify-center gap-2 shadow-xs transition-all"
+          >
+            <i data-lucide="file-down" class="w-4 h-4 text-amber-700"></i>
+            <span>Download Order PDF</span>
+          </button>
+
+          <!-- 2. Send Order to WhatsApp -->
+          <button 
+            type="button" 
+            onclick="sendOrderWhatsApp()" 
+            class="flex-1 sm:flex-none px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-md shadow-emerald-600/25 transition-all"
+          >
+            <i data-lucide="send" class="w-4 h-4"></i>
+            <span>Send Order via WhatsApp</span>
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Hidden Luxury Order PDF Template (For High-Fidelity Canvas/PDF Export) -->
+  <div id="orderPdfContainerWrapper" class="fixed left-[-9999px] top-[-9999px] z-[-1] pointer-events-none opacity-0">
+    <div id="orderPdfPrintTemplate" style="width: 794px; min-height: 1123px; background: #ffffff; color: #1c1917; font-family: 'Plus Jakarta Sans', system-ui, sans-serif; padding: 40px; box-sizing: border-box; border: 4px solid #8b1d40; position: relative;">
+      
+      <!-- Regal Gold Accent Border Header -->
+      <div style="border-bottom: 3px double #d4af37; padding-bottom: 20px; display: flex; justify-content: space-between; align-items: flex-start;">
+        <div>
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <div style="background: #8b1d40; color: #ffffff; width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 900; border: 2px solid #d4af37;">🥻</div>
+            <div>
+              <h1 id="pdfHeaderFirmName" style="font-family: 'Playfair Display', Georgia, serif; font-size: 26px; font-weight: 900; color: #8b1d40; margin: 0; line-height: 1.1;">Saurashtra Sarees</h1>
+              <p id="pdfHeaderFirmTagline" style="font-size: 11px; font-weight: 800; color: #d4af37; text-transform: uppercase; letter-spacing: 2px; margin: 2px 0 0 0;">Make Occasion Better • Surat Mill Direct Wholesale</p>
+            </div>
+          </div>
+          <p style="font-size: 10px; color: #57534e; margin: 8px 0 0 0; line-height: 1.4;">
+            A-1001, Rajhans Fabrizo, Near Polaris Textile City, Magob, Surat, Gujarat – 395010<br>
+            Mill Inquiries: +91 98794 71039 / +91 99136 43433 • saurashtrasarees@gmail.com
+          </p>
+        </div>
+
+        <div style="text-align: right;">
+          <span style="background: #8b1d40; color: #ffffff; font-size: 11px; font-weight: 900; padding: 4px 12px; border-radius: 20px; border: 1px solid #d4af37; display: inline-block;">OFFICIAL WHOLESALE ORDER</span>
+          <p id="pdfOrderId" style="font-family: monospace; font-size: 12px; font-weight: 800; color: #1c1917; margin: 8px 0 2px 0;">ORD-20261128-001</p>
+          <p id="pdfOrderDate" style="font-size: 10px; color: #78716c; margin: 0;">Date: 28 Nov 2026</p>
+        </div>
+      </div>
+
+      <!-- Buyer & Desk Metadata Cards -->
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 20px 0;">
+        <div style="background: #fdfbf7; border: 1px solid #fef3c7; border-radius: 12px; padding: 12px;">
+          <p style="font-size: 9px; font-weight: 800; text-transform: uppercase; color: #8b1d40; margin: 0 0 4px 0; letter-spacing: 1px;">CUSTOMER / BOUTIQUE DETAILS</p>
+          <h4 id="pdfBuyerName" style="font-size: 14px; font-weight: 800; color: #1c1917; margin: 0;">Valued Trade Partner</h4>
+          <p id="pdfBuyerCity" style="font-size: 11px; color: #57534e; margin: 2px 0 0 0;">Destination: Surat, India</p>
+          <p id="pdfBuyerNotes" style="font-size: 10px; color: #78716c; margin: 4px 0 0 0; font-style: italic;"></p>
+        </div>
+
+        <div style="background: #fdfbf7; border: 1px solid #fef3c7; border-radius: 12px; padding: 12px;">
+          <p style="font-size: 9px; font-weight: 800; text-transform: uppercase; color: #8b1d40; margin: 0 0 4px 0; letter-spacing: 1px;">ASSIGNED MANAGEMENT DESK</p>
+          <h4 id="pdfStaffName" style="font-size: 14px; font-weight: 800; color: #1c1917; margin: 0;">Nayan Patel [Founder]</h4>
+          <p id="pdfStaffPhone" style="font-size: 11px; font-family: monospace; font-weight: 700; color: #059669; margin: 2px 0 0 0;">Direct: +91 98794 71039</p>
+          <p style="font-size: 10px; color: #78716c; margin: 2px 0 0 0;">Mill Executive Desk • Direct Factory Allocation</p>
+        </div>
+      </div>
+
+      <!-- Itemized Saree Order Table -->
+      <table style="width: 100%; border-collapse: collapse; font-size: 11px; margin-top: 10px;">
+        <thead>
+          <tr style="background: #8b1d40; color: #ffffff; text-align: left;">
+            <th style="padding: 10px 8px; border: 1px solid #701633; width: 35px; text-align: center;">#</th>
+            <th style="padding: 10px 8px; border: 1px solid #701633; width: 55px; text-align: center;">Photo</th>
+            <th style="padding: 10px 8px; border: 1px solid #701633;">Catalog Name & SKU</th>
+            <th style="padding: 10px 8px; border: 1px solid #701633;">Colorway / Shade</th>
+            <th style="padding: 10px 8px; border: 1px solid #701633; text-align: center; width: 50px;">Qty</th>
+            <th style="padding: 10px 8px; border: 1px solid #701633; text-align: right; width: 90px;">Pure Rate (₹)</th>
+            <th style="padding: 10px 8px; border: 1px solid #701633; text-align: right; width: 100px;">Amount (₹)</th>
+          </tr>
+        </thead>
+        <tbody id="pdfTableBody">
+          <!-- Dynamically populated by JS with exact photo, sku, color, and pure rate -->
+        </tbody>
+        <tfoot>
+          <tr style="background: #fdfbf7; border-top: 2px solid #8b1d40;">
+            <td colspan="4" style="padding: 12px 8px; font-weight: 800; text-align: right; font-size: 12px; color: #8b1d40;">
+              TOTAL ORDER AMOUNT (PURE COMMERCIAL VALUE):
+            </td>
+            <td id="pdfTotalQty" style="padding: 12px 8px; font-weight: 800; text-align: center; font-size: 12px; font-family: monospace;">0</td>
+            <td style="padding: 12px 8px; font-size: 10px; color: #78716c; text-align: right;">(No Extra Taxes)</td>
+            <td id="pdfTotalAmount" style="padding: 12px 8px; font-weight: 900; text-align: right; font-size: 16px; color: #1c1917; font-family: 'Plus Jakarta Sans', sans-serif;">₹0</td>
+          </tr>
+        </tfoot>
+      </table>
+
+      <!-- Strict Mill Direct Assurance & No-Tax Notice -->
+      <div style="margin-top: 24px; padding: 12px 16px; background: #fefce8; border: 1px solid #fef08a; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; font-size: 10px; color: #713f12;">
+        <span><strong>Pricing Policy:</strong> Pure mill direct manufacturing rate. Strictly NO GST or extra handling charges included.</span>
+        <span><strong>Dispatch Hub:</strong> Magob Mill Facility (24–48h Dispatch)</span>
+      </div>
+
+      <!-- Executive Footer & Signature Blocks -->
+      <div style="position: absolute; bottom: 35px; left: 40px; right: 40px; border-top: 2px solid #d4af37; padding-top: 15px; display: flex; justify-content: space-between; align-items: flex-end; font-size: 10px; color: #57534e;">
+        <div>
+          <strong style="color: #8b1d40; font-size: 11px;">Saurashtra Sarees • Surat Mill Direct</strong><br>
+          Nayan Patel [Founder] • Chetan Patel [Co-Founder]<br>
+          A-1001, Rajhans Fabrizo, Near Polaris Textile City, Magob, Surat – 395010
+        </div>
+        <div style="text-align: right;">
+          <p style="margin: 0 0 20px 0; color: #a8a29e;">Authorized Mill Allocation Stamp</p>
+          <p style="font-size: 9px; color: #78716c; margin: 0;">Generated digitally via Vellum Engine</p>
+        </div>
       </div>
 
     </div>
@@ -922,8 +1230,8 @@
             <i data-lucide="phone-call" class="w-3.5 h-3.5 text-amber-400"></i> Direct Management Desks
           </h6>
           <div class="space-y-1.5">
-            <p>Nayan Patel <span class="text-amber-300 font-bold text-xs">[Founder & CEO]</span>: <a href="tel:+919879471039" class="text-white hover:text-amber-200 font-bold ml-1 transition-colors">+91 98794 71039</a></p>
-            <p>Chetan Patel <span class="text-amber-300 font-bold text-xs">[Co-Founder & COO]</span>: <a href="tel:+919913643433" class="text-white hover:text-amber-200 font-bold ml-1 transition-colors">+91 99136 43433</a></p>
+            <p>Nayan Patel <span class="text-amber-300 font-bold text-xs">[Founder]</span>: <a href="tel:+919879471039" class="text-white hover:text-amber-200 font-bold ml-1 transition-colors">+91 98794 71039</a></p>
+            <p>Chetan Patel <span class="text-amber-300 font-bold text-xs">[Co-Founder]</span>: <a href="tel:+919913643433" class="text-white hover:text-amber-200 font-bold ml-1 transition-colors">+91 99136 43433</a></p>
           </div>
           <div class="pt-2 border-t border-amber-400/30">
             <span class="text-amber-200/80 block text-[11px]">Official Firm Email:</span>

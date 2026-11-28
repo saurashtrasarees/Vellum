@@ -126,10 +126,10 @@ const USER_PROFILES = {
   'NA39': {
     code: 'NA39',
     slug: 'nayan',
-    name: 'Nayan Patel [Founder & CEO]',
+    name: 'Nayan Patel [Founder]',
     shortName: 'Nayan Patel',
     initials: 'NP',
-    title: 'Founder & CEO',
+    title: 'Founder',
     phone: '9879471039',
     whatsapp: '919879471039',
     displayPhone: '+91 98794 71039',
@@ -139,10 +139,10 @@ const USER_PROFILES = {
   'CH33': {
     code: 'CH33',
     slug: 'chetan',
-    name: 'Chetan Patel [Co-Founder & COO]',
+    name: 'Chetan Patel [Co-Founder]',
     shortName: 'Chetan Patel',
     initials: 'CP',
-    title: 'Co-Founder & COO',
+    title: 'Co-Founder',
     phone: '9913643433',
     whatsapp: '919913643433',
     displayPhone: '+91 99136 43433',
@@ -178,7 +178,8 @@ const state = {
   activePdpDesignIndex: 0,
   activePdpImageIndex: 0,
   activePdpShoot: 'all',
-  activePdpTab: 'specs'
+  activePdpTab: 'specs',
+  cart: []
 };
 
 // --------------------------------------------------------------------------
@@ -240,6 +241,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   resolveUrlContext();
+  initCart();
   await loadCatalogData();
   renderCategoryPills();
   applyFiltersAndRender();
@@ -354,12 +356,20 @@ function applyFirmTheme() {
   if (footerLogo) footerLogo.src = firm.logo;
 
   // Header & Announcement Text
-  document.getElementById('headerFirmName').textContent = firm.name;
-  document.getElementById('announcementFirmText').textContent = firm.name;
-  document.getElementById('announcementTagline').textContent = firm.tagline;
-  document.getElementById('footerFirmName').textContent = firm.name;
-  document.getElementById('footerFirmTagline').textContent = firm.tagline;
-  document.getElementById('heroFirmTag').textContent = `${firm.name} Atelier`;
+  const headerFirmNameEl = document.getElementById('headerFirmName');
+  if (headerFirmNameEl) headerFirmNameEl.textContent = firm.name;
+  const headerTaglineEl = document.getElementById('headerFirmTagline');
+  if (headerTaglineEl) headerTaglineEl.textContent = firm.id === 'keya' ? 'Curated Catalogues' : 'Wholesale Showroom';
+  const annFirmTextEl = document.getElementById('announcementFirmText');
+  if (annFirmTextEl) annFirmTextEl.textContent = firm.name;
+  const annTaglineEl = document.getElementById('announcementTagline');
+  if (annTaglineEl) annTaglineEl.textContent = firm.tagline;
+  const footFirmNameEl = document.getElementById('footerFirmName');
+  if (footFirmNameEl) footFirmNameEl.textContent = firm.name;
+  const footTaglineEl = document.getElementById('footerFirmTagline');
+  if (footTaglineEl) footTaglineEl.textContent = firm.tagline;
+  const heroFirmTagEl = document.getElementById('heroFirmTag');
+  if (heroFirmTagEl) heroFirmTagEl.textContent = `${firm.name} Atelier`;
   
   const pillLabel = document.getElementById('currentFirmPillLabel');
   if (pillLabel) pillLabel.textContent = `Firm: ${firm.name.split(' ')[0]}`;
@@ -559,6 +569,23 @@ function updateShootUI() {
     mBtnAll.className = (state.currentShoot === 'all') ? mActiveClass : mInactiveClass;
     mBtnModel.className = (state.currentShoot === 'model') ? mActiveClass : mInactiveClass;
     mBtnTable.className = (state.currentShoot === 'table') ? mActiveClass : mInactiveClass;
+  }
+
+  const pBtnAll = document.getElementById('mobilePillAll');
+  const pBtnModel = document.getElementById('mobilePillModel');
+  const pBtnTable = document.getElementById('mobilePillTable');
+  const pillActiveClass = 'px-2.5 py-1 rounded-lg font-bold bg-amber-600 text-white shrink-0 shadow-xs text-[11px]';
+  const pillInactiveClass = 'px-2.5 py-1 rounded-lg font-medium bg-stone-100 text-stone-700 border border-stone-200 shrink-0 text-[11px]';
+
+  if (pBtnAll && pBtnModel && pBtnTable) {
+    pBtnAll.className = (state.currentShoot === 'all') ? pillActiveClass : pillInactiveClass;
+    pBtnModel.className = (state.currentShoot === 'model') ? pillActiveClass : pillInactiveClass;
+    pBtnTable.className = (state.currentShoot === 'table') ? pillActiveClass : pillInactiveClass;
+  }
+
+  const shootSelect = document.getElementById('shootSelectFilter');
+  if (shootSelect && shootSelect.value !== state.currentShoot) {
+    shootSelect.value = state.currentShoot;
   }
 
   if (badgeShoot) {
@@ -904,34 +931,63 @@ function setPriceRange(range) {
 
 function handleSearch(val) {
   state.searchQuery = val.trim().toLowerCase();
+  
+  const dInput = document.getElementById('searchInput');
+  const mInput = document.getElementById('mobileSearchInput');
+  if (dInput && dInput.value !== val) dInput.value = val;
+  if (mInput && mInput.value !== val) mInput.value = val;
+
   const clearBtn = document.getElementById('btnClearSearch');
-  if (clearBtn) {
-    if (val) clearBtn.classList.remove('hidden');
-    else clearBtn.classList.add('hidden');
-  }
+  const clearBtnMobile = document.getElementById('btnClearSearchMobile');
+  if (clearBtn) clearBtn.classList.toggle('hidden', !val);
+  if (clearBtnMobile) clearBtnMobile.classList.toggle('hidden', !val);
+
   applyFiltersAndRender();
 }
 
 function clearSearch() {
-  const input = document.getElementById('searchInput');
-  if (input) input.value = '';
+  const dInput = document.getElementById('searchInput');
+  const mInput = document.getElementById('mobileSearchInput');
+  if (dInput) dInput.value = '';
+  if (mInput) mInput.value = '';
   handleSearch('');
 }
 
 function handleSort(sortVal) {
   state.sortBy = sortVal;
+  const dSort = document.getElementById('sortSelect');
+  if (dSort && dSort.value !== sortVal) dSort.value = sortVal;
   applyFiltersAndRender();
 }
 
 function resetFilters() {
   state.selectedCategory = 'all';
+  state.selectedCategories = [];
   state.selectedPriceRange = 'all';
   state.currentShoot = 'all';
   state.searchQuery = '';
   state.sortBy = 'newest';
 
-  const searchInput = document.getElementById('searchInput');
-  if (searchInput) searchInput.value = '';
+  const dInput = document.getElementById('searchInput');
+  const mInput = document.getElementById('mobileSearchInput');
+  if (dInput) dInput.value = '';
+  if (mInput) mInput.value = '';
+
+  const priceSelect = document.getElementById('priceRangeFilter');
+  if (priceSelect) priceSelect.value = 'all';
+
+  const shootSelect = document.getElementById('shootSelectFilter');
+  if (shootSelect) shootSelect.value = 'all';
+
+  const sortSelect = document.getElementById('sortSelect');
+  if (sortSelect) sortSelect.value = 'newest';
+
+  const fabricBtnLabel = document.getElementById('fabricDropdownBtnLabel');
+  if (fabricBtnLabel) fabricBtnLabel.textContent = `All Fabrics (${state.catalogs.length})`;
+
+  updateShootUI();
+  applyFiltersAndRender();
+}
 
   const shootSelect = document.getElementById('shootSelectFilter');
   if (shootSelect) shootSelect.value = 'all';
@@ -1266,6 +1322,14 @@ function renderCatalogGrid() {
               >
                 <span>View Details</span>
                 <i data-lucide="arrow-right" class="w-3 h-3 sm:w-3.5 sm:h-3.5"></i>
+              </button>
+
+              <button 
+                onclick="addCatalogCardToCart('${cat.id}')" 
+                title="Add Saree to Order Cart" 
+                class="p-1.5 sm:p-2 rounded-lg sm:rounded-xl bg-amber-50 hover:bg-amber-100 border border-amber-300 text-amber-800 transition-all flex items-center justify-center shrink-0"
+              >
+                <i data-lucide="shopping-bag" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i>
               </button>
 
               <button 
@@ -1688,6 +1752,10 @@ function updatePdpGallery() {
 
   const heroImg = document.getElementById('pdpHeroImage');
   if (heroImg && currentImgUrl) {
+    heroImg.onerror = function() {
+      this.onerror = null;
+      this.src = cat.heroImageUrl || 'assets/saurashtra-sarees-logo.jpg';
+    };
     heroImg.src = currentImgUrl;
   }
 
@@ -2308,5 +2376,399 @@ function openInfoPage(pageKey) {
 function closeInfoModal() {
   const modal = document.getElementById('infoModal');
   if (modal) modal.classList.add('hidden');
+}
+
+// ==============================================================================
+// 10. B2B SELECTION CART & LUXURY ORDER PDF ENGINE (Pure Rates • 0 GST)
+// ==============================================================================
+
+function initCart() {
+  try {
+    const saved = localStorage.getItem('vellum_order_cart');
+    state.cart = saved ? JSON.parse(saved) : [];
+  } catch (e) {
+    state.cart = [];
+  }
+  updateCartBadges();
+}
+
+function saveCart() {
+  try {
+    localStorage.setItem('vellum_order_cart', JSON.stringify(state.cart));
+  } catch (e) {}
+  updateCartBadges();
+}
+
+function updateCartBadges() {
+  const count = state.cart.reduce((sum, item) => sum + (item.qty || 1), 0);
+  
+  const headerBadge = document.getElementById('headerCartCountBadge');
+  if (headerBadge) headerBadge.textContent = count;
+
+  const mobileBadge = document.getElementById('mobileCartCountBadge');
+  if (mobileBadge) mobileBadge.textContent = count;
+
+  const modalBadge = document.getElementById('cartCountBadgeModal');
+  if (modalBadge) modalBadge.textContent = `${count} Items`;
+}
+
+function addToCart(item) {
+  const existing = state.cart.find(i => i.catalogCode === item.catalogCode && i.designCode === item.designCode);
+  if (existing) {
+    existing.qty = (existing.qty || 1) + (item.qty || 1);
+  } else {
+    state.cart.push({
+      catalogCode: item.catalogCode,
+      catalogName: item.catalogName,
+      designCode: item.designCode,
+      sku: item.sku || `${item.catalogCode}-${item.designCode}`,
+      color: item.color,
+      rate: Number(item.rate) || 0,
+      imageUrl: item.imageUrl || '',
+      category: item.category || 'Curated Saree',
+      qty: item.qty || 1
+    });
+  }
+  saveCart();
+  showCartToast(`✓ Added ${item.catalogName} (${item.color}) to Order Cart!`);
+}
+
+function addCurrentPdpToCart() {
+  const cat = state.activePdpCatalog;
+  if (!cat) return;
+  const activeDesign = cat.designs[state.activePdpDesignIndex] || cat.designs[0] || {};
+  const colorObj = getAccurateColor(activeDesign.color);
+  const activeRate = getActiveRate(cat);
+
+  const realUrls = (activeDesign.images && activeDesign.images.length > 0)
+    ? activeDesign.images
+    : (activeDesign.imageUrls && activeDesign.imageUrls.length > 0 ? activeDesign.imageUrls : [activeDesign.heroImageUrl || cat.heroImageUrl]);
+
+  addToCart({
+    catalogCode: cat.code,
+    catalogName: cat.name,
+    designCode: activeDesign.code || '101',
+    sku: `${cat.code}-D${activeDesign.code || '101'}`,
+    color: colorObj.label,
+    rate: activeRate,
+    imageUrl: realUrls[0] || cat.heroImageUrl,
+    category: cat.category
+  });
+}
+
+function addCatalogCardToCart(catId) {
+  const cat = state.catalogs.find(c => c.id === catId || c.code.toLowerCase() === catId.toLowerCase());
+  if (!cat) return;
+  const firstDesign = cat.designs[0] || {};
+  const colorObj = getAccurateColor(firstDesign.color);
+  const activeRate = getActiveRate(cat);
+
+  addToCart({
+    catalogCode: cat.code,
+    catalogName: cat.name,
+    designCode: firstDesign.code || '101',
+    sku: `${cat.code}-D${firstDesign.code || '101'}`,
+    color: colorObj.label,
+    rate: activeRate,
+    imageUrl: firstDesign.heroImageUrl || cat.heroImageUrl,
+    category: cat.category
+  });
+}
+
+function updateCartItemQty(index, delta) {
+  if (!state.cart[index]) return;
+  state.cart[index].qty = (state.cart[index].qty || 1) + delta;
+  if (state.cart[index].qty <= 0) {
+    state.cart.splice(index, 1);
+  }
+  saveCart();
+  renderCartUI();
+}
+
+function removeCartItem(index) {
+  state.cart.splice(index, 1);
+  saveCart();
+  renderCartUI();
+}
+
+function clearCart() {
+  if (state.cart.length === 0) return;
+  if (!confirm('Are you sure you want to clear all sarees from your order cart?')) return;
+  state.cart = [];
+  saveCart();
+  renderCartUI();
+}
+
+function toggleCartModal(forceOpen = null) {
+  const modal = document.getElementById('orderCartModal');
+  if (!modal) return;
+  const isHidden = modal.classList.contains('hidden');
+  const shouldOpen = forceOpen !== null ? forceOpen : isHidden;
+
+  if (shouldOpen) {
+    renderCartUI();
+    modal.classList.remove('hidden');
+  } else {
+    modal.classList.add('hidden');
+  }
+  if (window.lucide) lucide.createIcons();
+}
+
+function renderCartUI() {
+  const firm = FIRMS[state.activeFirm] || FIRMS.saurashtra;
+  const user = state.activeUser || USER_PROFILES['NA39'];
+
+  const firmSubhead = document.getElementById('cartFirmSubhead');
+  if (firmSubhead) firmSubhead.textContent = `${firm.name} • ${firm.focus || 'Direct Mill Wholesale'}`;
+
+  const staffNameEl = document.getElementById('cartAssignedStaffName');
+  if (staffNameEl) staffNameEl.textContent = user.name;
+
+  const staffPhoneEl = document.getElementById('cartAssignedStaffPhoneText');
+  if (staffPhoneEl) staffPhoneEl.textContent = user.displayPhone || user.phone;
+
+  const staffPhoneLink = document.getElementById('cartAssignedStaffPhoneLink');
+  if (staffPhoneLink) staffPhoneLink.href = `tel:+${user.phone.replace(/\D/g, '')}`;
+
+  const itemsContainer = document.getElementById('cartItemsContainer');
+  const emptyState = document.getElementById('cartEmptyState');
+  const detailsBox = document.getElementById('cartOrderDetailsBox');
+  const footerEl = document.getElementById('cartModalFooter');
+
+  if (state.cart.length === 0) {
+    if (itemsContainer) itemsContainer.innerHTML = '';
+    if (emptyState) emptyState.classList.remove('hidden');
+    if (detailsBox) detailsBox.classList.add('hidden');
+    if (footerEl) footerEl.classList.add('hidden');
+    return;
+  }
+
+  if (emptyState) emptyState.classList.add('hidden');
+  if (detailsBox) detailsBox.classList.remove('hidden');
+  if (footerEl) footerEl.classList.remove('hidden');
+
+  let totalQty = 0;
+  let totalPrice = 0;
+
+  if (itemsContainer) {
+    itemsContainer.innerHTML = state.cart.map((item, idx) => {
+      const itemQty = item.qty || 1;
+      const itemSubtotal = item.rate * itemQty;
+      totalQty += itemQty;
+      totalPrice += itemSubtotal;
+
+      return `
+        <div class="flex items-center gap-3 p-3 bg-stone-50 rounded-2xl border border-stone-200/80 hover:border-amber-300 transition-colors">
+          <img 
+            src="${item.imageUrl || 'assets/saurashtra-sarees-logo.jpg'}" 
+            referrerpolicy="no-referrer"
+            alt="${item.catalogName}" 
+            class="w-14 aspect-[3/4] rounded-xl object-cover object-top border border-stone-200 bg-white shrink-0 shadow-xs"
+            onerror="this.onerror=null; this.src='assets/saurashtra-sarees-logo.jpg';"
+          >
+          <div class="flex-1 min-w-0">
+            <h4 class="font-serif text-sm font-bold text-stone-900 truncate">${item.catalogName}</h4>
+            <p class="text-[11px] text-amber-900 font-medium">SKU: <span class="font-mono font-bold">${item.sku}</span> • ${item.color}</p>
+            <p class="text-xs font-price font-bold text-stone-800 mt-0.5">₹${item.rate} <span class="text-[10px] text-stone-500 font-normal">/ piece</span></p>
+          </div>
+          <div class="flex flex-col items-end gap-1.5 shrink-0">
+            <div class="flex items-center border border-stone-300 rounded-lg overflow-hidden bg-white shadow-xs text-xs font-bold">
+              <button onclick="updateCartItemQty(${idx}, -1)" class="px-2 py-1 hover:bg-stone-100 text-stone-600 transition-colors">−</button>
+              <span class="px-2 font-mono">${itemQty}</span>
+              <button onclick="updateCartItemQty(${idx}, 1)" class="px-2 py-1 hover:bg-stone-100 text-stone-600 transition-colors">+</button>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="font-price font-black text-sm text-stone-900">₹${itemSubtotal}</span>
+              <button onclick="removeCartItem(${idx})" title="Remove item" class="text-stone-400 hover:text-rose-600 p-0.5 transition-colors">
+                <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  const totalQtyEl = document.getElementById('cartSummaryTotalQty');
+  if (totalQtyEl) totalQtyEl.textContent = `${totalQty} Sarees`;
+
+  const totalPriceEl = document.getElementById('cartSummaryTotalPrice');
+  if (totalPriceEl) totalPriceEl.textContent = `₹${totalPrice.toLocaleString('en-IN')}`;
+
+  if (window.lucide) lucide.createIcons();
+}
+
+function showCartToast(msg) {
+  let toast = document.getElementById('vellumCartToast');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.id = 'vellumCartToast';
+    toast.className = 'fixed bottom-20 left-1/2 -translate-x-1/2 z-50 px-4 py-2.5 bg-stone-950 text-white rounded-2xl shadow-2xl border border-amber-400 text-xs font-bold flex items-center gap-2 animate-fadeIn';
+    document.body.appendChild(toast);
+  }
+  toast.innerHTML = `<span class="text-amber-400">🛍️</span><span>${msg}</span>`;
+  toast.classList.remove('hidden');
+  clearTimeout(window.__cartToastTimeout);
+  window.__cartToastTimeout = setTimeout(() => {
+    toast.classList.add('hidden');
+  }, 3000);
+}
+
+function toggleMobileFilterPanel() {
+  const panel = document.getElementById('filterControlsWrap');
+  if (!panel) return;
+  panel.classList.toggle('hidden');
+  if (window.lucide) lucide.createIcons();
+}
+
+function sendOrderWhatsApp() {
+  if (state.cart.length === 0) {
+    alert('Please add sarees to your order cart before sending.');
+    return;
+  }
+  const firm = FIRMS[state.activeFirm] || FIRMS.saurashtra;
+  const user = state.activeUser || USER_PROFILES['NA39'];
+  const buyerName = document.getElementById('cartBuyerName')?.value.trim() || 'Trade Partner';
+  const buyerCity = document.getElementById('cartBuyerCity')?.value.trim() || 'Surat';
+  const buyerNotes = document.getElementById('cartBuyerNotes')?.value.trim();
+
+  let totalQty = 0;
+  let totalPrice = 0;
+  const orderLines = state.cart.map((item, i) => {
+    const qty = item.qty || 1;
+    const subtotal = item.rate * qty;
+    totalQty += qty;
+    totalPrice += subtotal;
+    return `${i + 1}. *${item.catalogName}* (SKU: ${item.sku})\n   • Color: ${item.color}\n   • Qty: ${qty} pcs @ ₹${item.rate} = *₹${subtotal}*`;
+  });
+
+  const msg = encodeURIComponent(
+    `🥻 *WHOLESALE ORDER INQUIRY — ${firm.name.toUpperCase()}*\n` +
+    `_Strict Direct Mill Pricing • Pure Commercial Rate (No GST)_\n\n` +
+    `👤 *Buyer / Boutique:* ${buyerName}\n` +
+    `📍 *Destination:* ${buyerCity}\n` +
+    (buyerNotes ? `📝 *Notes:* ${buyerNotes}\n` : '') +
+    `--------------------------------------\n` +
+    `📦 *ITEMIZED ORDER SELECTION:*\n\n` +
+    orderLines.join('\n\n') +
+    `\n\n--------------------------------------\n` +
+    `🔢 *TOTAL QUANTITY:* ${totalQty} Sarees\n` +
+    `💰 *GRAND TOTAL (PURE RATE):* ₹${totalPrice.toLocaleString('en-IN')}\n\n` +
+    `Representative: ${user.name} (${user.displayPhone})\n` +
+    `Please confirm ready lot availability and dispatch schedule.`
+  );
+
+  window.open(`https://api.whatsapp.com/send?phone=${user.whatsapp}&text=${msg}`, '_blank');
+}
+
+async function downloadOrderPdf() {
+  if (state.cart.length === 0) {
+    alert('Please add sarees to your order cart before downloading the PDF.');
+    return;
+  }
+
+  const firm = FIRMS[state.activeFirm] || FIRMS.saurashtra;
+  const user = state.activeUser || USER_PROFILES['NA39'];
+  const buyerName = document.getElementById('cartBuyerName')?.value.trim() || 'Trade Partner / Boutique';
+  const buyerCity = document.getElementById('cartBuyerCity')?.value.trim() || 'Surat, Gujarat';
+  const buyerNotes = document.getElementById('cartBuyerNotes')?.value.trim() || '';
+
+  const dateStr = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+  const orderId = `ORD-${Date.now().toString().slice(-6)}`;
+
+  // Populate print template
+  const pdfHeaderName = document.getElementById('pdfHeaderFirmName');
+  if (pdfHeaderName) pdfHeaderName.textContent = firm.name;
+
+  const pdfTagline = document.getElementById('pdfHeaderFirmTagline');
+  if (pdfTagline) pdfTagline.textContent = `${firm.tagline} • Surat Mill Direct Wholesale`;
+
+  const pdfIdEl = document.getElementById('pdfOrderId');
+  if (pdfIdEl) pdfIdEl.textContent = orderId;
+
+  const pdfDateEl = document.getElementById('pdfOrderDate');
+  if (pdfDateEl) pdfDateEl.textContent = `Date: ${dateStr}`;
+
+  const pdfBuyerNameEl = document.getElementById('pdfBuyerName');
+  if (pdfBuyerNameEl) pdfBuyerNameEl.textContent = buyerName;
+
+  const pdfBuyerCityEl = document.getElementById('pdfBuyerCity');
+  if (pdfBuyerCityEl) pdfBuyerCityEl.textContent = `Destination: ${buyerCity}`;
+
+  const pdfBuyerNotesEl = document.getElementById('pdfBuyerNotes');
+  if (pdfBuyerNotesEl) pdfBuyerNotesEl.textContent = buyerNotes ? `Instructions: ${buyerNotes}` : '';
+
+  const pdfStaffNameEl = document.getElementById('pdfStaffName');
+  if (pdfStaffNameEl) pdfStaffNameEl.textContent = user.name;
+
+  const pdfStaffPhoneEl = document.getElementById('pdfStaffPhone');
+  if (pdfStaffPhoneEl) pdfStaffPhoneEl.textContent = `Direct: ${user.displayPhone || user.phone}`;
+
+  let totalQty = 0;
+  let totalPrice = 0;
+
+  const tbody = document.getElementById('pdfTableBody');
+  if (tbody) {
+    tbody.innerHTML = state.cart.map((item, idx) => {
+      const qty = item.qty || 1;
+      const subtotal = item.rate * qty;
+      totalQty += qty;
+      totalPrice += subtotal;
+
+      return `
+        <tr style="border-bottom: 1px solid #e7e5e4;">
+          <td style="padding: 8px; text-align: center; font-weight: bold; color: #78716c;">${idx + 1}</td>
+          <td style="padding: 6px; text-align: center;">
+            <img src="${item.imageUrl}" referrerpolicy="no-referrer" style="width: 44px; height: 58px; object-fit: cover; border-radius: 6px; border: 1px solid #e7e5e4;" crossorigin="anonymous">
+          </td>
+          <td style="padding: 8px;">
+            <strong style="color: #1c1917; font-size: 11px;">${item.catalogName}</strong><br>
+            <span style="font-family: monospace; font-size: 10px; color: #8b1d40; font-weight: bold;">${item.sku}</span>
+          </td>
+          <td style="padding: 8px; color: #44403c;">${item.color}</td>
+          <td style="padding: 8px; text-align: center; font-weight: bold; font-family: monospace;">${qty}</td>
+          <td style="padding: 8px; text-align: right; font-weight: bold;">₹${item.rate}</td>
+          <td style="padding: 8px; text-align: right; font-weight: 900; color: #1c1917;">₹${subtotal}</td>
+        </tr>
+      `;
+    }).join('');
+  }
+
+  const pdfTotalQtyEl = document.getElementById('pdfTotalQty');
+  if (pdfTotalQtyEl) pdfTotalQtyEl.textContent = totalQty;
+
+  const pdfTotalAmountEl = document.getElementById('pdfTotalAmount');
+  if (pdfTotalAmountEl) pdfTotalAmountEl.textContent = `₹${totalPrice.toLocaleString('en-IN')}`;
+
+  const btn = document.getElementById('btnDownloadOrderPdf');
+  const originalHtml = btn ? btn.innerHTML : '';
+  if (btn) btn.innerHTML = `<span>Generating PDF...</span>`;
+
+  try {
+    const templateEl = document.getElementById('orderPdfPrintTemplate');
+    if (window.html2canvas && window.jspdf) {
+      const canvas = await html2canvas(templateEl, {
+        scale: 2,
+        useCORS: true,
+        allowTaint: true,
+        backgroundColor: '#ffffff'
+      });
+      const imgData = canvas.toDataURL('image/jpeg', 0.95);
+      const { jsPDF } = window.jspdf;
+      const pdf = new jsPDF('p', 'pt', 'a4');
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+      pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
+      pdf.save(`${firm.name.replace(/\s+/g, '_')}_Order_${orderId}.pdf`);
+      showCartToast(`✓ Order PDF downloaded successfully!`);
+    } else {
+      window.print();
+    }
+  } catch (err) {
+    console.warn('PDF canvas error, using print fallback:', err);
+    window.print();
+  } finally {
+    if (btn) btn.innerHTML = originalHtml;
+  }
 }
 

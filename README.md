@@ -17,8 +17,8 @@ Vellum powers two flagship ethnic wear brands operating from Surat's premier tex
 
 | Firm | Brand Slogan | Accent Palette | Primary Focus | Direct Desk Contacts |
 | :--- | :--- | :--- | :--- | :--- |
-| **Saurashtra Sarees** | *Make Occasion Better* | `#8b1d40` (Royal Maroon) & `#d4af37` (Gold) | Direct Mill Wholesale & Super Stockist Distribution | **Nayan Patel [Founder & CEO]**: `+91 98794 71039`<br>**Chetan Patel [Co-Founder & COO]**: `+91 99136 43433` |
-| **Keya Fashion** | *Stop wishing. Start living....* | `#0284c7` (Atelier Sky) & `#f59e0b` (Amber) | Curated Catalogues & Retail Showroom Collections | **Nayan Patel [Founder & CEO]**: `+91 98794 71039`<br>**Chetan Patel [Co-Founder & COO]**: `+91 99136 43433` |
+| **Saurashtra Sarees** | *Make Occasion Better* | `#8b1d40` (Royal Maroon) & `#d4af37` (Gold) | Direct Mill Wholesale & Super Stockist Distribution | **Nayan Patel [Founder]**: `+91 98794 71039`<br>**Chetan Patel [Co-Founder]**: `+91 99136 43433` |
+| **Keya Fashion** | *Stop wishing. Start living....* | `#0284c7` (Atelier Sky) & `#f59e0b` (Amber) | Curated Catalogues & Retail Showroom Collections | **Nayan Patel [Founder]**: `+91 98794 71039`<br>**Chetan Patel [Co-Founder]**: `+91 99136 43433` |
 
 * **Atelier & Registered Mill Address:**  
   `A-1001, Rajhans Fabrizo, Near Polaris Textile City, Magob, Surat, Gujarat – 395010`
@@ -127,8 +127,8 @@ python -m http.server 8080
 
 ## 🎨 Executive Leadership & Inquiries
 
-* **Nayan Patel [Founder & CEO]**: `+91 98794 71039` | `saurashtrasarees@gmail.com`
-* **Chetan Patel [Co-Founder & COO]**: `+91 99136 43433` | `keyafashion5517@gmail.com`
+* **Nayan Patel [Founder]**: `+91 98794 71039` | `saurashtrasarees@gmail.com`
+* **Chetan Patel [Co-Founder]**: `+91 99136 43433` | `keyafashion5517@gmail.com`
 * **Architecture & Engineering Systems:** **BinduGrid Studio [ØG]** (<bindugrid@gmail.com>)
 
 ---
