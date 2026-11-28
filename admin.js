@@ -42,6 +42,17 @@ let currentStockStatusFilter = 'all';
 
 document.addEventListener('DOMContentLoaded', async () => {
   checkAdminAuth();
+
+  // 1. Live Google Sheet Synchronization before rendering UI
+  if (window.vellumAdapter) {
+    try {
+      await window.vellumAdapter.syncFromGoogleSheet();
+      console.log('✓ Admin Panel: Synchronized live staff, firms, and settings from Google Sheet!');
+    } catch(e) {
+      console.warn('Admin Google Sheet auto-sync error:', e);
+    }
+  }
+
   try { renderStaffHub(); } catch (e) { console.warn('renderStaffHub error:', e); }
   try { initDriveFoldersUI(); } catch (e) { console.warn('initDriveFoldersUI error:', e); }
   try { renderFirmProfilesUI(); } catch (e) { console.warn('renderFirmProfilesUI error:', e); }
@@ -862,6 +873,17 @@ function renderSheetDatabaseTable() {
       </tr>
     `;
   }).join('');
+}
+
+async function refreshLiveGoogleSheetData() {
+  showAdminToast('🔄 Fetching live staff, firms & rates from Google Sheet...');
+  if (window.vellumAdapter) {
+    await window.vellumAdapter.syncFromGoogleSheet();
+    renderStaffHub();
+    renderFirmProfilesUI();
+    initDeepLinkUI();
+    showAdminToast('✓ Google Sheet live data successfully updated!');
+  }
 }
 
 function downloadSheetCsv() {

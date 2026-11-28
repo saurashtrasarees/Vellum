@@ -89,10 +89,10 @@ const USER_PROFILES = {
   },
   'PR28': {
     code: 'PR28',
-    slug: 'priti',
-    name: 'Priti',
+    slug: 'priti-singh',
+    name: 'Priti Singh',
     initials: 'PR',
-    title: 'Customer Sales Coordinator',
+    title: 'Dedicated Representative',
     phone: '9909352528',
     whatsapp: '919909352528',
     displayPhone: '+91 99093 52528',
@@ -101,10 +101,10 @@ const USER_PROFILES = {
   },
   'PA28': {
     code: 'PA28',
-    slug: 'palak',
-    name: 'Palak',
+    slug: 'palak-pandey',
+    name: 'Palak Pandey',
     initials: 'PA',
-    title: 'Order Desk Manager',
+    title: 'Dedicated Representative',
     phone: '9909452528',
     whatsapp: '919909452528',
     displayPhone: '+91 99094 52528',
@@ -113,10 +113,10 @@ const USER_PROFILES = {
   },
   'JE04': {
     code: 'JE04',
-    slug: 'jenish',
-    name: 'Jenish',
+    slug: 'jenish-vavaliya',
+    name: 'Jenish Vavaliya',
     initials: 'JE',
-    title: 'Digital Sales Executive',
+    title: 'Dedicated Representative',
     phone: '9033808104',
     whatsapp: '919033808104',
     displayPhone: '+91 90338 08104',
@@ -249,6 +249,25 @@ async function syncLiveGoogleSheetDatabase() {
             rateAccess
           };
         }
+        
+        // Also persist live Google Sheet staff into local storage so admin panel is always in sync
+        const liveStaffArray = Object.values(USER_PROFILES).map(p => ({
+          code: p.code,
+          name: p.name,
+          shortName: p.name.split(' ')[0],
+          phone: p.phone,
+          displayPhone: p.displayPhone,
+          whatsapp: p.whatsapp,
+          firm: p.firm,
+          firmName: p.firm === 'keya' ? 'Keya Fashion' : 'Saurashtra Sarees',
+          title: p.title,
+          rateAccess: p.rateAccess,
+          hasWholesaleLink: p.rateAccess === 'all',
+          hasPrimeLink: p.rateAccess === 'all'
+        }));
+        try {
+          localStorage.setItem('vellum_staff_profiles', JSON.stringify(liveStaffArray));
+        } catch(e) {}
         console.log('✓ Successfully synced', Object.keys(USER_PROFILES).length, 'staff profiles live from Google Sheet Staff_Master!');
       })
       .catch(err => console.warn('Staff sync error:', err))

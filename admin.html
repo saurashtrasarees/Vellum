@@ -10,7 +10,7 @@
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
   <!-- Vellum Data Engine -->
-  <script src="data-adapter.js"></script>
+  <script src="data-adapter.js?v=20261128-04"></script>
   <!-- Custom Styles -->
   <link rel="stylesheet" href="styles.css">
 
@@ -224,10 +224,16 @@
             </p>
           </div>
 
-          <button onclick="openStaffModal()" class="px-5 py-2.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs uppercase tracking-wider flex items-center gap-2 shadow-xs transition-all shrink-0">
-            <i data-lucide="user-plus" class="w-4 h-4"></i>
-            <span>+ Add Sales Staff Member</span>
-          </button>
+          <div class="flex items-center gap-2.5">
+            <button onclick="refreshLiveGoogleSheetData()" class="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs uppercase tracking-wider flex items-center gap-2 shadow-xs transition-all shrink-0">
+              <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+              <span>🔄 Sync from Google Sheet</span>
+            </button>
+            <button onclick="openStaffModal()" class="px-5 py-2.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs uppercase tracking-wider flex items-center gap-2 shadow-xs transition-all shrink-0">
+              <i data-lucide="user-plus" class="w-4 h-4"></i>
+              <span>+ Add Sales Staff Member</span>
+            </button>
+          </div>
         </div>
 
         <!-- Rate Architecture Callout Bar -->
@@ -863,6 +869,6 @@
     <span id="adminToastMsg">Action completed!</span>
   </div>
 
-  <script src="admin.js"></script>
+  <script src="admin.js?v=20261128-04"></script>
 </body>
 </html>

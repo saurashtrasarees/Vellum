@@ -131,40 +131,46 @@ const DEFAULT_STAFF_PROFILES = [
   },
   {
     code: 'PR28',
-    name: 'Priti',
+    name: 'Priti Singh',
+    shortName: 'Priti Singh',
     letter: 'C',
     phone: '9909352528',
     displayPhone: '+91 99093 52528',
     whatsapp: '919909352528',
     firm: 'keya',
     firmName: 'Keya Fashion',
-    title: 'Customer Sales Coordinator',
+    title: 'Dedicated Representative',
+    rateAccess: 'retail',
     hasWholesaleLink: false,
     hasPrimeLink: false
   },
   {
     code: 'PA28',
-    name: 'Palak',
+    name: 'Palak Pandey',
+    shortName: 'Palak Pandey',
     letter: 'D',
     phone: '9909452528',
     displayPhone: '+91 99094 52528',
     whatsapp: '919909452528',
     firm: 'keya',
     firmName: 'Keya Fashion',
-    title: 'Order Desk Manager',
+    title: 'Dedicated Representative',
+    rateAccess: 'retail',
     hasWholesaleLink: false,
     hasPrimeLink: false
   },
   {
     code: 'JE04',
-    name: 'Jenish',
+    name: 'Jenish Vavaliya',
+    shortName: 'Jenish Vavaliya',
     letter: 'E',
     phone: '9033808104',
     displayPhone: '+91 90338 08104',
     whatsapp: '919033808104',
     firm: 'keya',
     firmName: 'Keya Fashion',
-    title: 'Digital Sales Executive',
+    title: 'Dedicated Representative',
+    rateAccess: 'retail',
     hasWholesaleLink: false,
     hasPrimeLink: false
   },
@@ -191,6 +197,8 @@ class VellumDataAdapter {
     this.stockOverrides = this.loadStockOverrides();
     this.firmProfiles = this.loadFirmProfiles();
     this.sheetId = this.loadSheetId();
+    // Auto-sync live Google Sheet database in background on initialization
+    this.syncFromGoogleSheet().catch(() => {});
   }
 
   // 1. Google Sheet Master ID
@@ -495,6 +503,151 @@ class VellumDataAdapter {
       console.error('Error saving links:', e);
       return false;
     }
+  }
+
+  // 8. Dynamic Live Google Sheet Synchronization Engine
+  async syncFromGoogleSheet() {
+    const sheetId = this.loadSheetId();
+    const staffUrl = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&sheet=Staff_Master&t=${Date.now()}`;
+    const firmUrl = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&sheet=Firm_Master&t=${Date.now()}`;
+    const secUrl = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&sheet=Security_Settings&t=${Date.now()}`;
+
+    const tasks = [];
+
+    // 1. Sync Staff_Master
+    tasks.push(
+      fetch(staffUrl)
+        .then(r => r.ok ? r.text() : null)
+        .then(csv => {
+          if (!csv) return;
+          const lines = csv.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+          if (lines.length < 2) return;
+          const header = this.parseCsvRow(lines[0].toLowerCase());
+          const codeIdx = header.findIndex(h => h.includes('code'));
+          const nameIdx = header.findIndex(h => h.includes('name') || h.includes('rep'));
+          const firmIdx = header.findIndex(h => h.includes('firm'));
+          const phoneIdx = header.findIndex(h => h.includes('phone') || h.includes('direct'));
+          const waIdx = header.findIndex(h => h.includes('whatsapp'));
+          const titleIdx = header.findIndex(h => h.includes('role') || h.includes('title'));
+          const rateIdx = header.findIndex(h => h.includes('rate') || h.includes('tier') || h.includes('access'));
+
+          const staffList = [];
+          for (let i = 1; i < lines.length; i++) {
+            const row = this.parseCsvRow(lines[i]);
+            const code = (row[codeIdx] || '').trim().toUpperCase();
+            if (!code) continue;
+            const name = (row[nameIdx] || code).trim();
+            const firmText = (row[firmIdx] || '').trim().toLowerCase();
+            const isKeya = firmText.includes('keya') || code === 'KH28' || code === 'AN26' || code === 'PR28' || code === 'PA28' || code === 'AR38' || code === 'JE04';
+            const phone = (row[phoneIdx] || '').trim().replace(/[^0-9]/g, '');
+            const waRaw = (row[waIdx] || '').trim().replace(/[^0-9]/g, '');
+            const wa = waRaw ? (waRaw.startsWith('91') ? waRaw : '91' + waRaw) : ('91' + phone);
+            const title = (row[titleIdx] || 'Dedicated Representative').trim();
+            const rateVal = (row[rateIdx] || '').trim().toLowerCase();
+            const rateAccess = rateVal.includes('all') ? 'all' : 'retail';
+
+            staffList.push({
+              code,
+              name,
+              shortName: name.split(' ')[0],
+              phone,
+              displayPhone: phone.length === 10 ? `+91 ${phone.slice(0, 5)} ${phone.slice(5)}` : `+91 ${phone}`,
+              whatsapp: wa,
+              firm: isKeya ? 'keya' : 'saurashtra',
+              firmName: isKeya ? 'Keya Fashion' : 'Saurashtra Sarees',
+              title,
+              rateAccess,
+              hasWholesaleLink: rateAccess === 'all',
+              hasPrimeLink: rateAccess === 'all'
+            });
+          }
+
+          if (staffList.length > 0) {
+            localStorage.setItem(STORAGE_KEYS.STAFF_PROFILES, JSON.stringify(staffList));
+            window.dispatchEvent(new CustomEvent('vellum:staff-updated', { detail: staffList }));
+            console.log('✓ VellumDataAdapter synced', staffList.length, 'staff profiles live from Google Sheet!');
+          }
+        })
+        .catch(err => console.warn('VellumDataAdapter Staff sync error:', err))
+    );
+
+    // 2. Sync Firm_Master
+    tasks.push(
+      fetch(firmUrl)
+        .then(r => r.ok ? r.text() : null)
+        .then(csv => {
+          if (!csv) return;
+          const lines = csv.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+          if (lines.length < 2) return;
+          const header = this.parseCsvRow(lines[0].toLowerCase());
+          const idIdx = header.findIndex(h => h.includes('id') || h.includes('firm'));
+          const nameIdx = header.findIndex(h => h.includes('brand') || h.includes('name'));
+          const tagIdx = header.findIndex(h => h.includes('tagline'));
+          const yearIdx = header.findIndex(h => h.includes('year') || h.includes('est'));
+          const addrIdx = header.findIndex(h => h.includes('coord') || h.includes('address'));
+          const emailIdx = header.findIndex(h => h.includes('email'));
+          const phoneIdx = header.findIndex(h => h.includes('phone'));
+
+          const firms = this.loadFirmProfiles();
+          for (let i = 1; i < lines.length; i++) {
+            const row = this.parseCsvRow(lines[i]);
+            let fId = (row[idIdx] || '').trim().toLowerCase();
+            if (!fId) continue;
+            if (fId.includes('keya')) fId = 'keya';
+            else if (fId.includes('saurashtra')) fId = 'saurashtra';
+
+            if (firms[fId]) {
+              if (row[nameIdx]) firms[fId].name = row[nameIdx].trim();
+              if (row[tagIdx]) firms[fId].tagline = row[tagIdx].trim();
+              if (row[addrIdx]) firms[fId].address = firms[fId].atelierCoordinates = row[addrIdx].trim();
+              if (row[yearIdx]) firms[fId].estYear = row[yearIdx].trim();
+              if (row[emailIdx]) firms[fId].email = row[emailIdx].trim();
+              if (row[phoneIdx]) firms[fId].primaryPhone = '+91 ' + row[phoneIdx].trim().replace(/[^0-9]/g, '');
+            }
+          }
+          this.saveFirmProfiles(firms);
+          console.log('✓ VellumDataAdapter synced firm profiles live from Google Sheet!');
+        })
+        .catch(err => console.warn('VellumDataAdapter Firm sync error:', err))
+    );
+
+    // 3. Sync Security_Settings
+    tasks.push(
+      fetch(secUrl)
+        .then(r => r.ok ? r.text() : null)
+        .then(csv => {
+          if (!csv) return;
+          const lines = csv.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+          for (let i = 1; i < lines.length; i++) {
+            const row = this.parseCsvRow(lines[i]);
+            const key = (row[0] || '').trim();
+            const val = (row[1] || '').trim();
+            if (key === 'ADMIN_ACCESS_PIN' && val) {
+              sessionStorage.setItem('vellum_admin_pin', val);
+            }
+          }
+        })
+        .catch(err => console.warn('VellumDataAdapter Security sync error:', err))
+    );
+
+    await Promise.allSettled(tasks);
+    return true;
+  }
+
+  parseCsvRow(line) {
+    const result = [];
+    let current = '';
+    let inQuotes = false;
+    for (let i = 0; i < line.length; i++) {
+      const ch = line[i];
+      if (ch === '"') inQuotes = !inQuotes;
+      else if (ch === ',' && !inQuotes) {
+        result.push(current);
+        current = '';
+      } else current += ch;
+    }
+    result.push(current);
+    return result;
   }
 }
 
