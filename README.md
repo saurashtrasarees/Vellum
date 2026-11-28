@@ -106,7 +106,7 @@ python -m http.server 8080
 # Open in browser:
 # http://localhost:8080/
 # http://localhost:8080/catalog.html
-# http://localhost:8080/admin.html
+# http://localhost:8080/admin.html (Protected via PIN: 551799)
 ```
 
 ### Custom Domain Configuration (Hostinger -> GitHub Pages):

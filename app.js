@@ -186,7 +186,7 @@ const state = {
 // 3. INITIALIZATION & ROUTING
 // --------------------------------------------------------------------------
 document.addEventListener('DOMContentLoaded', async () => {
-  // Sync custom firm profiles if configured in admin or Supabase
+  // Sync custom firm profiles from local adapter & Google Sheet Master
   if (window.vellumAdapter) {
     const savedProfiles = window.vellumAdapter.loadFirmProfiles();
     Object.keys(savedProfiles).forEach(k => {
@@ -197,6 +197,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const savedStaff = window.vellumAdapter.loadStaffProfiles();
     savedStaff.forEach(s => {
       const codeKey = s.code.toUpperCase();
+      const isKeya = s.firm === 'keya' || codeKey === 'KH28' || codeKey === 'AN26' || codeKey === 'PR28' || codeKey === 'PA28' || (s.firmName && s.firmName.toLowerCase().includes('keya'));
       USER_PROFILES[codeKey] = {
         code: codeKey,
         slug: s.name.toLowerCase().replace(/[^a-z0-9]/g, '-'),
@@ -206,8 +207,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         phone: s.phone,
         whatsapp: s.whatsapp || ('91' + s.phone),
         displayPhone: s.displayPhone || ('+91 ' + s.phone),
-        firm: s.firm || 'saurashtra',
-        rateAccess: 'retail'
+        firm: isKeya ? 'keya' : (s.firm || 'saurashtra'),
+        rateAccess: s.rateAccess || (isKeya ? 'retail' : 'all')
       };
     });
 
@@ -275,7 +276,7 @@ function resolveUrlContext() {
   }
 
   // 2. User Code Resolution & 3-Tier Rate Suffix
-  let rawUser = (params.get('u') || params.get('user') || params.get('staff') || '').toUpperCase().trim();
+  let rawUser = (params.get('u') || params.get('code') || params.get('user') || params.get('staff') || params.get('c') || '').toUpperCase().trim();
   rawUser = rawUser.replace(/[^A-Z0-9]/g, '');
 
   let baseCode = rawUser;
@@ -299,14 +300,14 @@ function resolveUrlContext() {
 
   let matchedUser = USER_PROFILES[baseCode];
 
-  // Also check if someone passed the slug (e.g. ?staff=nayan)
+  // Also check if someone passed the slug (e.g. ?staff=nayan or ?staff=khushi)
   if (!matchedUser && baseCode) {
     matchedUser = Object.values(USER_PROFILES).find(p => p.slug.toUpperCase().replace(/[^A-Z0-9]/g, '') === baseCode);
   }
 
   if (matchedUser) {
     state.activeUser = matchedUser;
-    state.activeFirm = matchedUser.firm;
+    state.activeFirm = matchedUser.firm || (matchedUser.name && matchedUser.name.toLowerCase().includes('khushi') ? 'keya' : 'saurashtra');
     state.isLocked = true; // Firm and user are locked!
     state.currentRole = rateTier;
     state.hasAttachedCode = true;
@@ -984,22 +985,6 @@ function resetFilters() {
 
   const fabricBtnLabel = document.getElementById('fabricDropdownBtnLabel');
   if (fabricBtnLabel) fabricBtnLabel.textContent = `All Fabrics (${state.catalogs.length})`;
-
-  updateShootUI();
-  applyFiltersAndRender();
-}
-
-  const shootSelect = document.getElementById('shootSelectFilter');
-  if (shootSelect) shootSelect.value = 'all';
-
-  const priceSelect = document.getElementById('priceRangeFilter');
-  if (priceSelect) priceSelect.value = 'all';
-
-  const fabricSelect = document.getElementById('fabricSelectFilter');
-  if (fabricSelect) fabricSelect.value = 'all';
-
-  const sortSelect = document.getElementById('sortSelect');
-  if (sortSelect) sortSelect.value = 'newest';
 
   updateShootUI();
   applyFiltersAndRender();

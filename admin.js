@@ -1,13 +1,47 @@
 // ==============================================================================
 // VELLUM — Super-Admin Control Center Engine
-// Full Staff CRUD, Universal Firm Manager, Clean Stock Control & Supabase Sync
+// Full Staff CRUD, Universal Firm Manager, Clean Stock Control & Google Sheet Sync
 // Architecture & Engineering by BinduGrid Studio [ØG]
 // ==============================================================================
+
+const AUTH_PIN = '551799';
+
+function checkAdminAuth() {
+  const gate = document.getElementById('adminPinGate');
+  if (!gate) return;
+  if (sessionStorage.getItem('vellum_admin_auth') === 'true') {
+    gate.classList.add('hidden');
+  } else {
+    gate.classList.remove('hidden');
+    const input = document.getElementById('adminPinInput');
+    if (input) input.focus();
+  }
+}
+
+function handlePinSubmit(e) {
+  if (e) e.preventDefault();
+  const input = document.getElementById('adminPinInput');
+  const err = document.getElementById('pinErrorMessage');
+  const gate = document.getElementById('adminPinGate');
+  if (!input) return;
+
+  if (input.value.trim() === AUTH_PIN) {
+    sessionStorage.setItem('vellum_admin_auth', 'true');
+    if (err) err.classList.add('hidden');
+    if (gate) gate.classList.add('hidden');
+    showAdminToast('✓ Super-Admin console unlocked!');
+  } else {
+    if (err) err.classList.remove('hidden');
+    input.value = '';
+    input.focus();
+  }
+}
 
 let adminCatalogs = [];
 let currentStockStatusFilter = 'all';
 
 document.addEventListener('DOMContentLoaded', async () => {
+  checkAdminAuth();
   try { renderStaffHub(); } catch (e) { console.warn('renderStaffHub error:', e); }
   try { initDriveFoldersUI(); } catch (e) { console.warn('initDriveFoldersUI error:', e); }
   try { renderFirmProfilesUI(); } catch (e) { console.warn('renderFirmProfilesUI error:', e); }

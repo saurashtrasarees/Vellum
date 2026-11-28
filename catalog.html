@@ -110,72 +110,15 @@
         </button>
       </div>
 
-      <!-- Right: Role Pricing Tier, Firm Switcher & Admin Link -->
+      <!-- Right: Order Selection Cart Button -->
       <div class="flex items-center gap-2 sm:gap-3">
-        
-        <!-- Firm Quick Switcher Dropdown (Conditionally hidden for locked staff links) -->
-        <div id="firmSwitcherContainer" class="relative">
-          <button onclick="toggleFirmMenu()" class="flex items-center gap-1.5 px-2.5 py-2 bg-stone-100 hover:bg-stone-200/80 rounded-xl text-xs font-semibold text-stone-700 transition-all border border-stone-200">
-            <i data-lucide="building-2" class="w-3.5 h-3.5 text-stone-500"></i>
-            <span id="currentFirmPillLabel" class="hidden sm:inline">Firm: Saurashtra</span>
-            <i data-lucide="chevron-down" class="w-3 h-3 text-stone-500"></i>
-          </button>
-          <div id="firmMenu" class="hidden absolute right-0 mt-2 w-52 bg-white rounded-2xl shadow-2xl border border-stone-200 py-2 z-50 animate-fadeIn">
-            <div class="px-3.5 py-1.5 border-b border-stone-100 text-[10px] font-bold text-stone-400 uppercase tracking-wider">Switch Brand Theme</div>
-            <button onclick="switchFirm('saurashtra')" class="w-full text-left px-3.5 py-2 text-xs hover:bg-stone-50 flex items-center justify-between font-semibold text-stone-800">
-              <span>Saurashtra Sarees</span>
-              <span class="w-2.5 h-2.5 rounded-full bg-[#8b1d40]"></span>
-            </button>
-            <button onclick="switchFirm('keya')" class="w-full text-left px-3.5 py-2 text-xs hover:bg-stone-50 flex items-center justify-between font-semibold text-stone-800">
-              <span>Keya Fashion</span>
-              <span class="w-2.5 h-2.5 rounded-full bg-brand-sky"></span>
-            </button>
-          </div>
-        </div>
-
-        <!-- Role Pricing Dropdown (Conditionally hidden for locked retail users) -->
-        <div id="roleDropdownContainer" class="relative">
-          <button id="btnRoleDropdown" onclick="toggleRoleMenu()" class="flex items-center gap-1.5 px-3 py-2 bg-amber-50/90 hover:bg-amber-100 border border-amber-300/80 rounded-xl text-xs font-bold text-amber-900 transition-all shadow-xs">
-            <i data-lucide="shield-check" class="w-3.5 h-3.5 text-amber-700"></i>
-            <span id="currentRoleLabel">Catalog MRP</span>
-            <i data-lucide="chevron-down" class="w-3 h-3 text-amber-800"></i>
-          </button>
-
-          <div id="roleMenu" class="hidden absolute right-0 mt-2 w-64 bg-white rounded-2xl shadow-2xl border border-stone-200 py-2 z-50 animate-fadeIn">
-            <div class="px-4 py-2 border-b border-stone-100">
-              <p class="text-[10px] font-bold text-stone-400 uppercase tracking-wider">Pricing Tier Active</p>
-              <p class="text-[11px] text-stone-600 mt-0.5">Rates dynamically adjust on-screen</p>
-            </div>
-            <button onclick="setRole('prime')" class="w-full text-left px-4 py-2.5 text-xs hover:bg-stone-50 flex items-center justify-between font-semibold text-stone-800">
-              <div class="flex items-center gap-2">
-                <span class="w-2 h-2 rounded-full bg-amber-500"></span>
-                <span>Prime Rate</span>
-              </div>
-              <span class="text-[10px] bg-amber-50 text-amber-800 px-1.5 py-0.5 rounded font-bold border border-amber-300">Tier 1 (P)</span>
-            </button>
-            <button onclick="setRole('wholesale')" class="w-full text-left px-4 py-2.5 text-xs hover:bg-stone-50 flex items-center justify-between font-semibold text-stone-800">
-              <div class="flex items-center gap-2">
-                <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-                <span>Wholesale / Stockist</span>
-              </div>
-              <span class="text-[10px] bg-emerald-50 text-emerald-700 px-1.5 py-0.5 rounded font-bold border border-emerald-300">Tier 2 (W)</span>
-            </button>
-            <button onclick="setRole('retail')" class="w-full text-left px-4 py-2.5 text-xs hover:bg-stone-50 flex items-center justify-between font-semibold text-stone-800">
-              <div class="flex items-center gap-2">
-                <span class="w-2 h-2 rounded-full bg-purple-500"></span>
-                <span>Retail / MRP</span>
-              </div>
-              <span class="text-[10px] bg-purple-50 text-purple-700 px-1.5 py-0.5 rounded font-bold border border-purple-300">Tier 3 (Default)</span>
-            </button>
-          </div>
-        </div>
-
         <!-- Order Selection Cart Button -->
-        <button id="headerCartBtn" onclick="toggleCartModal()" class="relative flex items-center gap-1.5 px-3 py-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white rounded-xl text-xs font-bold transition-all shadow-md shadow-amber-500/20 shrink-0">
-          <i data-lucide="shopping-bag" class="w-4 h-4"></i>
+        <button id="headerCartBtn" onclick="toggleCartModal()" class="relative flex items-center gap-2 px-3.5 py-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white rounded-xl text-xs font-bold transition-all shadow-md shadow-amber-500/20 shrink-0">
+          <span class="text-sm">🛍️</span>
           <span class="hidden sm:inline">Order Cart</span>
           <span id="headerCartCountBadge" class="bg-white text-amber-950 font-black text-[10px] w-5 h-5 rounded-full flex items-center justify-center shadow-xs">0</span>
         </button>
+      </div>
 
       </div>
 
@@ -806,8 +749,8 @@
                 </div>
               </div>
               <a id="pdpStaffCallBtn" href="tel:+919825452528" class="px-3.5 py-2 bg-white border border-slate-300 hover:bg-slate-100 rounded-xl text-slate-800 text-xs font-bold transition-all flex items-center gap-1.5 shadow-xs">
-                <i data-lucide="phone-call" class="w-4 h-4 text-emerald-600"></i>
-                <span>Call</span>
+                <span>📞</span>
+                <span>Call Desk</span>
               </a>
             </div>
 
@@ -815,12 +758,12 @@
             <div class="space-y-2.5 pt-1">
               <!-- Add to Order Selection Cart Button -->
               <button id="pdpAddToCartBtn" onclick="addCurrentPdpToCart()" class="w-full py-4 px-5 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-bold text-sm flex items-center justify-center gap-2.5 shadow-xl shadow-amber-500/25 transition-all hover:scale-[1.01]">
-                <i data-lucide="shopping-bag" class="w-5 h-5"></i>
-                <span id="pdpAddToCartBtnText">🛍️ Add Selected Saree to Order Cart</span>
+                <span class="text-base">🛍️</span>
+                <span id="pdpAddToCartBtnText">Add Selected Saree to Order Cart</span>
               </button>
 
               <button id="pdpWhatsAppBtn" onclick="sendPdpWhatsApp()" class="w-full py-3.5 px-5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm flex items-center justify-center gap-2.5 shadow-md shadow-emerald-600/20 transition-all hover:scale-[1.01]">
-                <i data-lucide="message-circle" class="w-5 h-5 fill-current"></i>
+                <span class="text-base">💬</span>
                 <span id="pdpWhatsAppBtnText">Inquire & Order via WhatsApp</span>
               </button>
 
@@ -1192,11 +1135,11 @@
 
         <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 shrink-0">
           <a id="footerCallRepBtn" href="tel:+919879471039" class="px-5 py-3 rounded-xl bg-amber-50 hover:bg-white text-stone-900 font-bold text-xs flex items-center justify-center gap-2 shadow-md transition-all">
-            <i data-lucide="phone-call" class="w-4 h-4 text-[#8b1d40]"></i>
+            <span class="text-base">📞</span>
             <span id="footerCallRepText">Call Sales Desk</span>
           </a>
           <a id="footerWhatsAppRepBtn" href="https://api.whatsapp.com/send?phone=919879471039" target="_blank" rel="noopener noreferrer" class="px-5 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-md transition-all">
-            <i data-lucide="message-circle" class="w-4 h-4"></i>
+            <span class="text-base">💬</span>
             <span>WhatsApp Desk</span>
           </a>
         </div>
@@ -1246,18 +1189,14 @@
       <div class="border-t border-amber-400/30 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-amber-200/80">
         <p id="footerCopyright" class="font-bold text-stone-200">© 2014–2026 Saurashtra Sarees. All rights reserved.</p>
         
-        <div class="flex flex-wrap items-center gap-2.5 text-xs">
-          <span class="text-amber-200/70">Engineered with</span>
-          <a href="mailto:bindugrid@gmail.com" class="font-mono font-bold text-white hover:text-amber-300 flex items-center gap-1.5 transition-colors">
+        <div class="flex flex-wrap items-center gap-2 text-xs">
+          <span class="text-amber-200/70">Vellum Architecture by</span>
+          <a href="mailto:bindugrid@gmail.com" class="font-mono font-bold text-white hover:text-amber-300 flex items-center gap-1.5 transition-colors" title="BinduGrid Studio [ØG]">
             <span class="w-5 h-5 rounded-md bg-stone-900 border border-amber-400/50 flex items-center justify-center text-[10px] font-black shadow-xs">
               <span class="text-cyan-400">Ø</span><span class="text-white">G</span>
             </span>
             <span>BinduGrid Studio [ØG]</span>
           </a>
-          <span class="text-amber-400/50">•</span>
-          <a href="mailto:bindugrid@gmail.com" class="hover:text-amber-300 font-semibold transition-colors" title="Official Studio Desk">bindugrid@gmail.com</a>
-          <span class="text-amber-400/50">•</span>
-          <a href="index.html" class="text-amber-200/90 hover:text-white transition-colors font-semibold">Atelier Heritage & Mill</a>
         </div>
       </div>
 
