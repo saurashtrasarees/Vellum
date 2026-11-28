@@ -312,18 +312,17 @@ function resolveUrlContext() {
     state.currentRole = rateTier;
     state.hasAttachedCode = true;
   } else {
-    // If no user code supplied:
+    // If no user code supplied: strictly public anonymous visitor
     const firmParam = (params.get('firm') || params.get('f') || '').toLowerCase().trim();
     if (firmParam === 'keya' || firmParam === 'keyafashion') {
       state.activeFirm = 'keya';
-      state.activeUser = USER_PROFILES['KH28'] || Object.values(USER_PROFILES).find(p => p.firm === 'keya');
     } else {
       state.activeFirm = 'saurashtra';
-      state.activeUser = USER_PROFILES['NA39'] || USER_PROFILES['NA39'];
     }
+    state.activeUser = null; // No staff code attached
     state.isLocked = false;
-    state.currentRole = 'retail';
-    state.hasAttachedCode = Boolean(baseCode);
+    state.currentRole = 'retail'; // Strictly Retail MRP only!
+    state.hasAttachedCode = false;
   }
 
   // 3. Shoot resolution (Default is always "all")
@@ -1155,7 +1154,12 @@ function renderCatalogGrid() {
 
   if (emptyState) emptyState.classList.add('hidden');
 
-  const isAllRatesUser = (state.activeUser && state.activeUser.rateAccess === 'all') || state.currentRole === 'all';
+  // Only Founders / authorized executives with explicit all-rate access see the 3-rate matrix.
+  // Anonymous / code-less visitors strictly see only the single retail rate!
+  const isAllRatesUser = Boolean(
+    state.isSuperAdmin || 
+    (state.hasAttachedCode && state.activeUser && state.activeUser.rateAccess === 'all')
+  );
 
   grid.innerHTML = state.filteredCatalogs.map(cat => {
     const coverHero = getCatalogCoverHero(cat);
@@ -1487,24 +1491,34 @@ function handleHashRoute() {
 
       if (screenBrand) screenBrand.classList.add('hidden');
       if (screenShowroom) screenShowroom.classList.add('hidden');
-      if (screenProduct) screenProduct.classList.remove('hidden');
+      if (screenProduct) {
+        screenProduct.classList.remove('hidden');
+        screenProduct.style.display = 'flex';
+      }
       renderPdpScreen();
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      window.scrollTo(0, 0);
       return;
     }
   }
 
-  // Default: Show either Showroom or Brand Home
-  if (screenProduct) screenProduct.classList.add('hidden');
-  if (state.hasAttachedCode) {
-    if (screenBrand) screenBrand.classList.add('hidden');
-    if (screenShowroom) screenShowroom.classList.remove('hidden');
-  } else {
-    if (screenBrand) screenBrand.classList.remove('hidden');
-    if (screenShowroom) screenShowroom.classList.add('hidden');
+  // Default: Show either Showroom (on catalog.html) or Brand Home (on index.html)
+  if (screenProduct) {
+    screenProduct.classList.add('hidden');
+    screenProduct.style.display = 'none';
+  }
+  if (screenBrand) {
+    if (state.hasAttachedCode) {
+      screenBrand.classList.add('hidden');
+      if (screenShowroom) screenShowroom.classList.remove('hidden');
+    } else {
+      screenBrand.classList.remove('hidden');
+      if (screenShowroom) screenShowroom.classList.add('hidden');
+    }
+  } else if (screenShowroom) {
+    screenShowroom.classList.remove('hidden');
   }
   state.activePdpCatalog = null;
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  window.scrollTo(0, 0);
 }
 
 function renderPdpScreen() {
@@ -1814,7 +1828,12 @@ function renderRelatedCatalogs() {
   }
   related = related.slice(0, 4);
 
-  const isAllRatesUser = (state.activeUser && state.activeUser.rateAccess === 'all') || state.currentRole === 'all';
+  // Only Founders / authorized executives with explicit all-rate access see the 3-rate matrix.
+  // Anonymous / code-less visitors strictly see only the single retail rate!
+  const isAllRatesUser = Boolean(
+    state.isSuperAdmin || 
+    (state.hasAttachedCode && state.activeUser && state.activeUser.rateAccess === 'all')
+  );
 
   container.innerHTML = related.map(item => {
     const firstD = item.designs[0] || {};

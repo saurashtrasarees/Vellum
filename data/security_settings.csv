@@ -1,0 +1,4 @@
+Setting Key,Setting Value,Description
+ADMIN_ACCESS_PIN,551799,Super-Admin Console Access PIN (Masked in UI)
+DEFAULT_CATALOG_RATE,retail,Rate displayed to anonymous / code-less visitors
+DATABASE_MODE,google_sheets_live,Single Source of Truth (No third-party DB)
