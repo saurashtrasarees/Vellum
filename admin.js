@@ -98,7 +98,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 // 1. LEFT-HAND SIDEBAR TAB NAVIGATION
 // --------------------------------------------------------------------------
 function switchTab(tabId) {
-  const tabs = ['hub', 'drive', 'stock', 'rates', 'sheet', 'firms', 'generator'];
+  const tabs = ['hub', 'drive', 'stock', 'rates', 'sheet', 'firms', 'generator', 'colors'];
   
   tabs.forEach(t => {
     const content = document.getElementById(`tabContent-${t}`);
@@ -117,6 +117,7 @@ function switchTab(tabId) {
       else if (tabId === 'sheet') renderSheetDatabaseTable();
       else if (tabId === 'firms') renderFirmProfilesUI();
       else if (tabId === 'generator') { initDeepLinkUI(); renderSavedLinks(); }
+      else if (tabId === 'colors') { initColorExtractorTab(); }
     } else {
       if (content) content.classList.add('hidden');
       if (btn) {
@@ -1365,4 +1366,400 @@ function showAdminToast(msg) {
     toast.classList.remove('hidden');
     setTimeout(() => toast.classList.add('hidden'), 3500);
   }
+}
+
+// --------------------------------------------------------------------------
+// 9. BROWSER K-MEANS + HSV COLOR EXTRACTOR & DRIVE/SHEET MAPPER
+// --------------------------------------------------------------------------
+const VELLUM_SCRIPT_ID = '1GtHVuvZfc0gDvlKL96seelUHj-gbet-367Go30RrzY8LFjwWfIdV6u42';
+
+const CV_SAREE_PALETTE = {
+  'Ruby Red': [196, 30, 58],
+  'Crimson Red': [165, 28, 48],
+  'Sindoori Red': [210, 43, 43],
+  'Imperial Maroon': [120, 15, 35],
+  'Deep Wine': [105, 35, 55],
+  'Burgundy': [128, 0, 32],
+  'Rani Pink': [219, 39, 119],
+  'Magenta': [190, 24, 93],
+  'Rose Pink': [236, 72, 153],
+  'Baby Pink': [244, 154, 193],
+  'Gajari Pink': [229, 83, 102],
+  'Coral Peach': [240, 115, 95],
+  'Peach Sunset': [245, 160, 115],
+  'Kesari Orange': [234, 88, 12],
+  'Rust Copper': [175, 75, 45],
+  'Terracotta': [192, 92, 62],
+  'Mustard Gold': [202, 138, 4],
+  'Haldi Yellow': [234, 179, 8],
+  'Bright Yellow': [245, 205, 35],
+  'Lemon Yellow': [240, 225, 90],
+  'Antique Gold': [184, 148, 72],
+  'Bottle Green': [15, 76, 48],
+  'Emerald Green': [21, 128, 61],
+  'Mehendi Green': [85, 115, 32],
+  'Olive Green': [105, 115, 48],
+  'Parrot Green': [52, 168, 58],
+  'Pista Mint': [134, 215, 162],
+  'Rama Green': [0, 118, 110],
+  'Peacock Rama': [0, 95, 115],
+  'Sea Green': [32, 160, 145],
+  'Turquoise': [24, 175, 195],
+  'Firozi Sky Blue': [56, 175, 232],
+  'Royal Blue': [30, 58, 138],
+  'Cobalt Blue': [37, 99, 215],
+  'Midnight Navy': [18, 32, 72],
+  'Teal Blue': [15, 118, 138],
+  'Imperial Purple': [107, 33, 168],
+  'Deep Violet': [88, 28, 135],
+  'Soft Lavender': [168, 120, 215],
+  'Mauve Plum': [145, 85, 125],
+  'Chocolate Brown': [95, 58, 40],
+  'Chiku Beige': [195, 155, 115],
+  'Makkhan Cream': [238, 225, 195],
+  'Ivory White': [240, 238, 232],
+  'Silver Grey': [165, 170, 178],
+  'Charcoal Grey': [75, 82, 92],
+  'Jet Black': [28, 28, 32]
+};
+
+let latestCvResults = [];
+
+function initColorExtractorTab() {
+  // 1. Map Sheet ID, Script ID, and Drive Folders dynamically
+  const sheetId = window.vellumAdapter ? window.vellumAdapter.loadSheetId() : '1YcrvrrgwikEFkST8VEPf-XRjj8vWd0F750kauK1PU1o';
+  const driveCfg = window.vellumAdapter ? window.vellumAdapter.loadDriveConfig() : {};
+
+  const sIdEl = document.getElementById('cvMapSheetId');
+  const sLinkEl = document.getElementById('cvMapSheetLink');
+  if (sIdEl) sIdEl.textContent = sheetId;
+  if (sLinkEl) sLinkEl.href = `https://docs.google.com/spreadsheets/d/${sheetId}/edit`;
+
+  const scIdEl = document.getElementById('cvMapScriptId');
+  const scLinkEl = document.getElementById('cvMapScriptLink');
+  if (scIdEl) scIdEl.textContent = VELLUM_SCRIPT_ID;
+  if (scLinkEl) scLinkEl.href = `https://script.google.com/d/${VELLUM_SCRIPT_ID}/edit`;
+
+  const mUrl = driveCfg.modelShootFolderUrl || 'https://drive.google.com/open?id=1JregR_hN7mL3fynLcGOq4ZYaTRHAj91e&usp=drive_fs';
+  const tUrl = driveCfg.tableShootFolderUrl || 'https://drive.google.com/open?id=1JregR_hN7mL3fynLcGOq4ZYaTRHAj91e&usp=drive_fs';
+  const mId = driveCfg.modelFolderId || '1JregR_hN7mL3fynLcGOq4ZYaTRHAj91e';
+  const tId = driveCfg.tableFolderId || '1JregR_hN7mL3fynLcGOq4ZYaTRHAj91e';
+
+  const mLinkEl = document.getElementById('cvMapModelDriveLink');
+  const mIdEl = document.getElementById('cvMapModelDriveId');
+  if (mLinkEl) mLinkEl.href = mUrl;
+  if (mIdEl) mIdEl.textContent = mId;
+
+  const tLinkEl = document.getElementById('cvMapTableDriveLink');
+  const tIdEl = document.getElementById('cvMapTableDriveId');
+  if (tLinkEl) tLinkEl.href = tUrl;
+  if (tIdEl) tIdEl.textContent = tId;
+
+  // 2. Populate Catalog Inspector Dropdown
+  const sel = document.getElementById('cvCatalogInspectorSelect');
+  if (sel && adminCatalogs.length > 0) {
+    sel.innerHTML = adminCatalogs.map((c, idx) =>
+      `<option value="${idx}">${c.code} — ${c.name} (${c.shootType === 'table' ? 'Table' : 'Model'})</option>`
+    ).join('');
+    renderCvCatalogInspector();
+  }
+}
+
+function renderCvCatalogInspector() {
+  const sel = document.getElementById('cvCatalogInspectorSelect');
+  const body = document.getElementById('cvCatalogInspectorBody');
+  if (!sel || !body) return;
+
+  const cat = adminCatalogs[parseInt(sel.value, 10)];
+  if (!cat) return;
+
+  const designs = (cat.designs || []).filter(d => !String(d.code || '').startsWith('000'));
+  const colorListStr = designs.map(d => d.color).filter(Boolean).join(', ');
+  const driveUrl = cat.driveFolderUrl || (cat.driveFolderId ? `https://drive.google.com/drive/folders/${cat.driveFolderId}` : '#');
+
+  body.innerHTML = `
+    <div class="p-3 rounded-2xl bg-stone-50 border border-stone-200 space-y-2">
+      <div class="flex items-center justify-between gap-2">
+        <span class="font-bold text-stone-900">${cat.name}</span>
+        <a href="${driveUrl}" target="_blank" class="px-2.5 py-1 rounded-lg bg-sky-100 text-sky-900 border border-sky-300 font-bold text-[10px] hover:bg-sky-200">
+          Open Drive Folder ↗
+        </a>
+      </div>
+      <p class="font-mono text-[10px] text-stone-500">Folder ID: ${cat.driveFolderId || 'N/A'}</p>
+    </div>
+
+    <div class="space-y-1.5 max-h-56 overflow-y-auto pr-1">
+      ${designs.map(d => `
+        <div class="flex items-center justify-between p-2 rounded-xl bg-white border border-stone-200">
+          <div class="flex items-center gap-2">
+            <span class="w-4 h-4 rounded-full border border-black/15 shrink-0" style="background-color: ${d.colorHex || '#64748b'}"></span>
+            <span class="font-mono font-bold text-stone-700">${d.code}</span>
+            <span class="font-bold text-stone-900">${d.color}</span>
+          </div>
+          <span class="font-mono text-[10px] text-stone-500">${d.colorHex || ''}</span>
+        </div>
+      `).join('')}
+    </div>
+
+    <button onclick="copyToClipboard('${colorListStr.replace(/'/g, "\\'")}', 'Copied ${cat.code} Colorway Names!')" class="w-full py-2.5 px-3 rounded-xl bg-stone-900 hover:bg-stone-800 text-white font-bold text-xs transition-all">
+      📋 Copy Sheet Colorway Names
+    </button>
+  `;
+}
+
+function rgbToHsvCv(r, g, b) {
+  r /= 255; g /= 255; b /= 255;
+  const max = Math.max(r, g, b), min = Math.min(r, g, b);
+  const d = max - min;
+  let h = 0;
+  const s = max === 0 ? 0 : d / max;
+  const v = max;
+  if (d !== 0) {
+    if (max === r) h = ((g - b) / d + (g < b ? 6 : 0)) / 6;
+    else if (max === g) h = ((b - r) / d + 2) / 6;
+    else h = ((r - g) / d + 4) / 6;
+  }
+  return [h, s, v];
+}
+
+function rgbToLabCv(rgb) {
+  let [r, g, b] = rgb.map(x => x / 255);
+  r = r > 0.04045 ? Math.pow((r + 0.055) / 1.055, 2.4) : r / 12.92;
+  g = g > 0.04045 ? Math.pow((g + 0.055) / 1.055, 2.4) : g / 12.92;
+  b = b > 0.04045 ? Math.pow((b + 0.055) / 1.055, 2.4) : b / 12.92;
+
+  const x = (r * 0.4124 + g * 0.3576 + b * 0.1805) / 0.95047;
+  const y = (r * 0.2126 + g * 0.7152 + b * 0.0722) / 1.00000;
+  const z = (r * 0.0193 + g * 0.1192 + b * 0.9505) / 1.08883;
+
+  const f = t => t > 0.008856 ? Math.cbrt(t) : (7.787 * t) + (16 / 116);
+  const fx = f(x), fy = f(y), fz = f(z);
+  return [116 * fy - 16, 500 * (fx - fy), 200 * (fy - fz)];
+}
+
+function matchSareePaletteCv(rgb) {
+  const lab = rgbToLabCv(rgb);
+  let bestName = 'Multi-Color';
+  let bestDist = Infinity;
+  for (const [name, pRgb] of Object.entries(CV_SAREE_PALETTE)) {
+    const pLab = rgbToLabCv(pRgb);
+    const d = Math.pow(lab[0] - pLab[0], 2) + Math.pow(lab[1] - pLab[1], 2) + Math.pow(lab[2] - pLab[2], 2);
+    if (d < bestDist) {
+      bestDist = d;
+      bestName = name;
+    }
+  }
+  return bestName;
+}
+
+function kmeansRgbCv(pixels, k = 4, maxIter = 12) {
+  const n = pixels.length;
+  if (n === 0) return [[[148, 163, 184], 1]];
+  if (n <= k) return pixels.map(p => [p, 1]);
+
+  const step = Math.max(1, Math.floor(n / k));
+  const centroids = [];
+  for (let i = 0; i < k; i++) centroids.push([...pixels[i * step]]);
+
+  let counts = new Array(k).fill(0);
+  for (let iter = 0; iter < maxIter; iter++) {
+    const sums = Array.from({ length: k }, () => [0, 0, 0]);
+    counts = new Array(k).fill(0);
+
+    for (let p = 0; p < n; p++) {
+      const [r, g, b] = pixels[p];
+      let bestIdx = 0;
+      let bestD = Infinity;
+      for (let i = 0; i < k; i++) {
+        const dr = r - centroids[i][0];
+        const dg = g - centroids[i][1];
+        const db = b - centroids[i][2];
+        const d = dr * dr + dg * dg + db * db;
+        if (d < bestD) { bestD = d; bestIdx = i; }
+      }
+      sums[bestIdx][0] += r;
+      sums[bestIdx][1] += g;
+      sums[bestIdx][2] += b;
+      counts[bestIdx]++;
+    }
+
+    let moved = false;
+    for (let i = 0; i < k; i++) {
+      if (counts[i] > 0) {
+        const nr = sums[i][0] / counts[i];
+        const ng = sums[i][1] / counts[i];
+        const nb = sums[i][2] / counts[i];
+        if (Math.abs(nr - centroids[i][0]) > 0.5 || Math.abs(ng - centroids[i][1]) > 0.5 || Math.abs(nb - centroids[i][2]) > 0.5) {
+          moved = true;
+        }
+        centroids[i] = [nr, ng, nb];
+      }
+    }
+    if (!moved) break;
+  }
+
+  const out = [];
+  for (let i = 0; i < k; i++) {
+    if (counts[i] > 0) {
+      out.push([[Math.round(centroids[i][0]), Math.round(centroids[i][1]), Math.round(centroids[i][2])], counts[i]]);
+    }
+  }
+  return out;
+}
+
+function analyzeFileWithCanvasCv(file, shootTypeSetting) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    const objUrl = URL.createObjectURL(file);
+    img.onload = () => {
+      try {
+        const w = img.naturalWidth || img.width;
+        const h = img.naturalHeight || img.height;
+        const relPath = (file.webkitRelativePath || file.name).toLowerCase();
+        const shootType = shootTypeSetting === 'auto' ? (relPath.includes('table') ? 'table' : 'model') : shootTypeSetting;
+
+        const sx = Math.floor(w * (shootType === 'model' ? 0.22 : 0.16));
+        const sy = Math.floor(h * (shootType === 'model' ? 0.30 : 0.16));
+        const sw = Math.max(10, Math.floor(w * (shootType === 'model' ? 0.56 : 0.68)));
+        const sh = Math.max(10, Math.floor(h * (shootType === 'model' ? 0.54 : 0.68)));
+
+        const canvas = document.createElement('canvas');
+        canvas.width = 80;
+        canvas.height = 100;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, sx, sy, sw, sh, 0, 0, 80, 100);
+
+        const data = ctx.getImageData(0, 0, 80, 100).data;
+        const rawPixels = [];
+        const filtered = [];
+        for (let i = 0; i < data.length; i += 4) {
+          const r = data[i], g = data[i + 1], b = data[i + 2];
+          rawPixels.push([r, g, b]);
+          const [, sat, val] = rgbToHsvCv(r, g, b);
+          if (sat < 0.14 && val > 0.76) continue;
+          if (val < 0.09) continue;
+          if (sat < 0.11 && val >= 0.09 && val <= 0.76) continue;
+          filtered.push([r, g, b]);
+        }
+
+        const usePixels = filtered.length >= rawPixels.length * 0.15 ? filtered : rawPixels;
+        const clusters = kmeansRgbCv(usePixels, 4, 12);
+
+        let bestRgb = clusters[0][0];
+        let bestScore = -1;
+        for (const [rgb, count] of clusters) {
+          const [, sat] = rgbToHsvCv(rgb[0], rgb[1], rgb[2]);
+          const score = count * (0.45 + 0.55 * sat);
+          if (score > bestScore) { bestScore = score; bestRgb = rgb; }
+        }
+
+        const hex = '#' + bestRgb.map(v => v.toString(16).padStart(2, '0')).join('');
+        const colorName = matchSareePaletteCv(bestRgb);
+        resolve({ colorName, hex, thumbUrl: objUrl });
+      } catch (err) {
+        URL.revokeObjectURL(objUrl);
+        reject(err);
+      }
+    };
+    img.onerror = () => {
+      URL.revokeObjectURL(objUrl);
+      reject(new Error('Image load failed'));
+    };
+    img.src = objUrl;
+  });
+}
+
+async function handleCvFilesSelected(fileList) {
+  if (!fileList || fileList.length === 0) return;
+  const shootSetting = document.getElementById('cvShootTypeSelect')?.value || 'auto';
+  const resultsEl = document.getElementById('cvResultsContainer');
+  const outputBar = document.getElementById('cvOutputBar');
+
+  const files = Array.from(fileList)
+    .filter(f => /\.(jpg|jpeg|png|webp)$/i.test(f.name))
+    .sort((a, b) => a.name.localeCompare(b.name));
+
+  // Group by series (1xx, 2xx, 3xx...), ignoring 000 poster
+  const seriesMap = {};
+  for (const f of files) {
+    const base = f.name.replace(/\.[^.]+$/, '').toLowerCase();
+    if (base.startsWith('000')) continue;
+    const m = base.match(/^([1-9])\d{2}/);
+    const key = m ? m[1] : base;
+    if (!seriesMap[key]) seriesMap[key] = f;
+  }
+
+  const orderedKeys = Object.keys(seriesMap).sort((a, b) => {
+    const aNum = /^\d+$/.test(a), bNum = /^\d+$/.test(b);
+    if (aNum && bNum) return parseInt(a, 10) - parseInt(b, 10);
+    return a.localeCompare(b);
+  });
+
+  if (orderedKeys.length === 0) {
+    showAdminToast('No valid saree colorway photos found (000 covers are skipped).');
+    return;
+  }
+
+  if (resultsEl) {
+    resultsEl.innerHTML = `<div class="text-center py-6 text-xs font-bold text-amber-800">⏳ Running K-Means + HSV Masking on ${orderedKeys.length} colorways...</div>`;
+  }
+
+  latestCvResults = [];
+  for (const key of orderedKeys) {
+    const file = seriesMap[key];
+    const designCode = /^\d+$/.test(key) ? `${key}01` : key;
+    try {
+      const res = await analyzeFileWithCanvasCv(file, shootSetting);
+      latestCvResults.push({ designCode, fileName: file.name, ...res });
+    } catch (e) {
+      console.warn('CV error on', file.name, e);
+    }
+  }
+
+  renderCvResults();
+  if (outputBar) outputBar.classList.remove('hidden');
+  showAdminToast(`✓ Extracted ${latestCvResults.length} saree colors in browser!`);
+}
+
+function renderCvResults() {
+  const resultsEl = document.getElementById('cvResultsContainer');
+  const previewEl = document.getElementById('cvColorwayCsvPreview');
+  if (!resultsEl) return;
+
+  if (previewEl) {
+    previewEl.textContent = latestCvResults.map(r => r.colorName).join(', ');
+  }
+
+  resultsEl.innerHTML = latestCvResults.map((r, idx) => `
+    <div class="flex items-center justify-between gap-3 p-2.5 rounded-2xl bg-stone-50 border border-stone-200">
+      <div class="flex items-center gap-3 min-w-0">
+        <img src="${r.thumbUrl}" alt="${r.fileName}" class="w-10 h-12 object-cover rounded-lg border border-stone-300 shrink-0">
+        <div class="min-w-0">
+          <div class="flex items-center gap-2">
+            <span class="font-mono text-xs font-black text-stone-900">Design ${r.designCode}</span>
+            <span class="text-[10px] text-stone-500 truncate">${r.fileName}</span>
+          </div>
+          <div class="flex items-center gap-2 mt-1">
+            <span class="w-4 h-4 rounded-full border border-black/20 shrink-0" style="background-color: ${r.hex}"></span>
+            <input type="text" value="${r.colorName}" onchange="updateCvResultColor(${idx}, this.value)" class="px-2 py-0.5 text-xs font-bold text-stone-900 bg-white border border-stone-300 rounded-lg focus:outline-none focus:border-amber-600">
+            <span class="font-mono text-[10px] text-stone-500">${r.hex}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function updateCvResultColor(idx, newName) {
+  if (latestCvResults[idx]) {
+    latestCvResults[idx].colorName = newName.trim();
+    const previewEl = document.getElementById('cvColorwayCsvPreview');
+    if (previewEl) previewEl.textContent = latestCvResults.map(r => r.colorName).join(', ');
+  }
+}
+
+function copyCvSheetColors() {
+  const str = latestCvResults.map(r => r.colorName).join(', ');
+  if (!str) return;
+  copyToClipboard(str, 'Copied Colorway Names for Google Sheet Catalog_Master!');
 }

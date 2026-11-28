@@ -10,7 +10,7 @@
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
   <!-- Vellum Data Engine -->
-  <script src="data-adapter.js?v=20261128-04"></script>
+  <script src="data-adapter.js?v=20261128-06"></script>
   <!-- Custom Styles -->
   <link rel="stylesheet" href="styles.css">
 
@@ -145,6 +145,11 @@
       <button onclick="switchTab('generator')" id="sidebarBtn-generator" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-stone-600 hover:bg-amber-50 hover:text-stone-900 transition-all text-left">
         <i data-lucide="link" class="w-4 h-4 text-stone-500 shrink-0"></i>
         <span>Deep-Link Builder</span>
+      </button>
+
+      <button onclick="switchTab('colors')" id="sidebarBtn-colors" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-stone-600 hover:bg-amber-50 hover:text-stone-900 transition-all text-left">
+        <i data-lucide="palette" class="w-4 h-4 text-stone-500 shrink-0"></i>
+        <span>Color Extractor (CV)</span>
       </button>
 
     </nav>
@@ -747,6 +752,130 @@
 
       </section>
 
+      <!-- ==================================================================== -->
+      <!-- TAB 8: BROWSER K-MEANS + HSV COLOR EXTRACTOR & DRIVE/SHEET MAPPER    -->
+      <!-- ==================================================================== -->
+      <section id="tabContent-colors" class="hidden space-y-6">
+
+        <div class="border-b border-amber-200/80 pb-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <h2 class="font-serif text-2xl font-bold text-stone-900 flex items-center gap-2">
+              <span>🎨 Browser K-Means + HSV Color Extractor</span>
+              <span class="text-xs bg-emerald-100 text-emerald-800 border border-emerald-300 font-sans px-2.5 py-0.5 rounded-full font-bold">On-Device CV Engine</span>
+            </h2>
+            <p class="text-xs text-stone-600 mt-1">
+              Extract true saree fabric colors and HEX codes directly in your browser (no Windows or Python needed) and copy directly into Google Sheet <code class="bg-amber-100 px-1 py-0.5 rounded text-amber-900 font-bold">Catalog_Master</code>.
+            </p>
+          </div>
+        </div>
+
+        <!-- Mapped Master Links Bar: Drive Folders, Google Sheet ID & Apps Script ID -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+          <a id="cvMapSheetLink" href="https://docs.google.com/spreadsheets/d/1YcrvrrgwikEFkST8VEPf-XRjj8vWd0F750kauK1PU1o/edit" target="_blank" class="p-3.5 rounded-2xl bg-emerald-50/70 border border-emerald-300 hover:bg-emerald-100/70 transition-all flex flex-col justify-between gap-1">
+            <div class="flex items-center justify-between">
+              <span class="text-[10px] font-extrabold uppercase tracking-wider text-emerald-900">📊 Google Sheet Master</span>
+              <span class="text-[10px] font-bold text-emerald-700">Open ↗</span>
+            </div>
+            <span id="cvMapSheetId" class="font-mono text-[11px] font-bold text-stone-800 truncate">1YcrvrrgwikEFkST8VEPf-XRjj8vWd0F750kauK1PU1o</span>
+          </a>
+
+          <a id="cvMapScriptLink" href="https://script.google.com/d/1GtHVuvZfc0gDvlKL96seelUHj-gbet-367Go30RrzY8LFjwWfIdV6u42/edit" target="_blank" class="p-3.5 rounded-2xl bg-amber-50/70 border border-amber-300 hover:bg-amber-100/70 transition-all flex flex-col justify-between gap-1">
+            <div class="flex items-center justify-between">
+              <span class="text-[10px] font-extrabold uppercase tracking-wider text-amber-900">⚙️ Apps Script Project</span>
+              <span class="text-[10px] font-bold text-amber-800">Open ↗</span>
+            </div>
+            <span id="cvMapScriptId" class="font-mono text-[11px] font-bold text-stone-800 truncate">1GtHVuvZfc0gDvlKL96seelUHj-gbet-367Go30RrzY8LFjwWfIdV6u42</span>
+          </a>
+
+          <a id="cvMapModelDriveLink" href="https://drive.google.com/open?id=1JregR_hN7mL3fynLcGOq4ZYaTRHAj91e&usp=drive_fs" target="_blank" class="p-3.5 rounded-2xl bg-sky-50/70 border border-sky-300 hover:bg-sky-100/70 transition-all flex flex-col justify-between gap-1">
+            <div class="flex items-center justify-between">
+              <span class="text-[10px] font-extrabold uppercase tracking-wider text-sky-900">👗 Model Shoot Drive</span>
+              <span class="text-[10px] font-bold text-sky-700">Open ↗</span>
+            </div>
+            <span id="cvMapModelDriveId" class="font-mono text-[11px] font-bold text-stone-800 truncate">1JregR_hN7mL3fynLcGOq4ZYaTRHAj91e</span>
+          </a>
+
+          <a id="cvMapTableDriveLink" href="https://drive.google.com/open?id=1JregR_hN7mL3fynLcGOq4ZYaTRHAj91e&usp=drive_fs" target="_blank" class="p-3.5 rounded-2xl bg-purple-50/70 border border-purple-300 hover:bg-purple-100/70 transition-all flex flex-col justify-between gap-1">
+            <div class="flex items-center justify-between">
+              <span class="text-[10px] font-extrabold uppercase tracking-wider text-purple-900">🪑 Table Shoot Drive</span>
+              <span class="text-[10px] font-bold text-purple-700">Open ↗</span>
+            </div>
+            <span id="cvMapTableDriveId" class="font-mono text-[11px] font-bold text-stone-800 truncate">1JregR_hN7mL3fynLcGOq4ZYaTRHAj91e</span>
+          </a>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+          <!-- Left: On-Device Photo Picker & K-Means + HSV Extraction -->
+          <div class="lg:col-span-7 bg-white border border-amber-200/80 rounded-3xl p-6 space-y-5 shadow-sm">
+            <div class="flex flex-wrap items-center justify-between gap-3 border-b border-stone-100 pb-3">
+              <div>
+                <h3 class="font-serif text-lg font-bold text-stone-900">1. Extract Colors from Local Photos / Shoot</h3>
+                <p class="text-[11px] text-stone-500">Automatically ignores 000 covers, groups 1xx/2xx/3xx series, masks backgrounds, and runs K-Means (k=4).</p>
+              </div>
+              <select id="cvShootTypeSelect" class="px-3 py-1.5 rounded-xl bg-stone-50 border border-stone-300 text-xs font-bold text-stone-800 focus:outline-none focus:border-amber-600">
+                <option value="auto">Auto Shoot Crop</option>
+                <option value="model">👗 Model Shoot (Torso Crop)</option>
+                <option value="table">🪑 Table Shoot (Center Crop)</option>
+              </select>
+            </div>
+
+            <div class="flex flex-wrap gap-3">
+              <label class="flex-1 min-w-[180px] cursor-pointer py-4 px-4 rounded-2xl border-2 border-dashed border-amber-400 bg-amber-50/50 hover:bg-amber-50 transition-all text-center space-y-1">
+                <span class="text-sm font-bold text-amber-950 block">📸 Select Saree Photos</span>
+                <span class="text-[10px] text-stone-600 block">Pick 101.jpg, 201.jpg, 301.jpg...</span>
+                <input type="file" id="cvFilesInput" accept="image/*" multiple class="hidden" onchange="handleCvFilesSelected(this.files)">
+              </label>
+
+              <label class="flex-1 min-w-[180px] cursor-pointer py-4 px-4 rounded-2xl border-2 border-dashed border-sky-400 bg-sky-50/50 hover:bg-sky-50 transition-all text-center space-y-1">
+                <span class="text-sm font-bold text-sky-950 block">📁 Select Shoot Folder</span>
+                <span class="text-[10px] text-stone-600 block">Pick an entire local shoot folder</span>
+                <input type="file" id="cvFolderInput" webkitdirectory directory multiple class="hidden" onchange="handleCvFilesSelected(this.files)">
+              </label>
+            </div>
+
+            <!-- Extracted Output Summary Bar -->
+            <div id="cvOutputBar" class="hidden p-4 rounded-2xl bg-stone-900 text-white space-y-3">
+              <div class="flex flex-wrap items-center justify-between gap-2">
+                <span class="text-xs font-bold text-amber-300">Ready for Google Sheet (Catalog_Master Col J):</span>
+                <button onclick="copyCvSheetColors()" class="px-3.5 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-stone-950 font-bold text-xs transition-all">
+                  📋 Copy Colorway Names
+                </button>
+              </div>
+              <p id="cvColorwayCsvPreview" class="font-mono text-xs bg-stone-800 p-2.5 rounded-xl border border-stone-700 text-emerald-300 break-words"></p>
+            </div>
+
+            <!-- Results List -->
+            <div id="cvResultsContainer" class="space-y-2.5 max-h-96 overflow-y-auto pr-1">
+              <div class="text-center py-8 text-xs text-stone-400">
+                Select saree photos or a shoot folder above to run K-Means + HSV Masking in your browser.
+              </div>
+            </div>
+          </div>
+
+          <!-- Right: Existing Catalog Drive & Color Mapper -->
+          <div class="lg:col-span-5 bg-white border border-amber-200/80 rounded-3xl p-6 space-y-4 shadow-sm">
+            <div class="border-b border-stone-100 pb-3">
+              <h3 class="font-serif text-lg font-bold text-stone-900">2. Catalog Drive & Color Inspector</h3>
+              <p class="text-[11px] text-stone-500">Inspect any of the 132 mapped catalogs, verify its CV colors, or open its Drive folder.</p>
+            </div>
+
+            <div>
+              <label class="block text-[11px] font-bold text-stone-700 uppercase mb-1">Select Catalog</label>
+              <select id="cvCatalogInspectorSelect" onchange="renderCvCatalogInspector()" class="w-full px-3.5 py-2.5 bg-stone-50 border border-stone-300 rounded-xl text-xs font-bold text-stone-800 focus:outline-none focus:border-amber-600">
+                <option value="">Loading catalogs...</option>
+              </select>
+            </div>
+
+            <div id="cvCatalogInspectorBody" class="space-y-3 text-xs">
+              <p class="text-stone-400">Select a catalog above to view its Drive link and mapped swatches.</p>
+            </div>
+          </div>
+
+        </div>
+
+      </section>
+
     </main>
   </div>
 
@@ -869,6 +998,6 @@
     <span id="adminToastMsg">Action completed!</span>
   </div>
 
-  <script src="admin.js?v=20261128-04"></script>
+  <script src="admin.js?v=20261128-06"></script>
 </body>
 </html>
