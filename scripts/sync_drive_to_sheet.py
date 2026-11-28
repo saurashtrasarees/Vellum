@@ -5,8 +5,14 @@ VELLUM ATELIER — LOCAL / CLI DRIVE TO SHEET SYNC SCRIPT
 Scans drive_image_map.json and .txt files, parses Retail Price, Fabric,
 Colors, and Specs, updates data/google_sheet_master.csv, and rebuilds
 data/catalogs.json with full multi-angle photo URLs.
+
+Google Apps Script Project ID: 1GtHVuvZfc0gDvlKL96seelUHj-gbet-367Go30RrzY8LFjwWfIdV6u42
+Google Sheet Master ID:        1YcrvrrgwikEFkST8VEPf-XRjj8vWd0F750kauK1PU1o
 ==============================================================================
 """
+
+SCRIPT_ID = '1GtHVuvZfc0gDvlKL96seelUHj-gbet-367Go30RrzY8LFjwWfIdV6u42'
+SHEET_ID = '1YcrvrrgwikEFkST8VEPf-XRjj8vWd0F750kauK1PU1o'
 
 import os
 import re
