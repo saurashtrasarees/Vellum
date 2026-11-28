@@ -237,7 +237,80 @@ def fetch_and_analyze(task):
     return extract_saree_color_from_image_bytes(data, shoot_type=shoot_type)
 
 
-def main():
+def sync_colors_to_google_sheet(catalogs, target_catalog=None):
+    """Update Total Colors (Col I) and Colorway Names (Col J) directly in Google Sheet Catalog_Master."""
+    sheet_id = '1YcrvrrgwikEFkST8VEPf-XRjj8vWd0F750kauK1PU1o'
+    try:
+        read_res = subprocess.run(
+            ['gsheets', 'readonly', 'read', sheet_id, 'Catalog_Master!A1:D200'],
+            capture_output=True, text=True, shell=True, encoding='utf-8'
+        )
+        if read_res.returncode != 0:
+            print('Note: Could not auto-push to Google Sheet (gsheets CLI not authenticated or unavailable).')
+            return
+    except Exception as e:
+        print(f'Note: Skipping Google Sheet auto-push ({e}).')
+        return
+
+    cat_map = {}
+    for c in catalogs:
+        code = c.get('code', '').strip().lower()
+        st = c.get('shootType', 'model').lower()
+        designs = c.get('designs', [])
+        colors_str = ', '.join([d.get('color', '') for d in designs if d.get('color')])
+        cat_map[(code, st)] = (len(designs), colors_str)
+        if code not in cat_map:
+            cat_map[code] = (len(designs), colors_str)
+
+    lines = [l.rstrip('\r\n') for l in read_res.stdout.splitlines() if l.strip()]
+    if len(lines) < 2:
+        return
+
+    target_norm = target_catalog.strip().lower() if target_catalog else None
+    updates = []  # (row_num_1based, count, escaped_colors)
+
+    for idx, line in enumerate(lines[1:], start=2):
+        cols = line.split('\t')
+        code = cols[0].strip().lower() if len(cols) > 0 else ''
+        name = cols[1].strip().lower() if len(cols) > 1 else ''
+        shoot_col = cols[3].lower() if len(cols) > 3 else ''
+        st = 'table' if 'table' in shoot_col else 'model'
+
+        if target_norm and target_norm not in code and target_norm not in name:
+            continue
+
+        val = cat_map.get((code, st)) or cat_map.get(code)
+        if val:
+            count, c_str = val
+            c_escaped = c_str.replace(',', '\\,')
+            updates.append((idx, f'{count},{c_escaped}'))
+
+    if not updates:
+        print('No matching rows found in Google Sheet Catalog_Master to update.')
+        return
+
+    # Group contiguous rows into batches of up to 35 rows
+    print(f'Syncing {len(updates)} row(s) directly to Google Sheet Catalog_Master...')
+    i = 0
+    while i < len(updates):
+        start_row = updates[i][0]
+        batch_vals = [updates[i][1]]
+        j = i + 1
+        while j < len(updates) and updates[j][0] == updates[j - 1][0] + 1 and len(batch_vals) < 35:
+            batch_vals.append(updates[j][1])
+            j += 1
+        end_row = start_row + len(batch_vals) - 1
+        cell_range = f'Catalog_Master!I{start_row}:J{end_row}'
+        payload = '|'.join(batch_vals)
+        res = subprocess.run(['gsheets', 'mutate', 'write', sheet_id, cell_range, payload], capture_output=True, text=True, shell=True)
+        if res.returncode == 0:
+            print(f'  ✓ Google Sheet updated {cell_range}')
+        else:
+            print(f'  ⚠ Error updating {cell_range}: {res.stderr.strip()}')
+        i = j
+
+
+def main(target_catalog=None, push_sheet=True, force=False):
     start_time = time.time()
     print('Loading catalogs and CV color cache...')
     with open(CATALOGS_FILE, 'r', encoding='utf-8') as f:
@@ -251,18 +324,33 @@ def main():
         except Exception:
             cache = {}
 
-    # Collect unique (url, shootType) tasks not yet in cache
-    tasks = {}
+    target_norm = target_catalog.strip().lower() if target_catalog else None
+    selected_cats = []
     for cat in catalogs:
+        if target_norm:
+            c_code = cat.get('code', '').lower()
+            c_name = cat.get('name', '').lower()
+            c_id = cat.get('id', '').lower()
+            if target_norm not in c_code and target_norm not in c_name and target_norm not in c_id:
+                continue
+        selected_cats.append(cat)
+
+    if not selected_cats:
+        print(f'No catalog matched "{target_catalog}". Check the catalog code or name.')
+        return
+
+    # Collect unique (url, shootType) tasks not yet in cache (or forced for selected_cats)
+    tasks = {}
+    for cat in selected_cats:
         st = cat.get('shootType', 'model')
         for d in cat.get('designs', []):
             url = d.get('heroImageUrl') or (d.get('imageUrls') or [None])[0]
             if url:
                 key = f"{url}|{st}"
-                if key not in cache:
+                if force or key not in cache:
                     tasks[key] = (url, st)
 
-    print(f'Total catalogs: {len(catalogs)} | Cache hits: {len(cache)} | Images to analyze via CV: {len(tasks)}')
+    print(f'Selected catalogs: {len(selected_cats)}/{len(catalogs)} | Cache hits: {len(cache)} | Images to analyze via CV: {len(tasks)}')
 
     if tasks:
         done = 0
@@ -283,9 +371,9 @@ def main():
         with open(CACHE_FILE, 'w', encoding='utf-8') as f:
             json.dump(cache, f, indent=2, ensure_ascii=False)
 
-    # Apply extracted CV colors to catalogs.json
+    # Apply extracted CV colors to selected catalogs in catalogs.json
     updated_designs = 0
-    for cat in catalogs:
+    for cat in selected_cats:
         st = cat.get('shootType', 'model')
         for d in cat.get('designs', []):
             url = d.get('heroImageUrl') or (d.get('imageUrls') or [None])[0]
@@ -330,8 +418,11 @@ def main():
         writer = csv.writer(f)
         writer.writerows(csv_rows)
 
+    if push_sheet:
+        sync_colors_to_google_sheet(catalogs, target_catalog=target_catalog)
+
     elapsed = round(time.time() - start_time, 1)
-    print(f'✓ CV Color Extraction Complete in {elapsed}s! Updated {updated_designs} colorways across {len(catalogs)} catalogs.')
+    print(f'✓ CV Color Extraction Complete in {elapsed}s! Updated {updated_designs} colorways across {len(selected_cats)} catalog(s).')
 
 
 def analyze_local_catalog_folder(folder_path, shoot_type='auto'):
@@ -408,15 +499,14 @@ def run_local_dir(local_dir, shoot_type='auto'):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Vellum K-Means + HSV Masking Saree Color Extractor')
+    parser.add_argument('--catalog', type=str, help='Run on a single catalog code or name (e.g. Aayesha-Vol-4) and auto-update Google Sheet')
     parser.add_argument('--local-dir', type=str, help='Path to local disk folder containing saree photos or catalog subfolders')
     parser.add_argument('--shoot-type', type=str, default='auto', choices=['auto', 'model', 'table'], help='Shoot type for ROI crop (default: auto)')
-    parser.add_argument('--force', action='store_true', help='Ignore cache and re-analyze all Drive images')
+    parser.add_argument('--force', action='store_true', help='Ignore cache and re-analyze target images')
+    parser.add_argument('--no-sheet', action='store_true', help='Skip automatic Google Sheet update')
     args = parser.parse_args()
-
-    if args.force and os.path.exists(CACHE_FILE):
-        os.remove(CACHE_FILE)
 
     if args.local_dir:
         run_local_dir(args.local_dir, shoot_type=args.shoot_type)
     else:
-        main()
+        main(target_catalog=args.catalog, push_sheet=(not args.no_sheet), force=args.force)
