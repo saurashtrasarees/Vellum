@@ -25,7 +25,31 @@ import urllib.request
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from PIL import Image
 
-BASE_DIR = 'E:/Shakti/GitHub/Vellum'
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+CONFIG_FILE = os.path.join(SCRIPT_DIR, 'color_extractor_config.json')
+
+
+def load_config():
+    """Load portable configuration for repo path, Google Sheet ID, and Script ID."""
+    default_cfg = {
+        'repo_dir': os.path.dirname(SCRIPT_DIR),
+        'google_sheet_id': '1YcrvrrgwikEFkST8VEPf-XRjj8vWd0F750kauK1PU1o',
+        'apps_script_id': '1GtHVuvZfc0gDvlKL96seelUHj-gbet-367Go30RrzY8LFjwWfIdV6u42',
+        'default_local_dir': ''
+    }
+    if os.path.exists(CONFIG_FILE):
+        try:
+            with open(CONFIG_FILE, 'r', encoding='utf-8') as f:
+                loaded = json.load(f)
+                default_cfg.update({k: v for k, v in loaded.items() if v is not None})
+        except Exception:
+            pass
+    return default_cfg
+
+
+CFG = load_config()
+BASE_DIR = CFG['repo_dir']
+GOOGLE_SHEET_ID = CFG['google_sheet_id']
 CATALOGS_FILE = os.path.join(BASE_DIR, 'data/catalogs.json')
 SHEET_CSV_FILE = os.path.join(BASE_DIR, 'data/google_sheet_master.csv')
 CACHE_FILE = os.path.join(BASE_DIR, 'data/color_cv_cache.json')
@@ -239,7 +263,7 @@ def fetch_and_analyze(task):
 
 def sync_colors_to_google_sheet(catalogs, target_catalog=None):
     """Update Total Colors (Col I) and Colorway Names (Col J) directly in Google Sheet Catalog_Master."""
-    sheet_id = '1YcrvrrgwikEFkST8VEPf-XRjj8vWd0F750kauK1PU1o'
+    sheet_id = GOOGLE_SHEET_ID
     try:
         read_res = subprocess.run(
             ['gsheets', 'readonly', 'read', sheet_id, 'Catalog_Master!A1:D200'],
@@ -497,16 +521,60 @@ def run_local_dir(local_dir, shoot_type='auto'):
     print(f'\n✓ Saved local color report to: {out_csv}')
 
 
+def interactive_configure():
+    """Interactively update repo folder, Google Sheet ID, Apps Script ID, and default local folder."""
+    cfg = load_config()
+    print('\n=== VELLUM COLOR EXTRACTOR — CONFIGURE LOCATIONS & IDs ===')
+    print('(Press Enter to keep the current value shown in brackets)\n')
+
+    r = input(f"Vellum Project Folder [{cfg['repo_dir']}]: ").strip().strip('"')
+    if r:
+        cfg['repo_dir'] = r.replace('\\', '/')
+
+    s = input(f"Google Sheet ID [{cfg['google_sheet_id']}]: ").strip()
+    if s:
+        # Allow pasting full Google Sheet URL or bare ID
+        m = re.search(r'/d/([a-zA-Z0-9_-]+)', s)
+        cfg['google_sheet_id'] = m.group(1) if m else s
+
+    sc = input(f"Apps Script ID [{cfg['apps_script_id']}]: ").strip()
+    if sc:
+        m = re.search(r'/d/([a-zA-Z0-9_-]+)', sc)
+        cfg['apps_script_id'] = m.group(1) if m else sc
+
+    ld = input(f"Default Local Shoot Folder [{cfg.get('default_local_dir', '')}]: ").strip().strip('"')
+    if ld:
+        cfg['default_local_dir'] = ld.replace('\\', '/')
+
+    with open(CONFIG_FILE, 'w', encoding='utf-8') as f:
+        json.dump(cfg, f, indent=2)
+    print(f'\n✓ Configuration saved to: {CONFIG_FILE}\n')
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Vellum K-Means + HSV Masking Saree Color Extractor')
     parser.add_argument('--catalog', type=str, help='Run on a single catalog code or name (e.g. Aayesha-Vol-4) and auto-update Google Sheet')
     parser.add_argument('--local-dir', type=str, help='Path to local disk folder containing saree photos or catalog subfolders')
     parser.add_argument('--shoot-type', type=str, default='auto', choices=['auto', 'model', 'table'], help='Shoot type for ROI crop (default: auto)')
+    parser.add_argument('--repo-dir', type=str, help='Override Vellum project directory containing data/catalogs.json')
+    parser.add_argument('--sheet-id', type=str, help='Override Google Sheet ID')
+    parser.add_argument('--configure', action='store_true', help='Interactively configure paths and IDs')
     parser.add_argument('--force', action='store_true', help='Ignore cache and re-analyze target images')
     parser.add_argument('--no-sheet', action='store_true', help='Skip automatic Google Sheet update')
     args = parser.parse_args()
 
-    if args.local_dir:
-        run_local_dir(args.local_dir, shoot_type=args.shoot_type)
+    if args.configure:
+        interactive_configure()
     else:
-        main(target_catalog=args.catalog, push_sheet=(not args.no_sheet), force=args.force)
+        if args.repo_dir:
+            BASE_DIR = args.repo_dir
+            CATALOGS_FILE = os.path.join(BASE_DIR, 'data/catalogs.json')
+            SHEET_CSV_FILE = os.path.join(BASE_DIR, 'data/google_sheet_master.csv')
+            CACHE_FILE = os.path.join(BASE_DIR, 'data/color_cv_cache.json')
+        if args.sheet_id:
+            GOOGLE_SHEET_ID = args.sheet_id
+
+        if args.local_dir:
+            run_local_dir(args.local_dir, shoot_type=args.shoot_type)
+        else:
+            main(target_catalog=args.catalog, push_sheet=(not args.no_sheet), force=args.force)

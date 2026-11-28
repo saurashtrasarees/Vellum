@@ -7,8 +7,9 @@ echo.
 echo [1] Scan ALL 132 Catalogues ^& Auto-Update Google Sheet
 echo [2] Scan a SINGLE Catalogue (by Code/Name) ^& Auto-Update Google Sheet
 echo [3] Scan a LOCAL DISK FOLDER of saree photos (e.g. D:\Shoots\Vol1)
+echo [4] Configure Locations ^& IDs (Project Folder, Sheet ID, Script ID)
 echo.
-set /p CHOICE="Enter 1, 2, or 3: "
+set /p CHOICE="Enter 1, 2, 3, or 4: "
 
 if "%CHOICE%"=="2" (
     echo.
@@ -25,6 +26,13 @@ if "%CHOICE%"=="3" (
     setlocal enabledelayedexpansion
     set "FOLDER=!FOLDER:"=!"
     python "%~dp0extract_saree_colors_cv.py" --local-dir "!FOLDER!"
+    echo.
+    pause
+    exit /b 0
+)
+
+if "%CHOICE%"=="4" (
+    python "%~dp0extract_saree_colors_cv.py" --configure
     echo.
     pause
     exit /b 0
