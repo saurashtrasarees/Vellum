@@ -1599,7 +1599,7 @@ function renderPdpScreen() {
   document.getElementById('pdpBlouse').textContent = cat.blouse;
   document.getElementById('pdpLength').textContent = cat.sareeLengthTotal || cat.length;
   document.getElementById('pdpWeight').textContent = cat.weightApprox || 'Approx. 650 - 750 grams';
-  document.getElementById('pdpOrigin').textContent = cat.origin || 'A-1001, Rajhans Fabrizo, Surat, Gujarat – 395010 (Direct Mill Dispatch)';
+  document.getElementById('pdpOrigin').textContent = cat.origin ? cat.origin.replace(/\s*\(Direct Mill Dispatch\)/i, '') : 'A-1001, Rajhans Fabrizo, Surat, Gujarat – 395010';
 
   // Styling Tab Content
   document.getElementById('pdpOccasionText').textContent = cat.idealOccasion || 'Weddings, Traditional Functions & Festivals';
@@ -1611,7 +1611,7 @@ function renderPdpScreen() {
   document.getElementById('pdpStaffName').textContent = user.name;
   document.getElementById('pdpStaffFirm').textContent = `${firm.name} • ${user.title}`;
   document.getElementById('pdpStaffCallBtn').href = `tel:+91${user.phone}`;
-  document.getElementById('pdpWhatsAppBtnText').textContent = `Inquire & Order via WhatsApp with ${user.name}`;
+  document.getElementById('pdpWhatsAppBtnText').textContent = 'Inquire & Order via WhatsApp';
 
   // Mobile Sticky Bottom Bar (Fixed on mobile devices)
   const mobPrice = document.getElementById('pdpMobilePrice');
@@ -1619,7 +1619,7 @@ function renderPdpScreen() {
   const mobCall = document.getElementById('pdpMobileCallBtn');
   if (mobCall) mobCall.href = `tel:+91${user.phone}`;
   const mobWa = document.getElementById('pdpMobileWhatsAppText');
-  if (mobWa) mobWa.textContent = `Order with ${user.name}`;
+  if (mobWa) mobWa.textContent = 'Order via WhatsApp';
 
   // Swatches, Gallery, Shoot & Related
   renderPdpColorSwatches();
@@ -1723,7 +1723,7 @@ function renderPdpColorSwatches() {
         type="button"
         onclick="selectPdpDesign(${idx})" 
         class="swatch-btn ${isColorSold ? 'is-sold-out' : ''} inline-flex items-center gap-2 px-3 py-1.5 rounded-2xl border-2 transition-all ${activeClass}"
-        title="Design ${d.code} — ${colorObj.label} (${numPhotos} angle photos)"
+        title="${d.code} — ${colorObj.label}"
       >
         <span 
           class="w-4 h-4 rounded-full border border-black/15 shadow-xs shrink-0 flex items-center justify-center"
@@ -1756,7 +1756,7 @@ function renderPdpColorSwatches() {
 
   const labelEl = document.getElementById('pdpSelectedColorLabel');
   if (labelEl) {
-    labelEl.innerHTML = `<span class="font-bold text-stone-900">Design ${activeDesign.code || '101'} — ${activeColorObj.label} (${numCurrentPhotos} HD Angle Photos Loaded)</span> ${statusBadge}`;
+    labelEl.innerHTML = `<span class="font-bold text-stone-900">${activeDesign.code || '101'} — ${activeColorObj.label}</span> ${statusBadge}`;
   }
 }
 
@@ -1937,7 +1937,7 @@ function sendPdpWhatsApp() {
   const colorObj = getAccurateColor(activeDesign.color);
   const rate = getActiveRate(cat);
 
-  sendStaffWhatsApp(cat.code, `${colorObj.label} (Design ${activeDesign.code})`, rate);
+  sendStaffWhatsApp(cat.code, `${colorObj.label} (${activeDesign.code})`, rate);
 }
 
 function copyPdpSpecs() {
@@ -1972,7 +1972,7 @@ function copyPdpSpecs() {
 • *Total Variants:* ${cat.skuCount} Rich Festive Shades
 
 💰 *Price:* ${priceText}
-📦 *Status:* ${cat.status} (Direct Surat Mill Dispatch)
+📦 *Status:* ${cat.status}
 
 📞 *Direct Booking & Orders:*
 Representative: *${user.name}*
