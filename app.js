@@ -740,13 +740,14 @@ function mergeSheetPricing(csvText) {
   if (lines.length < 2) return;
 
   const headerRow = parseCsvRow(lines[0].toLowerCase());
-  let primeIdx = -1, wsIdx = -1, retIdx = -1, statusIdx = -1;
+  let primeIdx = -1, wsIdx = -1, retIdx = -1, statusIdx = -1, colorsIdx = -1;
 
   headerRow.forEach((h, idx) => {
     if (h.includes('prime')) primeIdx = idx;
     else if (h.includes('wholesale')) wsIdx = idx;
     else if (h.includes('retail') || h.includes('mrp')) retIdx = idx;
     else if (h.includes('status') || h.includes('stock')) statusIdx = idx;
+    else if (h.includes('colorway') || h.includes('color names')) colorsIdx = idx;
   });
 
   // Default positions: 1. Prime, 2. Wholesale, 3. Retail
@@ -766,8 +767,9 @@ function mergeSheetPricing(csvText) {
       const wsRate = wsIdx >= 0 && row[wsIdx] ? parseInt(row[wsIdx].replace(/[^0-9]/g, '')) : null;
       const retRate = retIdx >= 0 && row[retIdx] ? parseInt(row[retIdx].replace(/[^0-9]/g, '')) : null;
       const status = statusIdx >= 0 && row[statusIdx] ? row[statusIdx].trim() : null;
+      const colorNamesRaw = colorsIdx >= 0 && row[colorsIdx] ? row[colorsIdx].trim() : null;
 
-      priceMap[code] = { prime: primeRate, wholesale: wsRate, retail: retRate, status: status };
+      priceMap[code] = { prime: primeRate, wholesale: wsRate, retail: retRate, status: status, colorNamesRaw: colorNamesRaw };
     }
   }
 
@@ -778,6 +780,12 @@ function mergeSheetPricing(csvText) {
       if (mapped.wholesale) cat.wholesaleRate = mapped.wholesale;
       if (mapped.retail) cat.retailRate = mapped.retail;
       if (mapped.status) cat.status = mapped.status;
+      if (mapped.colorNamesRaw && cat.designs && cat.designs.length > 0) {
+        const sheetColors = mapped.colorNamesRaw.split(',').map(s => s.trim()).filter(Boolean);
+        cat.designs.forEach((d, idx) => {
+          if (sheetColors[idx]) d.color = sheetColors[idx];
+        });
+      }
     }
   });
 }
@@ -801,37 +809,86 @@ function parseCsvRow(line) {
 // --------------------------------------------------------------------------
 // 5. ACCURATE INDIAN TEXTILE COLOR PALETTE & HOVER TOOLTIPS
 // --------------------------------------------------------------------------
-function getAccurateColor(colorName) {
-  if (!colorName) return { hex: '#94a3b8', label: 'Multi-Color' };
-  const c = colorName.toLowerCase().replace(/_/g, ' ');
+function getAccurateColor(colorName, customHex) {
+  if (!colorName) return { hex: customHex || '#94a3b8', label: 'Multi-Color' };
+  const cleanLabel = colorName.replace(/_/g, ' ').trim();
+  const c = cleanLabel.toLowerCase();
 
-  if (c.includes('wine') || c.includes('burgundy')) return { hex: '#722F37', label: 'Deep Wine' };
-  if (c.includes('maroon')) return { hex: '#800000', label: 'Royal Maroon' };
-  if (c.includes('red')) return { hex: '#C41E3A', label: 'Ruby Red' };
-  if (c.includes('peacock') || c.includes('rama')) return { hex: '#005F73', label: 'Peacock Rama' };
-  if (c.includes('navy')) return { hex: '#0B1B3D', label: 'Midnight Navy' };
-  if (c.includes('sky')) return { hex: '#38BDF8', label: 'Firozi Sky Blue' };
-  if (c.includes('blue')) return { hex: '#1E3A8A', label: 'Royal Blue' };
-  if (c.includes('rani') || c.includes('magenta')) return { hex: '#E11D48', label: 'Rani Pink' };
-  if (c.includes('pink')) return { hex: '#F472B6', label: 'Gulabi Pink' };
-  if (c.includes('haldi') || c.includes('gold')) return { hex: '#EAB308', label: 'Haldi Gold' };
-  if (c.includes('mustard')) return { hex: '#CA8A04', label: 'Mustard Yellow' };
-  if (c.includes('yellow')) return { hex: '#FACC15', label: 'Bright Yellow' };
-  if (c.includes('mehendi')) return { hex: '#4D7C0F', label: 'Mehendi Green' };
-  if (c.includes('pista')) return { hex: '#86EFAC', label: 'Pista Green' };
-  if (c.includes('parrot')) return { hex: '#22C55E', label: 'Parrot Green' };
-  if (c.includes('sea green')) return { hex: '#14B8A6', label: 'Sea Green' };
-  if (c.includes('green')) return { hex: '#15803D', label: 'Emerald Green' };
-  if (c.includes('purple')) return { hex: '#6B21A8', label: 'Imperial Purple' };
-  if (c.includes('lavender')) return { hex: '#A855F7', label: 'Soft Lavender' };
-  if (c.includes('orange')) return { hex: '#EA580C', label: 'Kesari Orange' };
-  if (c.includes('peach')) return { hex: '#FDBA74', label: 'Aadu Peach' };
-  if (c.includes('black')) return { hex: '#18181B', label: 'Jet Black' };
-  if (c.includes('grey') || c.includes('gray')) return { hex: '#64748B', label: 'Charcoal Grey' };
-  if (c.includes('chiku') || c.includes('beige')) return { hex: '#D4A373', label: 'Chiku Beige' };
-  if (c.includes('cream') || c.includes('white')) return { hex: '#FEF3C7', label: 'Makkhan Cream' };
+  const palette = [
+    ['burgundy', '#800020'],
+    ['wine', '#722F37'],
+    ['maroon', '#800000'],
+    ['sindoori', '#D22B2B'],
+    ['crimson', '#A51C30'],
+    ['ruby', '#C41E3A'],
+    ['red', '#C41E3A'],
+    ['peacock', '#005F73'],
+    ['rama', '#00766E'],
+    ['teal', '#0F768A'],
+    ['turquoise', '#18AFC3'],
+    ['firozi', '#38BDF8'],
+    ['sky', '#38BDF8'],
+    ['navy', '#122048'],
+    ['cobalt', '#2563D7'],
+    ['royal blue', '#1E3A8A'],
+    ['blue', '#1E3A8A'],
+    ['rani', '#DB2777'],
+    ['magenta', '#BE185D'],
+    ['gajari', '#E55366'],
+    ['baby pink', '#F49AC1'],
+    ['rose', '#EC4899'],
+    ['pink', '#F472B6'],
+    ['coral', '#F0735F'],
+    ['peach', '#F5A073'],
+    ['rust', '#AF4B2D'],
+    ['copper', '#AF4B2D'],
+    ['terracotta', '#C05C3E'],
+    ['orange', '#EA580C'],
+    ['mustard', '#CA8A04'],
+    ['antique gold', '#B89448'],
+    ['haldi', '#EAB308'],
+    ['gold', '#EAB308'],
+    ['lemon', '#F0E15A'],
+    ['yellow', '#FACC15'],
+    ['bottle green', '#0F4C30'],
+    ['mehendi', '#557320'],
+    ['olive', '#697330'],
+    ['pista', '#86D7A2'],
+    ['parrot', '#34A83A'],
+    ['sea green', '#20A091'],
+    ['emerald', '#15803D'],
+    ['green', '#15803D'],
+    ['violet', '#581C87'],
+    ['lavender', '#A878D7'],
+    ['plum', '#91557D'],
+    ['mauve', '#91557D'],
+    ['purple', '#6B21A8'],
+    ['chocolate', '#5F3A28'],
+    ['brown', '#5F3A28'],
+    ['chiku', '#C39B73'],
+    ['beige', '#C39B73'],
+    ['cream', '#EEE1C3'],
+    ['ivory', '#F0EEE8'],
+    ['white', '#F0EEE8'],
+    ['silver', '#A5AAB2'],
+    ['charcoal', '#4B525C'],
+    ['grey', '#64748B'],
+    ['gray', '#64748B'],
+    ['black', '#1C1C20']
+  ];
 
-  return { hex: '#64748b', label: colorName };
+  let matchedHex = '#64748b';
+  for (const [key, hex] of palette) {
+    if (c.includes(key)) {
+      matchedHex = hex;
+      break;
+    }
+  }
+
+  return {
+    hex: customHex || matchedHex,
+    label: cleanLabel
+  };
 }
 
 // ==========================================================================
@@ -1270,7 +1327,7 @@ function renderCatalogGrid() {
     const heroImg = coverHero.url;
     const colorways = getColorwayDesigns(cat);
     const firstDesign = colorways[0] || (cat.designs && cat.designs[0]) || {};
-    const activeColorObj = getAccurateColor(firstDesign.color);
+    const activeColorObj = getAccurateColor(firstDesign.color, firstDesign.colorHex);
 
     const retailRate = cat.retailRate;
     const wholesaleRate = cat.wholesaleRate;
@@ -1349,7 +1406,7 @@ function renderCatalogGrid() {
             <div class="mt-2 sm:mt-3 pt-2 border-t border-slate-100 flex items-center justify-between">
               <div class="flex items-center gap-1 sm:gap-1.5 flex-wrap">
                 ${colorways.slice(0, 5).map((d, dIdx) => {
-                  const dColor = getAccurateColor(d.color);
+                  const dColor = getAccurateColor(d.color, d.colorHex);
                   const isColorSold = window.vellumAdapter && window.vellumAdapter.getColorStock(cat.id, d.code) === 'sold_out';
                   return `
                     <div class="swatch-wrapper">
@@ -1453,7 +1510,7 @@ function switchCardDesign(catId, designIdx) {
   if (!colorways[designIdx]) return;
 
   const design = colorways[designIdx];
-  const colorObj = getAccurateColor(design.color);
+  const colorObj = getAccurateColor(design.color, design.colorHex);
 
   const imgEl = document.getElementById(`card-hero-${cat.id}`);
   if (imgEl && design.heroImageUrl) {
@@ -1816,7 +1873,7 @@ function renderPdpColorSwatches() {
 
   const swatchesHtml = colorways.map((d, idx) => {
     const isSelected = idx === state.activePdpDesignIndex;
-    const colorObj = getAccurateColor(d.color);
+    const colorObj = getAccurateColor(d.color, d.colorHex);
     const isColorSold = window.vellumAdapter && window.vellumAdapter.getColorStock(cat.id, d.code) === 'sold_out';
     const numPhotos = (d.imageUrls && d.imageUrls.length) || 1;
     
@@ -1847,7 +1904,7 @@ function renderPdpColorSwatches() {
   container.innerHTML = `<div class="flex items-center gap-2 flex-wrap pt-1">${swatchesHtml}</div>`;
 
   const activeDesign = colorways[state.activePdpDesignIndex] || (cat.designs && cat.designs[0]) || {};
-  const activeColorObj = getAccurateColor(activeDesign.color);
+  const activeColorObj = getAccurateColor(activeDesign.color, activeDesign.colorHex);
   const isCurrentColorSold = window.vellumAdapter && window.vellumAdapter.getColorStock(cat.id, activeDesign.code) === 'sold_out';
   const numCurrentPhotos = (activeDesign.imageUrls && activeDesign.imageUrls.length) || 1;
   
@@ -2039,7 +2096,7 @@ function sendPdpWhatsApp() {
   const cat = state.activePdpCatalog;
   if (!cat) return;
   const activeDesign = cat.designs[state.activePdpDesignIndex] || {};
-  const colorObj = getAccurateColor(activeDesign.color);
+  const colorObj = getAccurateColor(activeDesign.color, activeDesign.colorHex);
   const rate = getActiveRate(cat);
 
   sendStaffWhatsApp(cat.code, `${colorObj.label} (${activeDesign.code})`, rate);
@@ -2591,7 +2648,7 @@ function addCurrentPdpToCart() {
   const cat = state.activePdpCatalog;
   if (!cat) return;
   const activeDesign = cat.designs[state.activePdpDesignIndex] || cat.designs[0] || {};
-  const colorObj = getAccurateColor(activeDesign.color);
+  const colorObj = getAccurateColor(activeDesign.color, activeDesign.colorHex);
   const activeRate = getActiveRate(cat);
 
   const realUrls = (activeDesign.images && activeDesign.images.length > 0)
@@ -2614,7 +2671,7 @@ function addCatalogCardToCart(catId) {
   const cat = state.catalogs.find(c => c.id === catId || c.code.toLowerCase() === catId.toLowerCase());
   if (!cat) return;
   const firstDesign = cat.designs[0] || {};
-  const colorObj = getAccurateColor(firstDesign.color);
+  const colorObj = getAccurateColor(firstDesign.color, firstDesign.colorHex);
   const activeRate = getActiveRate(cat);
 
   addToCart({
